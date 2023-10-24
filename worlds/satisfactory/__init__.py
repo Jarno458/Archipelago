@@ -4,7 +4,7 @@ from .GameLogic import GameLogic
 from .Items import Items
 from .Locations import get_locations, LocationData
 from .Rules import EventId, StateLogic
-from .Options import is_option_enabled, get_option_value, satisfactory_options
+from .Options import SatisfactoryOptions
 from .Regions import create_regions_and_return_locations
 from ..AutoWorld import World, WebWorld
 
@@ -28,8 +28,9 @@ class SatisfactoryWorld(World):
     Explore an alien planet, create multi-story factories, and enter conveyor belt heaven!
     """
 
-    option_definitions = satisfactory_options
     game = "Satisfactory"
+    options_dataclass = SatisfactoryOptions
+    options: SatisfactoryOptions
     topology_present = False
     data_version = 0
     web = SatisfactoryWebWorld()
@@ -47,11 +48,10 @@ class SatisfactoryWorld(World):
 
 
     def generate_early(self) -> None:
-        self.state_logic = StateLogic(self.multiworld, self.player)
+        self.state_logic = StateLogic(self.player, self.options)
         self.items = Items(self.multiworld, self.player, self.game_logic, self.random)
 
-        if get_option_value(self.multiworld, self.player, "FinalElevatorTier") <= 0 and \
-           get_option_value(self.multiworld, self.player, "FinalResourceSinkPoints") <= 0:
+        if self.options.final_elevator_tier <= 0 and self.options.final_resource_sink_points <= 0:
                 raise Exception("""Satisfactory: player {} needs to choose a goal,
                     both FinalElevatorTier and FinalResourceSinkPoints are set to off"""
                     .format(self.multiworld.player_name[self.player]))
@@ -64,57 +64,23 @@ class SatisfactoryWorld(World):
 
 
     def create_items(self) -> None:
-        #self.create_initial_unlocked_items()
+        self.create_initial_unlocked_items()
         self.setup_events()
 
-        excluded_items = set()  #self.get_excluded_items()
+        excluded_items = set() #self.get_excluded_items()
 
         self.multiworld.itempool += self.items.build_item_pool(self.random, excluded_items, 
             len(self.multiworld.get_unfilled_locations(self.player)))
 
 
     def set_rules(self) -> None:
-        required_parts: Tuple[str]
+        last_elevator_tier: int = \
+            len(self.game_logic.space_elevator_tiers) if self.options.final_resource_sink_points > 0 \
+                else self.options.final_elevator_tier
 
-        if is_option_enabled(self.multiworld, self.player, "FinalResourceSinkPoints"):
-            required_parts = self.game_logic.space_elevator_tiers[3]
-        else:
-            required_parts = self.game_logic.space_elevator_tiers[
-                get_option_value(self.multiworld, self.player, "FinalElevatorTier")]
-            
+        required_parts = self.game_logic.space_elevator_tiers[last_elevator_tier - 1]
         self.multiworld.completion_condition[self.player] = \
             lambda state: self.state_logic._satisfactory_can_produce_all(state, required_parts)
-
-
-    def get_pre_fill_items(self)  -> List[Item]:
-        initial_unlocked_items: Tuple[str, ...] = (
-            #Tier 0 rewards
-            "Building: Constructor",
-            "Building: Miner Mk.1",
-            "Building: Smelter",
-
-            "Recipe: Limestone",
-            "Recipe: Raw Quartz",
-            "Recipe: Iron Ore",
-            "Recipe: Copper Ore",
-            "Recipe: Coal",
-            "Recipe: Sulfur",
-            "Recipe: Caterium Ore",
-            "Recipe: Water",
-
-            "Recipe: Iron Ingot",
-            "Recipe: Copper Ingot",
-
-            "Recipe: Concrete",
-            "Recipe: Iron Plate",
-            "Recipe: Iron Rod",
-
-            "Recipe: Reinforced Iron Plate",
-            "Recipe: Screw",
-            "Recipe: Wire",
-            "Recipe: Cable"
-        )
-        return [self.create_item(item) for item in initial_unlocked_items]
 
 
     def fill_slot_data(self) -> Dict[str, object]:
@@ -127,20 +93,24 @@ class SatisfactoryWorld(World):
                  for part, amount in parts.items():
                      self.item_name_to_id[part]
                      hub_layout[tier - 1][milestone - 1][f"{self.item_name_to_id[part]}"] = amount
-                     
 
-        slot_data: Dict[str, object] = {}
-        slot_data["Data"] = {
-            "Slot": self.player,
-            "HubLayout": hub_layout,
-            "SlotsPerMilestone": self.game_logic.slots_per_milestone,
-            "Options": {}
+        return {
+            "Data": {
+                "HubLayout": hub_layout,
+                "SlotsPerMilestone": self.game_logic.slots_per_milestone,
+                "Options": {
+                    "ElevatorTier": int(self.options.final_elevator_tier),
+                    "ResourceSinkPoints": int(self.options.final_resource_sink_points),
+                    "AllowDroppodProgression": bool(self.options.allow_droppod_progression),
+                    "FreeSampleEquipment": int(self.options.free_sample_equipment),
+                    "FreeSampleBuildings": int(self.options.free_sample_buildings),
+                    "FreeSampleParts": int(self.options.free_sample_parts),
+                    "FreeSampleRadioactive": bool(self.options.free_sample_radioactive),
+                    "DeathLink": bool(self.options.death_link),
+                    "EnergyLink": bool(self.options.energy_link)
+                }
+            }
         }
-
-        for option_name in satisfactory_options:
-            slot_data["Data"]["Options"][option_name] = self.get_option_value(option_name)
-                
-        return slot_data
 
 
     def write_spoiler(self, spoiler_handle: TextIO):
@@ -149,7 +119,7 @@ class SatisfactoryWorld(World):
 
 
     def get_filler_item_name(self) -> str:
-        return self.items.get_filler_item_name(self.random)
+        return self.items.get_filler_item_name(self.random, self.options)
 
 
     def setup_events(self):
@@ -206,11 +176,3 @@ class SatisfactoryWorld(World):
 
         for item_name in initial_unlocked_items:
             self.multiworld.push_precollected(self.create_item(item_name))
-
-
-    def is_option_enabled(self, option: str) -> bool:
-        return is_option_enabled(self.multiworld, self.player, option)
-
-
-    def get_option_value(self, option: str) -> int:
-        return get_option_value(self.multiworld, self.player, option)

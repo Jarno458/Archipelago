@@ -1,8 +1,7 @@
-from typing import Tuple, Optional, List, Callable, Dict
+from typing import Tuple, Optional, List, Callable
 from BaseClasses import MultiWorld, CollectionState
-from enum import Enum
-from .Options import is_option_enabled
 from .GameLogic import GameLogic, Recipe, Building, PowerLevel
+from .Options import SatisfactoryOptions
 from .Items import Items
 
 EventId: Optional[int] = None
@@ -12,9 +11,11 @@ building_event_prefix = "Can Build: "
 
 class StateLogic:
     player: int
+    options: SatisfactoryOptions
 
-    def __init__(self, world: MultiWorld, player: int):
+    def __init__(self, player: int, options: SatisfactoryOptions):
         self.player = player
+        self.options = options
 
 
     def has(self, state: CollectionState, item_name: str):
@@ -82,9 +83,10 @@ class Part(LocationData):
                 for recipe in recipes)
 
         def specific_logic_rule(state: CollectionState) -> bool:
-            return state_logic._satisfactory_can_produce_specific_recipe_for_part(state, items.selected_recipes[name])
+            return state_logic._satisfactory_can_produce_specific_recipe_for_part( 
+                state, items.precalculated_progression_recipes[name])
         
-        return logic_rule if not items.selected_recipes else specific_logic_rule
+        return logic_rule if not items.precalculated_progression_recipes else specific_logic_rule
 
 
 class EventBuilding(LocationData):

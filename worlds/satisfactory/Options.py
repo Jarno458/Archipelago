@@ -1,6 +1,5 @@
-from typing import Dict
-from BaseClasses import MultiWorld
-from Options import DeathLink, Option, Range, Toggle, SpecialRange, OptionList
+from dataclasses import dataclass
+from Options import PerGameCommonOptions, DeathLink, Range, Toggle, SpecialRange, OptionList
 
 class ElevatorTier(SpecialRange):
     """Ship these Space Elevator packages to finish"""
@@ -169,27 +168,17 @@ class EnergyLink(Toggle):
     """Allow sending energy to other worlds. 25% of the energy is lost in the transfer."""
     display_name = "EnergyLink"
 
-satisfactory_options: Dict[str, Option] = {
-    "FinalElevatorTier": ElevatorTier,
-    "FinalResourceSinkPoints": ResourceSinkPoints,
-    # "TechTreeInformation": TechTreeInformation, # TODO: NYI
-    "AllowDroppodProgression": AllowDroppodProgression,
-    "FreeSampleEquipment": FreeSampleEquipment,
-    "FreeSampleBuildings": FreeSampleBuildings,
-    "FreeSampleParts": FreeSampleParts,
-    "FreeSampleRadioactive": FreeSampleRadioactive,
-    "TrapChance": TrapChance,
-    "Traps": Traps,
-    "DeathLink": DeathLink,
-    "EnergyLink": EnergyLink
-}
-
-def is_option_enabled(world: MultiWorld, player: int, name: str) -> bool:
-    return get_option_value(world, player, name) > 0
-
-def get_option_value(world: MultiWorld, player: int, name: str) -> int:
-    option = getattr(world, name, None)
-    if option == None:
-        return 0
-
-    return option[player].value
+@dataclass
+class SatisfactoryOptions(PerGameCommonOptions):
+    final_elevator_tier: ElevatorTier
+    final_resource_sink_points: ResourceSinkPoints
+    # "tech_tree_information: TechTreeInformation, # TODO: NYI
+    allow_droppod_progression: AllowDroppodProgression
+    free_sample_equipment: FreeSampleEquipment
+    free_sample_buildings: FreeSampleBuildings
+    free_sample_parts: FreeSampleParts
+    free_sample_radioactive: FreeSampleRadioactive
+    trap_chance: TrapChance
+    traps: Traps
+    death_link: DeathLink
+    energy_link: EnergyLink

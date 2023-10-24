@@ -2,7 +2,7 @@ from random import Random
 from typing import ClassVar, Dict, Literal, Set, NamedTuple, List, TextIO, Tuple, Optional
 from BaseClasses import Item, ItemClassification, MultiWorld
 from .GameLogic import GameLogic, Recipe
-from .Options import get_option_value
+from .Options import SatisfactoryOptions
 
 class ItemData(NamedTuple):
     category: Literal["Parts", "Equipment", "Ammo", "Recipe", "Building", "Trap"]
@@ -350,20 +350,19 @@ class Items:
     multiworld: MultiWorld
     logic: GameLogic
     random: Random
-    selected_recipes: Optional[Dict[str, Recipe]]
+    precalculated_progression_recipes: Optional[Dict[str, Recipe]]
     handcraftable_recipes: Set[str]
     filler_items: Tuple[str]
 
-    def __init__(self, multiworld: Optional[MultiWorld], player: Optional[int], logic: GameLogic, random: Random):
+    def __init__(self, player: Optional[int], logic: GameLogic, random: Random):
         self.player = player
-        self.multiworld = multiworld
         self.logic = logic
         self.random = random
 
-        if multiworld is not None and random is not None and False:
-            self.selected_recipes = self.select_progression_recipes() 
+        if False:
+            self.precalculated_progression_recipes = self.select_progression_recipes() 
         else:
-            self.selected_recipes = None
+            self.precalculated_progression_recipes = None
 
         self.handcraftable_recipes = frozenset(recipe.name 
                                                 for recipes_per_part in logic.recipes.values()
@@ -424,19 +423,19 @@ class Items:
     def create_item(self, name: str) -> Item:
         data: ItemData = self.item_data[name]
 
-        if self.selected_recipes and name in self.selected_recipes:
+        if self.precalculated_progression_recipes and name in self.precalculated_progression_recipes:
             return Item(name, ItemClassification.progression, data.code, self.player)
         if name in self.handcraftable_recipes:
             return Item(name, ItemClassification.progression, data.code, self.player)
-        if not self.selected_recipes and data.category == "Recipe":
+        if not self.precalculated_progression_recipes and data.category == "Recipe":
             return Item(name, ItemClassification.progression, data.code, self.player)
         else:
             return Item(name, data.type, data.code, self.player)
 
 
-    def get_filler_item_name(self, random: Random) -> str:
-        trap_chance: int = get_option_value(self.multiworld, self.player, "TrapChance")
-        enabled_traps: List[str] = get_option_value(self.multiworld, self.player, "Traps")
+    def get_filler_item_name(self, random: Random, options: SatisfactoryOptions) -> str:
+        trap_chance: int = options.trap_chance
+        enabled_traps: List[str] = options.traps
 
         if enabled_traps and random.random() < (trap_chance / 100):
             return random.choice(enabled_traps)
@@ -465,12 +464,12 @@ class Items:
 
 
     def write_progression_chain(self, multiworld: MultiWorld, spoiler_handle: TextIO):
-        if self.selected_recipes:
+        if self.precalculated_progression_recipes:
             player_name = f'{multiworld.get_player_name(self.player)}: ' if multiworld.players > 1 else ''
             spoiler_handle.write('\n\nSelected Satisfactory Recipes:\n\n')
             spoiler_handle.write('\n'.join(
                 f"{player_name}{part} -> {recipe.name}" 
                 for part, recipes_per_part in self.logic.recipes.items()
                 for recipe in recipes_per_part 
-                if recipe.name in self.selected_recipes
+                if recipe.name in self.precalculated_progression_recipes
             ))
