@@ -45,6 +45,7 @@ class MamNode():
         self.unlock_cost = unlock_cost
         self.depends_on = depends_on
 
+
 class MamTree():
     access_items: Tuple[str, ...]
     nodes: Tuple[str, ...]
@@ -52,6 +53,7 @@ class MamTree():
     def __init__(self, access_items: Tuple[str, ...], nodes: Tuple[str, ...]):
         self.access_item = access_items
         self.nodes = nodes
+
 
 class GameLogic:
     recipes: Dict[str, Tuple[Recipe, ...]]
@@ -67,158 +69,157 @@ class GameLogic:
     mam_nodes_layout: Dict[str, MamNode]
     mam_trees_layout: Dict[str, MamTree]
 
-#TODO Uodate all recipes with belt & pipes
     def __init__(self):
         self.recipes = {
             "Reinforced Iron Plate": (
-                Recipe("Reinforced Iron Plate", "Assembler", ("Iron Plate", "Screw"), handcraftable= True),
+                Recipe("Reinforced Iron Plate", "Assembler", ("Iron Plate", "Screw"), handcraftable=True),
                 Recipe("Adhered Iron Plate", "Assembler", ("Iron Plate", "Rubber")),
-                Recipe("Bolted Iron Plate", "Assembler", ("Iron Plate", "Screw")),
+                Recipe("Bolted Iron Plate", "Assembler", ("Iron Plate", "Screw"), minimal_belt_speed=3),
                 Recipe("Stitched Iron Plate", "Assembler", ("Iron Plate", "Wire"))),
             "Rotor": (
-                Recipe("Rotor", "Assembler", ("Iron Rod", "Screw"), handcraftable= True),
-                Recipe("Copper Rotor", "Assembler", ("Copper Sheet", "Screw")),
+                Recipe("Rotor", "Assembler", ("Iron Rod", "Screw"), minimal_belt_speed=2, handcraftable=True),
+                Recipe("Copper Rotor", "Assembler", ("Copper Sheet", "Screw"), minimal_belt_speed=3),
                 Recipe("Steel Rotor", "Assembler", ("Steel Pipe", "Wire"))),
             "Stator": (
-                Recipe("Stator", "Assembler", ("Steel Pipe", "Wire"), handcraftable= True),
+                Recipe("Stator", "Assembler", ("Steel Pipe", "Wire"), handcraftable=True),
                 Recipe("Quickwire Stator", "Assembler", ("Steel Pipe", "Quickwire"))),
             "Plastic": (
-                Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs= ("Heavy Oil Residue")),
-                Recipe("Residual Plastic", "Refinery", ("Polymer Resin", "Water")),
-                Recipe("Recycled Plastic", "Refinery", ("Rubber", "Fuel"))),
+                Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue"), needs_pipes=True),
+                Recipe("Residual Plastic", "Refinery", ("Polymer Resin", "Water"), needs_pipes=True),
+                Recipe("Recycled Plastic", "Refinery", ("Rubber", "Fuel"), needs_pipes=True)),
             "Rubber": (
-                Recipe("Rubber", "Refinery", ("Crude Oil", ), additional_outputs= ("Heavy Oil Residue")),
-                Recipe("Residual Rubber", "Refinery", ("Polymer Resin", "Water")),
-                Recipe("Recycled Rubber", "Refinery", ("Plastic", "Fuel"))),
+                Recipe("Rubber", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue"), needs_pipes=True),
+                Recipe("Residual Rubber", "Refinery", ("Polymer Resin", "Water"), needs_pipes=True),
+                Recipe("Recycled Rubber", "Refinery", ("Plastic", "Fuel"), needs_pipes=True)),
             "Iron Plate": (
-                Recipe("Iron Plate", "Constructor", ("Iron Ingot", ), handcraftable= True),
-                Recipe("Coated Iron Plate", "Assembler", ("Iron Ingot", "Plastic")),
+                Recipe("Iron Plate", "Constructor", ("Iron Ingot", ), handcraftable=True),
+                Recipe("Coated Iron Plate", "Assembler", ("Iron Ingot", "Plastic"), minimal_belt_speed=2),
                 Recipe("Steel Coated Plate", "Assembler", ("Steel Ingot", "Plastic"))),
             "Iron Rod": (
-                Recipe("Iron Rod", "Constructor", ("Iron Ingot", ), handcraftable= True),
+                Recipe("Iron Rod", "Constructor", ("Iron Ingot", ), handcraftable=True),
                 Recipe("Steel Rod", "Constructor", ("Steel Ingot", ))),
             "Screw": (
-                Recipe("Screw", "Constructor", ("Iron Rod", ), handcraftable= True),
+                Recipe("Screw", "Constructor", ("Iron Rod", ), handcraftable=True),
                 Recipe("Cast Screw", "Constructor", ("Iron Ingot", )),
-                Recipe("Steel Screw", "Constructor", ("Steel Beam", ))),
+                Recipe("Steel Screw", "Constructor", ("Steel Beam", ), minimal_belt_speed=3)),
             "Wire": (
-                Recipe("Wire", "Constructor", ("Copper Ingot", ), handcraftable= True),
-                Recipe("Fused Wire", "Assembler", ("Copper Ingot", "Caterium Ingot")),
+                Recipe("Wire", "Constructor", ("Copper Ingot", ), handcraftable=True),
+                Recipe("Fused Wire", "Assembler", ("Copper Ingot", "Caterium Ingot"), minimal_belt_speed=2),
                 Recipe("Iron Wire", "Constructor", ("Iron Ingot", )),
-                Recipe("Caterium Wire", "Constructor", ("Caterium Ingot", ))),
+                Recipe("Caterium Wire", "Constructor", ("Caterium Ingot", ), minimal_belt_speed=2)),
             "Cable": (
                 Recipe("Cable", "Constructor", ("Wire", ), handcraftable= True),
-                Recipe("Coated Cable", "Refinery", ("Wire", "Heavy Oil Residue")),
-                Recipe("Insulated Cable", "Assembler", ("Wire", "Rubber")),
+                Recipe("Coated Cable", "Refinery", ("Wire", "Heavy Oil Residue"), needs_pipes=True, minimal_belt_speed=2),
+                Recipe("Insulated Cable", "Assembler", ("Wire", "Rubber"), minimal_belt_speed=2),
                 Recipe("Quickwire Cable", "Assembler", ("Quickwire", "Rubber"))),
             "Quickwire": (
-                Recipe("Quickwire", "Constructor", ("Caterium Ingot", ), handcraftable= True),
-                Recipe("Fused Quickwire", "Assembler", ("Caterium Ingot", "Copper Ingot"))),
+                Recipe("Quickwire", "Constructor", ("Caterium Ingot", ), handcraftable=True),
+                Recipe("Fused Quickwire", "Assembler", ("Caterium Ingot", "Copper Ingot"), minimal_belt_speed=2)),
             "Copper Sheet": (
-                Recipe("Copper Sheet", "Constructor", ("Copper Ingot", ), handcraftable= True),
-                Recipe("Steamed Copper Sheet", "Refinery", ("Copper Ingot", "Water"))),
+                Recipe("Copper Sheet", "Constructor", ("Copper Ingot", ), handcraftable=True),
+                Recipe("Steamed Copper Sheet", "Refinery", ("Copper Ingot", "Water"), needs_pipes=True)),
             "Steel Pipe": (
-                Recipe("Steel Pipe", "Constructor", ("Steel Ingot", ), handcraftable= True), ),
+                Recipe("Steel Pipe", "Constructor", ("Steel Ingot", ), handcraftable=True), ),
             "Steel Beam": (
-                Recipe("Steel Beam", "Constructor", ("Steel Ingot", ), handcraftable= True), ),
+                Recipe("Steel Beam", "Constructor", ("Steel Ingot", ), handcraftable=True), ),
             "Crude Oil": (
-                Recipe("Crude Oil", "Oil Extractor", None), ),
+                Recipe("Crude Oil", "Oil Extractor", None, needs_pipes=True), ),
             "Heavy Oil Residue": (
-                Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs= ("Polymer Resin", )),
-                Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs= ("Plastic", )),
-                Recipe("Rubber", "Refinery", ("Crude Oil", ), additional_outputs= ("Rubber", )),
-                Recipe("Polymer Resin", "Refinery", ("Crude Oil", ), additional_outputs= ("Polymer Resin", ))),
+                Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin", ), needs_pipes=True),
+                Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs=("Plastic", ), needs_pipes=True),
+                Recipe("Rubber", "Refinery", ("Crude Oil", ), additional_outputs=("Rubber", ), needs_pipes=True),
+                Recipe("Polymer Resin", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin", ), needs_pipes=True, minimal_belt_speed=3)),
             "Polymer Resin": (
-                Recipe("Polymer Resin", "Refinery", ("Crude Oil", ), additional_outputs= ("Heavy Oil Residue", )),
-                Recipe("Fuel", "Refinery", ("Crude Oil", ), additional_outputs= ("Fuel", )),
-                Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs= ("Heavy Oil Residue", ))),
+                Recipe("Polymer Resin", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue", ), needs_pipes=True),
+                Recipe("Fuel", "Refinery", ("Crude Oil", ), additional_outputs=("Fuel", ), needs_pipes=True),
+                Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue", ), needs_pipes=True, minimal_belt_speed=3)),
             "Fuel": (
-                Recipe("Fuel", "Refinery", ("Crude Oil", ), additional_outputs= ("Polymer Resin")),
-                #Recipe("Diluted Fuel (blender)", "Blender", ("Heavy Oil Residue", "Water")), #TODO bauxite / alumina
-                Recipe("Residual Fuel", "Refinery", ("Heavy Oil Residue", ))),
+                Recipe("Fuel", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin"), needs_pipes=True),
+                Recipe("Diluted Fuel (blender)", "Blender", ("Heavy Oil Residue", "Water"), needs_pipes=True),
+                Recipe("Residual Fuel", "Refinery", ("Heavy Oil Residue", ), needs_pipes=True)),
             "Water": (
-                Recipe("Water", "Water Extractor", None), ),
+                Recipe("Water", "Water Extractor", None, needs_pipes=True), ),
             "Concrete": (
                 Recipe("Concrete", "Constructor", ("Limestone", ), handcraftable= True),
+                Recipe("Fine Concrete", "Assembler", ("Limestone", "Silica")),
                 Recipe("Rubber Concrete", "Assembler", ("Limestone", "Rubber")),
-                Recipe("Wet Concrete", "Refinery", ("Limestone", "Water")),
-                Recipe("Fine Concrete", "Assembler", ("Limestone", "Silica"))),
+                Recipe("Wet Concrete", "Refinery", ("Limestone", "Water"), needs_pipes=True, minimal_belt_speed=2)),
             "Silica": (
-                Recipe("Silica", "Constructor", ("Raw Quartz", ), handcraftable= True),
-                #Recipe("Alumina Solution", "Refinery", ("Bauxite", "Water"), additional_outputs= ("Alumina Solution", )), #TODO bauxite / alumina
+                Recipe("Alumina Solution", "Refinery", ("Bauxite", "Water"), additional_outputs=("Alumina Solution", ), needs_pipes=True, minimal_belt_speed=2),
+                Recipe("Silica", "Constructor", ("Raw Quartz", ), handcraftable=True),
                 Recipe("Cheap Silica", "Assembler", ("Raw Quartz", "Limestone"))),
             "Quartz Crystal": (
-                Recipe("Quartz Crystal", "Constructor", ("Raw Quartz", ), handcraftable= True),
-                Recipe("Pure Quartz Crystal", "Refinery", ("Raw Quartz", "Water"))),
+                Recipe("Quartz Crystal", "Constructor", ("Raw Quartz", ), handcraftable=True),
+                Recipe("Pure Quartz Crystal", "Refinery", ("Raw Quartz", "Water"), needs_pipes=True, minimal_belt_speed=2)),
             "Iron Ingot": (
-                Recipe("Iron Ingot", "Smelter", ("Iron Ore", ), handcraftable= True),
-                Recipe("Pure Iron Ingot", "Refinery", ("Iron Ore", "Water")),
+                Recipe("Iron Ingot", "Smelter", ("Iron Ore", ), handcraftable=True),
+                Recipe("Pure Iron Ingot", "Refinery", ("Iron Ore", "Water"), needs_pipes=True, minimal_belt_speed=2),
                 Recipe("Iron Alloy Ingot", "Foundry", ("Iron Ore", "Copper Ore"))),
             "Steel Ingot": (
-                Recipe("Steel Ingot", "Foundry", ("Iron Ore", "Coal"), handcraftable= True),
-                Recipe("Coke Steel Ingot", "Foundry", ("Iron Ore", "Petroleum Coke")),
+                Recipe("Steel Ingot", "Foundry", ("Iron Ore", "Coal"), handcraftable=True),
+                Recipe("Coke Steel Ingot", "Foundry", ("Iron Ore", "Petroleum Coke"), minimal_belt_speed=2),
                 Recipe("Compacted Steel Ingot", "Foundry", ("Iron Ore", "Compacted Coal")),
-                Recipe("Solid Steel Ingot", "Refinery", ("Iron Ingot", "Coal"))),
+                Recipe("Solid Steel Ingot", "Foundry", ("Iron Ingot", "Coal"))),
             "Copper Ingot": (
-                Recipe("Copper Ingot", "Smelter", ("Copper Ore", ), handcraftable= True),
-                Recipe("Copper Alloy Ingot", "Foundry", ("Copper Ore", "Iron Ore")),
-                Recipe("Pure Copper Ingot", "Refinery", ("Copper Ore", "Water"))),
+                Recipe("Copper Ingot", "Smelter", ("Copper Ore", ), handcraftable=True),
+                Recipe("Copper Alloy Ingot", "Foundry", ("Copper Ore", "Iron Ore"), minimal_belt_speed=2),
+                Recipe("Pure Copper Ingot", "Refinery", ("Copper Ore", "Water"), needs_pipes=True)),
             "Caterium Ingot": (
-                Recipe("Caterium Ingot", "Smelter", ("Caterium Ore", ), handcraftable= True),
-                Recipe("Pure Caterium Ingot", "Refinery", ("Caterium Ore", "Water"))),
+                Recipe("Caterium Ingot", "Smelter", ("Caterium Ore", ), handcraftable=True),
+                Recipe("Pure Caterium Ingot", "Refinery", ("Caterium Ore", "Water"), needs_pipes=True)),
             "Limestone": (
-                Recipe("Limestone", "Miner Mk.1", None, handcraftable= True), ),
+                Recipe("Limestone", "Miner Mk.1", None, handcraftable=True), ),
             "Raw Quartz": (
-                Recipe("Raw Quartz", "Miner Mk.1", None, handcraftable= True), ),
+                Recipe("Raw Quartz", "Miner Mk.1", None, handcraftable=True), ),
             "Iron Ore": (
-                Recipe("Iron Ore", "Miner Mk.1", None, handcraftable= True), ),
+                Recipe("Iron Ore", "Miner Mk.1", None, handcraftable=True), ),
             "Copper Ore": (
-                Recipe("Copper Ore", "Miner Mk.1", None, handcraftable= True), ),
+                Recipe("Copper Ore", "Miner Mk.1", None, handcraftable=True), ),
             "Coal": (
-                Recipe("Coal", "Miner Mk.1", None, handcraftable= True), ),
+                Recipe("Coal", "Miner Mk.1", None, handcraftable=True), ),
             "Sulfur": (
-                Recipe("Sulfur", "Miner Mk.1", None, handcraftable= True), ),
+                Recipe("Sulfur", "Miner Mk.1", None, handcraftable=True), ),
             "Caterium Ore": (
-                Recipe("Caterium Ore", "Miner Mk.1", None, handcraftable= True), ),
+                Recipe("Caterium Ore", "Miner Mk.1", None, handcraftable=True), ),
             "Petroleum Coke": (
-                Recipe("Petroleum Coke", "Refinery", ("Heavy Oil Residue", )), ),
+                Recipe("Petroleum Coke", "Refinery", ("Heavy Oil Residue", ), needs_pipes=True, minimal_belt_speed=2), ),
             "Compacted Coal": (
                 Recipe("Compacted Coal", "Assembler", ("Coal", "Sulfur")), ),
             "Motor": (
-                Recipe("Motor", "Assembler", ("Rotor", "Stator"), handcraftable= True),
+                Recipe("Motor", "Assembler", ("Rotor", "Stator"), handcraftable=True),
                 Recipe("Rigour Motor", "Manufacturer", ("Rotor", "Stator", "Crystal Oscillator")),
                 Recipe("Electric Motor", "Assembler", ("Electromagnetic Control Rod", "Rotor"))),
             "Modular Frame": (
-                Recipe("Modular Frame", "Assembler", ("Reinforced Iron Plate", "Iron Rod"), handcraftable= True),
-                Recipe("Bolted Frame", "Assembler", ("Reinforced Iron Plate", "Screw")),
+                Recipe("Modular Frame", "Assembler", ("Reinforced Iron Plate", "Iron Rod"), handcraftable=True),
+                Recipe("Bolted Frame", "Assembler", ("Reinforced Iron Plate", "Screw"), minimal_belt_speed=3),
                 Recipe("Steeled Frame", "Assembler", ("Reinforced Iron Plate", "Steel Pipe"))),
             "Heavy Modular Frame": (
-                Recipe("Heavy Modular Frame", "Manufacturer", ("Modular Frame", "Steel Pipe", "Encased Industrial Beam", "Screw"), handcraftable= True),
-                Recipe("Heavy Flexible Frame", "Manufacturer", ("Modular Frame", "Encased Industrial Beam", "Rubber", "Screw")),
+                Recipe("Heavy Modular Frame", "Manufacturer", ("Modular Frame", "Steel Pipe", "Encased Industrial Beam", "Screw"), minimal_belt_speed=3, handcraftable=True),
+                Recipe("Heavy Flexible Frame", "Manufacturer", ("Modular Frame", "Encased Industrial Beam", "Rubber", "Screw"), minimal_belt_speed=4),
                 Recipe("Heavy Encased Frame", "Manufacturer", ("Modular Frame", "Encased Industrial Beam", "Steel Pipe", "Concrete"))),
             "Encased Industrial Beam": (
-                Recipe("Encased Industrial Beam", "Assembler", ("Steel Beam", "Concrete"), handcraftable= True),
+                Recipe("Encased Industrial Beam", "Assembler", ("Steel Beam", "Concrete"), handcraftable=True),
                 Recipe("Encased Industrial Pipe", "Assembler", ("Steel Pipe", "Concrete"))),
             "Computer": (
-                Recipe("Computer", "Manufacturer", ("Circuit Board", "Cable", "Plastic", "Screw"), handcraftable= True),
+                Recipe("Computer", "Manufacturer", ("Circuit Board", "Cable", "Plastic", "Screw"), minimal_belt_speed=3, handcraftable= True),
                 Recipe("Crystal Computer", "Assembler", ("Circuit Board", "Crystal Oscillator")),
-                Recipe("Caterium Computer", "Manufacturer", ("Circuit Board", "Quickwire", "Rubber"))),
+                Recipe("Caterium Computer", "Manufacturer", ("Circuit Board", "Quickwire", "Rubber"), minimal_belt_speed=2)),
             "Circuit Board": (
-                Recipe("Circuit Board", "Assembler", ("Copper Sheet", "Plastic"), handcraftable= True),
+                Recipe("Circuit Board", "Assembler", ("Copper Sheet", "Plastic"), handcraftable=True),
                 Recipe("Electrode Circuit Board", "Assembler", ("Rubber", "Petroleum Coke")),
                 Recipe("Silicon Circuit Board", "Assembler", ("Copper Sheet", "Silica")),
                 Recipe("Caterium Circuit Board", "Assembler", ("Plastic", "Quickwire"))),
             "Crystal Oscillator": (
-                Recipe("Crystal Oscillator", "Manufacturer", ("Quartz Crystal", "Cable", "Reinforced Iron Plate"), handcraftable= True),
+                Recipe("Crystal Oscillator", "Manufacturer", ("Quartz Crystal", "Cable", "Reinforced Iron Plate"), handcraftable=True),
                 Recipe("Insulated Crystal Oscillator", "Manufacturer", ("Quartz Crystal", "Rubber", "AI Limiter"))),
             "AI Limiter": (
-                Recipe("AI Limiter", "Assembler", ("Copper Sheet", "Quickwire"), handcraftable= True), ),
+                Recipe("AI Limiter", "Assembler", ("Copper Sheet", "Quickwire"), minimal_belt_speed=2, handcraftable=True), ),
             "Electromagnetic Control Rod": (
-                Recipe("Electromagnetic Control Rod", "Assembler", ("Stator", "AI Limiter"), handcraftable= True),
+                Recipe("Electromagnetic Control Rod", "Assembler", ("Stator", "AI Limiter"), handcraftable=True),
                 Recipe("Electromagnetic Connection Rod", "Assembler", ("Stator", "High-Speed Connector"))),
             "High-Speed Connector": (
-                Recipe("High-Speed Connector", "Manufacturer", ("Quickwire", "Cable", "Circuit Board"), handcraftable= True),
-                Recipe("Silicon High-Speed Connector", "Manufacturer", ("Quickwire", "Silica", "Circuit Board"))),
+                Recipe("High-Speed Connector", "Manufacturer", ("Quickwire", "Cable", "Circuit Board"), minimal_belt_speed=3, handcraftable=True),
+                Recipe("Silicon High-Speed Connector", "Manufacturer", ("Quickwire", "Silica", "Circuit Board"), minimal_belt_speed=2)),
             "Smart Plating": (
                 Recipe("Smart Plating", "Assembler", ("Reinforced Iron Plate", "Rotor")), 
                 Recipe("Plastic Smart Plating", "Manufacturer", ("Reinforced Iron Plate", "Rotor", "Plastic"))),
@@ -227,7 +228,7 @@ class GameLogic:
                 Recipe("Flexible Framework", "Manufacturer", ("Modular Frame", "Steel Beam", "Rubber"))),
             "Automated Wiring": (
                 Recipe("Automated Wiring", "Assembler", ("Stator", "Cable")), 
-                Recipe("Automated Speed Wiring", "Manufacturer", ("Stator", "Wire", "High-Speed Connector"))),
+                Recipe("Automated Speed Wiring", "Manufacturer", ("Stator", "Wire", "High-Speed Connector"), minimal_belt_speed=2)),
             "Modular Engine": (
                 Recipe("Modular Engine", "Manufacturer", ("Motor", "Rubber", "Smart Plating")), ), 
             "Adaptive Control Unit": (
@@ -254,16 +255,16 @@ class GameLogic:
             "Manufacturer": Building(Recipe("Manufacturer", None, ("Motor", "Heavy Modular Frame", "Cable", "Plastic")), PowerLevel.Advanced),
             "Packager": Building(Recipe("Packager", None, ("Steel Beam", "Rubber", "Plastic")), PowerLevel.Simpel),
             "Refinery": Building(Recipe("Refinery", None, ("Motor", "Encased Industrial Beam", "Steel Pipe", "Copper Sheet")), PowerLevel.Advanced),
-            #"Blender": Building(Recipe("Blender", None, ("Motor", "Heavy Modular Frame", "Aluminum Casing", "Radio Control Unit"), PowerLevel.Complex),
-            #"Particle Accelerator": Building(Recipe("Particle Accelerator", None, ("Radio Control Unit", "Electromagnetic Control Rod", "Supercomputer", "Cooling System", "Fused Modular Frame", "Turbo Motor")), PowerLevel.Complex),
+            "Blender": Building(Recipe("Blender", None, ("Motor", "Heavy Modular Frame", "Aluminum Casing", "Radio Control Unit")), PowerLevel.Complex),
+            "Particle Accelerator": Building(Recipe("Particle Accelerator", None, ("Radio Control Unit", "Electromagnetic Control Rod", "Supercomputer", "Cooling System", "Fused Modular Frame", "Turbo Motor")), PowerLevel.Complex),
             "Biomass Burner": Building(Recipe("Biomass Burner", None, ("Iron Plate", "Iron Rod", "Wire"))),
             "Coal Generator": Building(Recipe("Coal Generator", None, ("Reinforced Iron Plate", "Rotor", "Cable"))),
             "Fuel Generator": Building(Recipe("Coal Generator", None, ("Computer", "Heavy Modular Frame", "Motor", "Rubber", "Quickwire"))),
-            #"Geothermal_Generator": Building(Recipe("Geothermal_Generator", None, ("Supercomputer", "Heavy Modular Frame", "High-Speed Connector", "Copper Sheet", "Rubber"))),
-            #"Nuclear Power Plant": Building(Recipe("Nuclear Power Plant", None, ("Concrete", "Heavy Modular Frame", "Supercomputer", "Cable", "Alclad Aluminum Sheet"))),
+            "Geothermal_Generator": Building(Recipe("Geothermal_Generator", None, ("Supercomputer", "Heavy Modular Frame", "High-Speed Connector", "Copper Sheet", "Rubber"))),
+            "Nuclear Power Plant": Building(Recipe("Nuclear Power Plant", None, ("Concrete", "Heavy Modular Frame", "Supercomputer", "Cable", "Alclad Aluminum Sheet"))),
             "Miner Mk.1": Building(Recipe("Miner Mk.1", None, ("Iron Plate", "Concrete")), PowerLevel.Simpel),
             "Miner Mk.2": Building(Recipe("Miner Mk.2", None, ("Encased Industrial Beam", "Steel Pipe", "Modular Frame")), PowerLevel.Simpel),
-            #"Miner Mk.3": Building(Recipe("Miner Mk.3", None, ("Steel Pipe", "Supercomputer", "Fused Modular Frame", "Turbo Motor")), PowerLevel.Advanced),
+            "Miner Mk.3": Building(Recipe("Miner Mk.3", None, ("Steel Pipe", "Supercomputer", "Fused Modular Frame", "Turbo Motor")), PowerLevel.Advanced),
             "Oil Extractor": Building(Recipe("Oil Extractor", None, ("Motor", "Encased Industrial Beam", "Cable"))),
             "Water Extractor": Building(Recipe("Water Extractor", None, ("Copper Sheet", "Reinforced Iron Plate", "Rotor"))),
             "Smelter": Building(Recipe("Smelter", None, ("Iron Rod", "Wire")), PowerLevel.Simpel),
@@ -317,19 +318,20 @@ class GameLogic:
                 {"Modular Frame":100, "Steel Beam":200, "Cable":500, "Concrete":1000, }, # Schematic: FICSIT Blueprints (Schematic_4-5_C)
                 {"Steel Beam":200, "Steel Pipe":100, "Concrete":500, }, # Schematic: Logistics Mk.3 (Schematic_5-3_C)
             ),
+            ( # Tier 5
+                {"Motor":50, "Encased Industrial Beam":100, "Steel Pipe":500, "Copper Sheet":500, }, # Schematic: Oil Processing (Schematic_5-1_C)
+                {"Motor":100, "Plastic":200, "Rubber":200, "Cable":1000, }, # Schematic: Industrial Manufacturing (Schematic_5-2_C)
+                {"Heavy Modular Frame":25, "Motor":100, "Plastic":200, "Wire":3000, }, # Schematic: Alternative Fluid Transport (Schematic_5-4_C)
+                {"Rubber":200, "Plastic":100, "Fabric":50, }, # Schematic: Gas Mask (Schematic_6-4_C)
+            ),
+            ( # Tier 6
+                {"Heavy Modular Frame":50, "Computer":100, "Encased Industrial Beam":200, "Rubber":400, }, # Schematic: Logistics Mk.4 (Schematic_6-1_C)
+                # "Packaged Fuel":50, removed as packaging is not yet in logic
+                {"Motor":50, "Plastic":100, "Rubber":100, }, # Schematic: Jetpack (Schematic_6-2_C)
+                {"Computer":50, "Heavy Modular Frame":100, "Steel Beam":500, "Steel Pipe":600, }, # Schematic: Monorail Train Technology (Schematic_6-3_C)
+                {"Copper Sheet":1000, "Plastic":400, "Rubber":400, "Heavy Modular Frame":50, }, # Schematic: Pipeline Engineering Mk.2 (Schematic_6-5_C)
+            ),
             # T >5 commented out until rest of the code is ready
-            # ( # Tier 5
-            #     {"Motor":50, "Encased Industrial Beam":100, "Steel Pipe":500, "Copper Sheet":500, }, # Schematic: Oil Processing (Schematic_5-1_C)
-            #     {"Motor":100, "Plastic":200, "Rubber":200, "Cable":1000, }, # Schematic: Industrial Manufacturing (Schematic_5-2_C)
-            #     {"Heavy Modular Frame":25, "Motor":100, "Plastic":200, "Wire":3000, }, # Schematic: Alternative Fluid Transport (Schematic_5-4_C)
-            #     {"Rubber":200, "Plastic":100, "Fabric":50, }, # Schematic: Gas Mask (Schematic_6-4_C)
-            # ),
-            # ( # Tier 6
-            #     {"Heavy Modular Frame":50, "Computer":100, "Encased Industrial Beam":200, "Rubber":400, }, # Schematic: Logistics Mk.4 (Schematic_6-1_C)
-            #     {"Motor":50, "Plastic":100, "Rubber":100, "Packaged Fuel":50, }, # Schematic: Jetpack (Schematic_6-2_C)
-            #     {"Computer":50, "Heavy Modular Frame":100, "Steel Beam":500, "Steel Pipe":600, }, # Schematic: Monorail Train Technology (Schematic_6-3_C)
-            #     {"Copper Sheet":1000, "Plastic":400, "Rubber":400, "Heavy Modular Frame":50, }, # Schematic: Pipeline Engineering Mk.2 (Schematic_6-5_C)
-            # ),
             # ( # Tier 7
             #     {"Computer":50, "Heavy Modular Frame":100, "Motor":200, "Rubber":500, }, # Schematic: Bauxite Refinement (Schematic_7-1_C)
             #     {"Alclad Aluminum Sheet":100, "Encased Industrial Beam":200, "Reinforced Iron Plate":300, }, # Schematic: Logistics Mk.5 (Schematic_7-2_C)

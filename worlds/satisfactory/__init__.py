@@ -49,7 +49,7 @@ class SatisfactoryWorld(World):
 
     def generate_early(self) -> None:
         self.state_logic = StateLogic(self.player, self.options)
-        self.items = Items(self.multiworld, self.player, self.game_logic, self.random)
+        self.items = Items(self.player, self.game_logic, self.random)
 
         if self.options.final_elevator_tier <= 0 and self.options.final_resource_sink_points <= 0:
                 raise Exception("""Satisfactory: player {} needs to choose a goal,

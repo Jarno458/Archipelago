@@ -1,6 +1,5 @@
 from typing import List, Set, Dict, Tuple, Optional, Callable
 from BaseClasses import MultiWorld, Region, Entrance, Location, CollectionState
-from .Options import is_option_enabled
 from .Locations import LocationData
 from .GameLogic import GameLogic
 from .Rules import StateLogic
