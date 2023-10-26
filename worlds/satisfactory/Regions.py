@@ -6,47 +6,43 @@ from .Rules import StateLogic
 
 def create_regions_and_return_locations(world: MultiWorld, player: int, 
             game_logic: GameLogic, state_logic: StateLogic, locations: Tuple[LocationData, ...]):
-    locations_per_region = get_locations_per_region(locations)
     
-    regions = [
-        create_region(world, player, locations_per_region, "Menu"),
-        create_region(world, player, locations_per_region, "Overworld"),
-        create_region(world, player, locations_per_region, "Gas Area"),
-        create_region(world, player, locations_per_region, "Radioactive Area"),
-        create_region(world, player, locations_per_region, "Hub Tier 1"),
-        create_region(world, player, locations_per_region, "Hub Tier 2"),
-        create_region(world, player, locations_per_region, "Hub Tier 3"),
-        create_region(world, player, locations_per_region, "Hub Tier 4"),
-        create_region(world, player, locations_per_region, "Hub Tier 5"),
-        create_region(world, player, locations_per_region, "Hub Tier 6"),
-        create_region(world, player, locations_per_region, "Hub Tier 7"),
-        create_region(world, player, locations_per_region, "Hub Tier 8"),
-        create_region(world, player, locations_per_region, "Mam"),
-        create_region(world, player, locations_per_region, "AWESOME Shop")
+    region_names: List[str] = [
+        "Menu",
+        "Overworld",
+        "Gas Area",
+        "Radioactive Area",
+        "Mam",
+        "AWESOME Shop"
     ]
 
     for hub_tier, milestones_per_hub_tier in enumerate(game_logic.hub_layout, 1):
+        region_names.append(f"Hub {hub_tier}")
+
         for minestone, _ in enumerate(milestones_per_hub_tier, 1):
-            regions.append(create_region(world, player, locations_per_region, f"Hub {hub_tier}-{minestone}"))
+            region_names.append(f"Hub {hub_tier}-{minestone}")
+
+    locations_per_region: Dict[str, LocationData] = get_locations_per_region(locations)
+    regions: Dict[str, Region] = create_regions(world, player, locations_per_region, region_names)
 
     if __debug__:
         throwIfAnyLocationIsNotAssignedToARegion(regions, locations_per_region.keys())
         
-    world.regions += regions
+    world.regions += regions.values()
 
-    connect(world, player, "Menu", "Overworld")
-    connect(world, player, "Overworld", "Hub Tier 1")
-    connect(world, player, "Overworld", "Hub Tier 2")
-    connect(world, player, "Overworld", "Hub Tier 3", lambda state: state.has("Elevator Tier 1", player))
-    connect(world, player, "Overworld", "Hub Tier 4", lambda state: state.has("Elevator Tier 1", player))
-    connect(world, player, "Overworld", "Hub Tier 5", lambda state: state.has("Elevator Tier 2", player))
-    connect(world, player, "Overworld", "Hub Tier 6", lambda state: state.has("Elevator Tier 2", player))
-    connect(world, player, "Overworld", "Hub Tier 7", lambda state: state.has("Elevator Tier 3", player))
-    connect(world, player, "Overworld", "Hub Tier 8", lambda state: state.has("Elevator Tier 3", player))
-    connect(world, player, "Overworld", "Gas Area", lambda state: state.has("Gas Mask", player))
-    connect(world, player, "Overworld", "Radioactive Area", lambda state: state.has("Hazmat Suit", player))
-    connect(world, player, "Overworld", "Mam") # should prob require mam building and seperated tree"s
-    connect(world, player, "Overworld", "AWESOME Shop") # should prob require AWESOME shop building
+    connect(player, regions, "Menu", "Overworld")
+    connect(player, regions, "Overworld", "Hub Tier 1")
+    connect(player, regions, "Overworld", "Hub Tier 2")
+    connect(player, regions, "Overworld", "Hub Tier 3", lambda state: state.has("Elevator Tier 1", player))
+    connect(player, regions, "Overworld", "Hub Tier 4", lambda state: state.has("Elevator Tier 1", player))
+    connect(player, regions, "Overworld", "Hub Tier 5", lambda state: state.has("Elevator Tier 2", player))
+    connect(player, regions, "Overworld", "Hub Tier 6", lambda state: state.has("Elevator Tier 2", player))
+    connect(player, regions, "Overworld", "Hub Tier 7", lambda state: state.has("Elevator Tier 3", player))
+    connect(player, regions, "Overworld", "Hub Tier 8", lambda state: state.has("Elevator Tier 3", player))
+    connect(player, regions, "Overworld", "Gas Area", lambda state: state.has("Gas Mask", player))
+    connect(player, regions, "Overworld", "Radioactive Area", lambda state: state.has("Hazmat Suit", player))
+    connect(player, regions, "Overworld", "Mam") # should prob require mam building and seperated tree"s
+    connect(player, regions, "Overworld", "AWESOME Shop") # should prob require AWESOME shop building
 
     def can_produce_all_allowing_handcrafting(parts: Tuple[str, ...]) -> Callable[[CollectionState], bool]:
         def logic_rule(state: CollectionState):
@@ -56,14 +52,14 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
 
     for hub_tier, milestones_per_hub_tier in enumerate(game_logic.hub_layout, 1):
         for minestone, parts_per_milestone in enumerate(milestones_per_hub_tier, 1):
-            connect(world, player, f"Hub Tier {hub_tier}", f"Hub {hub_tier}-{minestone}", 
+            connect(player, regions, f"Hub Tier {hub_tier}", f"Hub {hub_tier}-{minestone}", 
                 can_produce_all_allowing_handcrafting(parts_per_milestone.keys()))
 
 
-def throwIfAnyLocationIsNotAssignedToARegion(regions: List[Region], regionNames: Set[str]):
+def throwIfAnyLocationIsNotAssignedToARegion(regions: Dict[str, Region], regionNames: Set[str]):
     existingRegions = set()
 
-    for region in regions:
+    for region in regions.values():
         existingRegions.add(region.name)
 
     if (regionNames - existingRegions):
@@ -96,11 +92,22 @@ def create_region(world: MultiWorld, player: int,
     return region
 
 
-def connect(world: MultiWorld, player: int, source: str, target: str, 
+def create_regions(world: MultiWorld, player: int, locations_per_region: Dict[str, List[LocationData]],
+                    region_names: List[str]) -> Dict[str, Region]:
+
+    regions: Dict[str, Region] = {}
+
+    for name in region_names:
+        regions[name] = create_region(world, player, locations_per_region, name)
+
+    return regions
+
+
+def connect(player: int, regions: Dict[str, Region], source: str, target: str, 
         rule: Optional[Callable[[CollectionState], bool]] = None):
 
-    sourceRegion = world.get_region(source, player)
-    targetRegion = world.get_region(target, player)
+    sourceRegion = regions[source]
+    targetRegion = regions[target]
 
     connection = Entrance(player, target, sourceRegion)
 

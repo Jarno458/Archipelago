@@ -1,5 +1,5 @@
-from typing import Tuple, Optional, List, Callable
-from BaseClasses import MultiWorld, CollectionState
+from typing import Tuple, Optional, List, Callable, NamedTuple
+from BaseClasses import CollectionState
 from .GameLogic import GameLogic, Recipe, Building, PowerLevel
 from .Options import SatisfactoryOptions
 from .Items import Items
@@ -55,18 +55,11 @@ class StateLogic:
             and self._satisfactory_can_produce_all(state, recipe.inputs)
 
 
-class LocationData():
+class LocationData(NamedTuple):
     region: str
     name: str
     code: Optional[int]
-    rule: Optional[Callable[[CollectionState], bool]]
-
-    def __init__(self, region: str, name: str, code: Optional[int], 
-                 rule: Optional[Callable[[CollectionState], bool]] = None):
-        self.region = region
-        self.name = name
-        self.code = code
-        self.rule = rule
+    rule: Optional[Callable[[CollectionState], bool]] = None
 
 
 class Part(LocationData):

@@ -1,7 +1,6 @@
 from typing import List, Tuple, Optional, Callable
 from BaseClasses import CollectionState
 from .GameLogic import GameLogic
-from .Options import is_option_enabled
 from .Rules import StateLogic, LocationData, EventId, get_logical_event_locations
 from .Items import Items
 
@@ -46,7 +45,9 @@ class Droppod(LocationData):
                 get_rule(unlocked_by, needs_power))
 
 
-def get_locations(game_logic: Optional[GameLogic], state_logic: Optional[StateLogic], items: Optional[Items]) -> Tuple[LocationData, ...]:
+def get_locations(game_logic: Optional[GameLogic], state_logic: Optional[StateLogic], items: Optional[Items]) \
+        -> List[LocationData]:
+    
     location_table: List[LocationData] = [
         ElevatorTier("Elevator Tier 1", state_logic, game_logic.space_elevator_tiers[0].keys()),
         ElevatorTier("Elevator Tier 2", state_logic, game_logic.space_elevator_tiers[1].keys()),
@@ -93,4 +94,4 @@ def get_locations(game_logic: Optional[GameLogic], state_logic: Optional[StateLo
 
         location_table.append(LocationData("Overworld", "UpperBound", 1338999))
  
-    return tuple(location_table)
+    return location_table
