@@ -55,11 +55,18 @@ class StateLogic:
             and self._satisfactory_can_produce_all(state, recipe.inputs)
 
 
-class LocationData(NamedTuple):
+class LocationData():
     region: str
     name: str
     code: Optional[int]
-    rule: Optional[Callable[[CollectionState], bool]] = None
+    rule: Optional[Callable[[CollectionState], bool]]
+
+    def __init__(self, region: str, name: str, code: Optional[int], 
+                 rule: Optional[Callable[[CollectionState], bool]] = None):
+        self.region = region
+        self.name = name
+        self.code = code
+        self.rule = rule
 
 
 class Part(LocationData):
@@ -85,7 +92,7 @@ class Part(LocationData):
 class EventBuilding(LocationData):
     def __init__(self, game_logic: GameLogic, state_logic: StateLogic, building_name: str, building: Building):
         super().__init__("Overworld", building_event_prefix + building_name, EventId, 
-            self.can_create_building(game_logic, state_logic, building))
+            self.can_create_building(game_logic, state_logic, building_name))
 
 
     def can_create_building(self, game_logic: GameLogic, state_logic: StateLogic, name: str
@@ -101,7 +108,7 @@ class EventBuilding(LocationData):
 class PowerInfrastructure(LocationData):
     def __init__(self, game_logic: GameLogic, state_logic: StateLogic, 
                  powerLevel: PowerLevel, recipes: Tuple[Recipe, ...]):
-        super().__init__("Overworld", building_event_prefix + powerLevel, EventId, 
+        super().__init__("Overworld", building_event_prefix + str(powerLevel), EventId, 
             self.can_create_power_infrastructure(game_logic, state_logic, powerLevel, recipes))
 
     def can_create_power_infrastructure(self, game_logic: GameLogic, state_logic: StateLogic, 

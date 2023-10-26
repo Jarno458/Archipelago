@@ -1,12 +1,19 @@
-from typing import List, Tuple, Optional, Callable
+from typing import List, Optional, Callable
 from BaseClasses import CollectionState
 from .GameLogic import GameLogic
 from .Rules import StateLogic, LocationData, EventId, get_logical_event_locations
 from .Items import Items
 
 class ElevatorTier(LocationData):
-    def __init__(self, name: str, state_logic: Optional[StateLogic], ingredients: Tuple[str, ...]):
-        super().__init__("Overworld", name, EventId,
+    def __init__(self, tier: int, state_logic: Optional[StateLogic], game_logic: Optional[GameLogic]):
+        def get_elevator_tier_ingredients(game_logic: Optional[GameLogic], tier: int) -> List[str]:
+            if not game_logic:
+                return []
+            return game_logic.space_elevator_tiers[tier - 1].keys()
+        
+        ingredients: List[str] = get_elevator_tier_ingredients(game_logic, tier)
+
+        super().__init__("Overworld", f"Elevator Tier {tier}", EventId,
             lambda state: state_logic and state_logic._satisfactory_can_produce_all(state, ingredients))
 
 
@@ -47,12 +54,12 @@ class Droppod(LocationData):
 
 def get_locations(game_logic: Optional[GameLogic], state_logic: Optional[StateLogic], items: Optional[Items]) \
         -> List[LocationData]:
-    
+
     location_table: List[LocationData] = [
-        ElevatorTier("Elevator Tier 1", state_logic, game_logic.space_elevator_tiers[0].keys()),
-        ElevatorTier("Elevator Tier 2", state_logic, game_logic.space_elevator_tiers[1].keys()),
-        ElevatorTier("Elevator Tier 3", state_logic, game_logic.space_elevator_tiers[2].keys()),
-        ElevatorTier("Elevator Tier 4", state_logic, game_logic.space_elevator_tiers[3].keys()),
+        ElevatorTier(1, state_logic, game_logic),
+        ElevatorTier(2, state_logic, game_logic),
+        ElevatorTier(3, state_logic, game_logic),
+        ElevatorTier(4, state_logic, game_logic),
         #Droppod(0, 0, 0, "Motor", state_logic, 1337605)),
         #Droppod(0, 0, 0, "Motor", state_logic, 1337605)),
         #Droppod(0, 0, 0, "Motor", state_logic, 1337605)),

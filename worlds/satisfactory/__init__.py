@@ -51,7 +51,7 @@ class SatisfactoryWorld(World):
         self.state_logic = StateLogic(self.player, self.options)
         self.items = Items(self.player, self.game_logic, self.random)
 
-        if self.options.final_elevator_tier <= 0 and self.options.final_resource_sink_points <= 0:
+        if self.options.final_elevator_tier.value <= 0 and self.options.final_resource_sink_points.value <= 0:
                 raise Exception("""Satisfactory: player {} needs to choose a goal,
                     both FinalElevatorTier and FinalResourceSinkPoints are set to off"""
                     .format(self.multiworld.player_name[self.player]))
@@ -69,14 +69,14 @@ class SatisfactoryWorld(World):
 
         excluded_items = set() #self.get_excluded_items()
 
-        self.multiworld.itempool += self.items.build_item_pool(self.random, excluded_items, 
+        self.multiworld.itempool += self.items.build_item_pool(self.random, self.options, excluded_items, 
             len(self.multiworld.get_unfilled_locations(self.player)))
 
 
     def set_rules(self) -> None:
         last_elevator_tier: int = \
-            len(self.game_logic.space_elevator_tiers) if self.options.final_resource_sink_points > 0 \
-                else self.options.final_elevator_tier
+            len(self.game_logic.space_elevator_tiers) if self.options.final_resource_sink_points.value > 0 \
+                else self.options.final_elevator_tier.value
 
         required_parts = self.game_logic.space_elevator_tiers[last_elevator_tier - 1]
         self.multiworld.completion_condition[self.player] = \
@@ -91,8 +91,7 @@ class SatisfactoryWorld(World):
             for milestone, parts in enumerate(milestones, 1):
                  hub_layout[tier - 1].append({})
                  for part, amount in parts.items():
-                     self.item_name_to_id[part]
-                     hub_layout[tier - 1][milestone - 1][f"{self.item_name_to_id[part]}"] = amount
+                    hub_layout[tier - 1][milestone - 1][f"{self.item_name_to_id[part]}"] = amount
 
         return {
             "Data": {

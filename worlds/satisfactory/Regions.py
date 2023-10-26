@@ -17,7 +17,7 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
     ]
 
     for hub_tier, milestones_per_hub_tier in enumerate(game_logic.hub_layout, 1):
-        region_names.append(f"Hub {hub_tier}")
+        region_names.append(f"Hub Tier {hub_tier}")
 
         for minestone, _ in enumerate(milestones_per_hub_tier, 1):
             region_names.append(f"Hub {hub_tier}-{minestone}")

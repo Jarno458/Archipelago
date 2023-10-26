@@ -34,7 +34,7 @@ class Building():
 
     def __init__(self, recipe: Recipe, power_requirement: Optional[PowerLevel] = None):
         self.recipe = recipe
-        self.power_requirement = self.power_requirement
+        self.power_requirement = power_requirement
 
 
 class MamNode():
@@ -272,20 +272,20 @@ class GameLogic:
         }
 
         self.requirement_per_powerlevel = {
-            { PowerLevel.Simpel, (
+            PowerLevel.Simpel: (
                 Recipe("Biomass Power", "Biomass Burner", ("Solid Biomass", )),
                 Recipe("Coal Generator Power", "Coal Generator", ("Coal", "Water"))
-            )},
-            { PowerLevel.Advanced, (
+            ),
+            PowerLevel.Advanced: (
                 Recipe("Geothermal Generator Power", "Geothermal Generator", None),
                 Recipe("Fuel Generator Power (Fuel)","Fuel Generator", ("Fuel", )),
                 Recipe("Fuel Generator Power (Turbofuel)","Fuel Generator", ("Turbofuel", )),
                 Recipe("Fuel Generator Power (Liquid Biofuel)","Fuel Generator", ("Liquid Biofuel", )),
-            )},
-            { PowerLevel.Complex, (
+            ),
+            PowerLevel.Complex: (
                 Recipe("Nuclear Power Plant Power (Uranium)","Nuclear Power Plant", ("Uranium Fuel Rod", "Water")),
                 Recipe("Nuclear Power Plant Power (Plutonium)","Nuclear Power Plant", ("Plutonium Fuel Rod", "Water")),
-            )},
+            )
         }
 
         self.slots_per_milestone = 8
@@ -331,20 +331,19 @@ class GameLogic:
                 {"Computer":50, "Heavy Modular Frame":100, "Steel Beam":500, "Steel Pipe":600, }, # Schematic: Monorail Train Technology (Schematic_6-3_C)
                 {"Copper Sheet":1000, "Plastic":400, "Rubber":400, "Heavy Modular Frame":50, }, # Schematic: Pipeline Engineering Mk.2 (Schematic_6-5_C)
             ),
-            # T >5 commented out until rest of the code is ready
-            # ( # Tier 7
-            #     {"Computer":50, "Heavy Modular Frame":100, "Motor":200, "Rubber":500, }, # Schematic: Bauxite Refinement (Schematic_7-1_C)
-            #     {"Alclad Aluminum Sheet":100, "Encased Industrial Beam":200, "Reinforced Iron Plate":300, }, # Schematic: Logistics Mk.5 (Schematic_7-2_C)
-            #     {"Aluminum Casing":50, "Quickwire":500, "Gas Filter":50, }, # Schematic: Hazmat Suit (Schematic_7-3_C)
-            #     {"Radio Control Unit":50, "Alclad Aluminum Sheet":100, "Aluminum Casing":200, "Motor":300, }, # Schematic: Aeronautical Engineering (Schematic_7-4_C)
-            #     {"Motor":200, "Heavy Modular Frame":100, "Computer":100, "Alclad Aluminum Sheet":200, }, # Schematic: Hover Pack (Schematic_8-3_C)
-            # ),
-            # ( # Tier 8
-            #     {"Supercomputer":50, "Heavy Modular Frame":200, "Cable":1000, "Concrete":2000, }, # Schematic: Nuclear Power (Schematic_8-1_C)
-            #     {"Radio Control Unit":50, "Aluminum Casing":100, "Alclad Aluminum Sheet":200, "Wire":3000, }, # Schematic: Advanced Aluminum Production (Schematic_8-2_C)
-            #     {"Fused Modular Frame":50, "Supercomputer":100, "Steel Pipe":1000, }, # Schematic: Leading-edge Production (Schematic_8-4_C)
-            #     {"Electromagnetic Control Rod":400, "Cooling System":400, "Fused Modular Frame":200, "Turbo Motor":100, }, # Schematic: Particle Enrichment (Schematic_8-5_C)
-            # ),
+            ( # Tier 7
+                {"Computer":50, "Heavy Modular Frame":100, "Motor":200, "Rubber":500, }, # Schematic: Bauxite Refinement (Schematic_7-1_C)
+                {"Alclad Aluminum Sheet":100, "Encased Industrial Beam":200, "Reinforced Iron Plate":300, }, # Schematic: Logistics Mk.5 (Schematic_7-2_C)
+                {"Aluminum Casing":50, "Quickwire":500, "Gas Filter":50, }, # Schematic: Hazmat Suit (Schematic_7-3_C)
+                {"Radio Control Unit":50, "Alclad Aluminum Sheet":100, "Aluminum Casing":200, "Motor":300, }, # Schematic: Aeronautical Engineering (Schematic_7-4_C)
+                {"Motor":200, "Heavy Modular Frame":100, "Computer":100, "Alclad Aluminum Sheet":200, }, # Schematic: Hover Pack (Schematic_8-3_C)
+            ),
+            ( # Tier 8
+                {"Supercomputer":50, "Heavy Modular Frame":200, "Cable":1000, "Concrete":2000, }, # Schematic: Nuclear Power (Schematic_8-1_C)
+                {"Radio Control Unit":50, "Aluminum Casing":100, "Alclad Aluminum Sheet":200, "Wire":3000, }, # Schematic: Advanced Aluminum Production (Schematic_8-2_C)
+                {"Fused Modular Frame":50, "Supercomputer":100, "Steel Pipe":1000, }, # Schematic: Leading-edge Production (Schematic_8-4_C)
+                {"Electromagnetic Control Rod":400, "Cooling System":400, "Fused Modular Frame":200, "Turbo Motor":100, }, # Schematic: Particle Enrichment (Schematic_8-5_C)
+            ),
         )
 
         self.space_elevator_tiers = (

@@ -434,8 +434,8 @@ class Items:
 
 
     def get_filler_item_name(self, random: Random, options: SatisfactoryOptions) -> str:
-        trap_chance: int = options.trap_chance
-        enabled_traps: List[str] = options.traps
+        trap_chance: int = options.trap_chance.value
+        enabled_traps: List[str] = options.traps.value
 
         if enabled_traps and random.random() < (trap_chance / 100):
             return random.choice(enabled_traps)
@@ -443,7 +443,9 @@ class Items:
             return random.choice(self.filler_items) 
 
 
-    def build_item_pool(self, random: Random, excluded_items: Set[str], size: int) -> List[Item]:
+    def build_item_pool(self, random: Random, options: SatisfactoryOptions, excluded_items: Set[str], size: int) \
+             -> List[Item]:
+        
         pool: List[Item] = []
 
         for name, data in self.item_data.items():
@@ -457,7 +459,7 @@ class Items:
             pool.append(item)
 
         for _ in range(size - len(pool)):
-            item = self.create_item(self.get_filler_item_name(random))
+            item = self.create_item(self.get_filler_item_name(random, options))
             pool.append(item)
 
         return pool
