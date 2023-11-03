@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, List, Callable, NamedTuple
+from typing import Tuple, Optional, List, Callable, Set
 from BaseClasses import CollectionState
 from .GameLogic import GameLogic, Recipe, Building, PowerLevel
 from .Options import SatisfactoryOptions
@@ -12,26 +12,28 @@ building_event_prefix = "Can Build: "
 class StateLogic:
     player: int
     options: SatisfactoryOptions
+    initial_unlocked_items: Set[str]
 
-    def __init__(self, player: int, options: SatisfactoryOptions):
+    def __init__(self, player: int, options: SatisfactoryOptions, initial_unlocked_items: Set[str]):
         self.player = player
         self.options = options
+        self.initial_unlocked_items = initial_unlocked_items
 
 
     def has(self, state: CollectionState, item_name: str):
-        return state.has(item_name, self.player)
+        return item_name in self.initial_unlocked_items or state.has(item_name, self.player)
 
 
-    def _satisfactory_can_produce(self, state: CollectionState, part_name: str) -> bool:
+    def can_produce(self, state: CollectionState, part_name: str) -> bool:
         return state.has(part_event_prefix + part_name, self.player)
 
 
-    def _satisfactory_can_produce_all(self, state: CollectionState, parts: Optional[Tuple[str, ...]]) -> bool:
+    def can_produce_all(self, state: CollectionState, parts: Optional[Tuple[str, ...]]) -> bool:
         return parts is None or \
             state.has_all({part_event_prefix + part_name for part_name in parts}, self.player)
 
 
-    def _satisfactory_can_produce_all_allowing_handcrafting(self, state: CollectionState, logic: GameLogic, 
+    def can_produce_all_allowing_handcrafting(self, state: CollectionState, logic: GameLogic, 
             parts: Optional[Tuple[str, ...]]) -> bool:
 
         def can_handcraft_part(part: str) -> bool:
@@ -42,17 +44,17 @@ class StateLogic:
 
             recipe: Recipe = logic.handcraftable_recipes[part]
 
-            return state.has(recipe.name, self.player) \
-                and self._satisfactory_can_produce_all_allowing_handcrafting(state, logic, recipe.inputs)
+            return recipe.name in self.initial_unlocked_items or state.has(recipe.name, self.player) \
+                and self.can_produce_all_allowing_handcrafting(state, logic, recipe.inputs)
 
-        return self._satisfactory_can_produce_all(state, parts) or all(can_handcraft_part(part) for part in parts)
+        return all(self.can_produce(state, part) or can_handcraft_part(part) for part in parts)
 
 
-    def _satisfactory_can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
+    def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
         #TODO, check if we got enough belt through put, check if pipes are needed, check if advanced power infrastructure is needed
         return state.has(recipe.name, self.player) \
             and (recipe.building is None or state.has(building_event_prefix + recipe.building, self.player)) \
-            and self._satisfactory_can_produce_all(state, recipe.inputs)
+            and self.can_produce_all(state, recipe.inputs)
 
 
 class LocationData():
@@ -79,14 +81,14 @@ class Part(LocationData):
                                         name: str, items: Items) -> Callable[[CollectionState], bool]:
         
         def logic_rule(state: CollectionState) -> bool:
-            return any(state_logic._satisfactory_can_produce_specific_recipe_for_part(state, recipe) 
+            return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) 
                 for recipe in recipes)
 
         def specific_logic_rule(state: CollectionState) -> bool:
-            return state_logic._satisfactory_can_produce_specific_recipe_for_part( 
+            return state_logic.can_produce_specific_recipe_for_part( 
                 state, items.precalculated_progression_recipes[name])
         
-        return logic_rule if not items.precalculated_progression_recipes else specific_logic_rule
+        return specific_logic_rule if items.precalculated_progression_recipes else logic_rule 
 
 
 class EventBuilding(LocationData):
@@ -101,10 +103,11 @@ class EventBuilding(LocationData):
         def logic_rule(state: CollectionState) -> bool:
             recipe = game_logic.buildings[name].recipe
             return state_logic.has(state, "Building: " + name) and \
-                state_logic._satisfactory_can_produce_all_allowing_handcrafting(state, game_logic, recipe.inputs)
+                state_logic.can_produce_all_allowing_handcrafting(state, game_logic, recipe.inputs)
 
         return logic_rule
-    
+
+
 class PowerInfrastructure(LocationData):
     def __init__(self, game_logic: GameLogic, state_logic: StateLogic, 
                  powerLevel: PowerLevel, recipes: Tuple[Recipe, ...]):
@@ -116,7 +119,7 @@ class PowerInfrastructure(LocationData):
             ) -> Callable[[CollectionState], bool]:
 
         def logic_rule(state: CollectionState) -> bool:
-            return any(state_logic._satisfactory_can_produce_specific_recipe_for_part(state, recipe) 
+            return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) 
                 for recipe in recipes)
 
         return logic_rule
@@ -131,6 +134,5 @@ def get_logical_event_locations(game_logic: GameLogic, state_logic: StateLogic, 
     location_table.extend(
         PowerInfrastructure(game_logic, state_logic, power_level, recipes) for power_level, recipes in 
         game_logic.requirement_per_powerlevel.items())
-
 
     return location_table

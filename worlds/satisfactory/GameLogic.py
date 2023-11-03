@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, Dict
+from typing import Tuple, Optional, Dict, ClassVar, Set
 from enum import Enum
 
 class PowerLevel(Enum):
@@ -11,18 +11,16 @@ class Recipe():
     name: str
     building: str
     inputs: Tuple[str, ...]
-    needs_pipes: bool
     minimal_belt_speed: int
     handcraftable: bool
     additional_outputs: Tuple[str, ...]
 
     def __init__(self, name: str, building: str, inputs: Optional[Tuple[str, ...]] = None,
-            needs_pipes: Optional[bool] = False, minimal_belt_speed: Optional[int] = 1,
+            minimal_belt_speed: Optional[int] = 1,
             handcraftable: Optional[bool] = False, additional_outputs: Optional[Tuple[str, ...]] = None):
         self.name = "Recipe: " + name
         self.building = building
         self.inputs = inputs
-        self.needs_pipes = needs_pipes
         self.minimal_belt_speed = minimal_belt_speed
         self.handcraftable = handcraftable
         self.additional_outputs = additional_outputs
@@ -56,20 +54,34 @@ class MamTree():
 
 
 class GameLogic:
-    recipes: Dict[str, Tuple[Recipe, ...]]
-    handcraftable_recipes: Dict[str, Recipe]
-    buildings: Dict[str, Building]
-    requirement_per_powerlevel: Dict[PowerLevel, Tuple[Recipe, ...]]
-    free_recipes: Tuple[str]
-    slots_per_milestone: int
-    hub_layout: Tuple[Tuple[Dict[str, int], ...]]
-    mam_layout: Dict[str, MamTree]
-    slots_per_milestone: int
-    space_elevator_tiers: Tuple[Dict[str, int], ...]
-    mam_nodes_layout: Dict[str, MamNode]
-    mam_trees_layout: Dict[str, MamTree]
+    liquids: ClassVar[Set[str]]
+    recipes: ClassVar[Dict[str, Tuple[Recipe, ...]]]
+    handcraftable_recipes: ClassVar[Dict[str, Recipe]]
+    buildings: ClassVar[Dict[str, Building]]
+    requirement_per_powerlevel: ClassVar[Dict[PowerLevel, Tuple[Recipe, ...]]]
+    free_recipes: ClassVar[Tuple[str]]
+    slots_per_milestone: ClassVar[int]
+    hub_layout: ClassVar[Tuple[Tuple[Dict[str, int], ...], ...]]
+    mam_layout: ClassVar[Dict[str, MamTree]]
+    slots_per_milestone: ClassVar[int]
+    space_elevator_tiers: ClassVar[Tuple[Dict[str, int], ...]]
+    mam_nodes_layout: ClassVar[Dict[str, MamNode]]
+    mam_trees_layout: ClassVar[Dict[str, MamTree]]
 
     def __init__(self):
+        self.liquids = {
+            "Water",
+            "Liquid Biofuel",
+            "Crude Oil",
+            "Fuel",
+            "Heavy Oil Residue",
+            "Turbofuel",
+            "Alumina Solution",
+            "Sulfuric Acid",
+            "Nitrogen Gas",
+            "Nitric Acid"
+        }
+
         self.recipes = {
             "Reinforced Iron Plate": (
                 Recipe("Reinforced Iron Plate", "Assembler", ("Iron Plate", "Screw"), handcraftable=True),
@@ -84,13 +96,13 @@ class GameLogic:
                 Recipe("Stator", "Assembler", ("Steel Pipe", "Wire"), handcraftable=True),
                 Recipe("Quickwire Stator", "Assembler", ("Steel Pipe", "Quickwire"))),
             "Plastic": (
-                Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue"), needs_pipes=True),
-                Recipe("Residual Plastic", "Refinery", ("Polymer Resin", "Water"), needs_pipes=True),
-                Recipe("Recycled Plastic", "Refinery", ("Rubber", "Fuel"), needs_pipes=True)),
+                Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue")),
+                Recipe("Residual Plastic", "Refinery", ("Polymer Resin", "Water")),
+                Recipe("Recycled Plastic", "Refinery", ("Rubber", "Fuel"))),
             "Rubber": (
-                Recipe("Rubber", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue"), needs_pipes=True),
-                Recipe("Residual Rubber", "Refinery", ("Polymer Resin", "Water"), needs_pipes=True),
-                Recipe("Recycled Rubber", "Refinery", ("Plastic", "Fuel"), needs_pipes=True)),
+                Recipe("Rubber", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue")),
+                Recipe("Residual Rubber", "Refinery", ("Polymer Resin", "Water")),
+                Recipe("Recycled Rubber", "Refinery", ("Plastic", "Fuel"))),
             "Iron Plate": (
                 Recipe("Iron Plate", "Constructor", ("Iron Ingot", ), handcraftable=True),
                 Recipe("Coated Iron Plate", "Assembler", ("Iron Ingot", "Plastic"), minimal_belt_speed=2),
@@ -109,7 +121,7 @@ class GameLogic:
                 Recipe("Caterium Wire", "Constructor", ("Caterium Ingot", ), minimal_belt_speed=2)),
             "Cable": (
                 Recipe("Cable", "Constructor", ("Wire", ), handcraftable= True),
-                Recipe("Coated Cable", "Refinery", ("Wire", "Heavy Oil Residue"), needs_pipes=True, minimal_belt_speed=2),
+                Recipe("Coated Cable", "Refinery", ("Wire", "Heavy Oil Residue"), minimal_belt_speed=2),
                 Recipe("Insulated Cable", "Assembler", ("Wire", "Rubber"), minimal_belt_speed=2),
                 Recipe("Quickwire Cable", "Assembler", ("Quickwire", "Rubber"))),
             "Quickwire": (
@@ -117,43 +129,43 @@ class GameLogic:
                 Recipe("Fused Quickwire", "Assembler", ("Caterium Ingot", "Copper Ingot"), minimal_belt_speed=2)),
             "Copper Sheet": (
                 Recipe("Copper Sheet", "Constructor", ("Copper Ingot", ), handcraftable=True),
-                Recipe("Steamed Copper Sheet", "Refinery", ("Copper Ingot", "Water"), needs_pipes=True)),
+                Recipe("Steamed Copper Sheet", "Refinery", ("Copper Ingot", "Water"))),
             "Steel Pipe": (
                 Recipe("Steel Pipe", "Constructor", ("Steel Ingot", ), handcraftable=True), ),
             "Steel Beam": (
                 Recipe("Steel Beam", "Constructor", ("Steel Ingot", ), handcraftable=True), ),
             "Crude Oil": (
-                Recipe("Crude Oil", "Oil Extractor", None, needs_pipes=True), ),
+                Recipe("Crude Oil", "Oil Extractor", None), ),
             "Heavy Oil Residue": (
-                Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin", ), needs_pipes=True),
-                Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs=("Plastic", ), needs_pipes=True),
-                Recipe("Rubber", "Refinery", ("Crude Oil", ), additional_outputs=("Rubber", ), needs_pipes=True),
-                Recipe("Polymer Resin", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin", ), needs_pipes=True, minimal_belt_speed=3)),
+                Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin", )),
+                Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs=("Plastic", )),
+                Recipe("Rubber", "Refinery", ("Crude Oil", ), additional_outputs=("Rubber", )),
+                Recipe("Polymer Resin", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin", ), minimal_belt_speed=3)),
             "Polymer Resin": (
-                Recipe("Polymer Resin", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue", ), needs_pipes=True),
-                Recipe("Fuel", "Refinery", ("Crude Oil", ), additional_outputs=("Fuel", ), needs_pipes=True),
-                Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue", ), needs_pipes=True, minimal_belt_speed=3)),
+                Recipe("Polymer Resin", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue", )),
+                Recipe("Fuel", "Refinery", ("Crude Oil", ), additional_outputs=("Fuel", )),
+                Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue", ), minimal_belt_speed=3)),
             "Fuel": (
-                Recipe("Fuel", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin"), needs_pipes=True),
-                Recipe("Diluted Fuel (blender)", "Blender", ("Heavy Oil Residue", "Water"), needs_pipes=True),
-                Recipe("Residual Fuel", "Refinery", ("Heavy Oil Residue", ), needs_pipes=True)),
+                Recipe("Fuel", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin")),
+                Recipe("Diluted Fuel (blender)", "Blender", ("Heavy Oil Residue", "Water")),
+                Recipe("Residual Fuel", "Refinery", ("Heavy Oil Residue", ))),
             "Water": (
-                Recipe("Water", "Water Extractor", None, needs_pipes=True), ),
+                Recipe("Water", "Water Extractor", None), ),
             "Concrete": (
                 Recipe("Concrete", "Constructor", ("Limestone", ), handcraftable= True),
                 Recipe("Fine Concrete", "Assembler", ("Limestone", "Silica")),
                 Recipe("Rubber Concrete", "Assembler", ("Limestone", "Rubber")),
-                Recipe("Wet Concrete", "Refinery", ("Limestone", "Water"), needs_pipes=True, minimal_belt_speed=2)),
+                Recipe("Wet Concrete", "Refinery", ("Limestone", "Water"), minimal_belt_speed=2)),
             "Silica": (
-                Recipe("Alumina Solution", "Refinery", ("Bauxite", "Water"), additional_outputs=("Alumina Solution", ), needs_pipes=True, minimal_belt_speed=2),
+                Recipe("Alumina Solution", "Refinery", ("Bauxite", "Water"), additional_outputs=("Alumina Solution", ), minimal_belt_speed=2),
                 Recipe("Silica", "Constructor", ("Raw Quartz", ), handcraftable=True),
                 Recipe("Cheap Silica", "Assembler", ("Raw Quartz", "Limestone"))),
             "Quartz Crystal": (
                 Recipe("Quartz Crystal", "Constructor", ("Raw Quartz", ), handcraftable=True),
-                Recipe("Pure Quartz Crystal", "Refinery", ("Raw Quartz", "Water"), needs_pipes=True, minimal_belt_speed=2)),
+                Recipe("Pure Quartz Crystal", "Refinery", ("Raw Quartz", "Water"), minimal_belt_speed=2)),
             "Iron Ingot": (
                 Recipe("Iron Ingot", "Smelter", ("Iron Ore", ), handcraftable=True),
-                Recipe("Pure Iron Ingot", "Refinery", ("Iron Ore", "Water"), needs_pipes=True, minimal_belt_speed=2),
+                Recipe("Pure Iron Ingot", "Refinery", ("Iron Ore", "Water"), minimal_belt_speed=2),
                 Recipe("Iron Alloy Ingot", "Foundry", ("Iron Ore", "Copper Ore"))),
             "Steel Ingot": (
                 Recipe("Steel Ingot", "Foundry", ("Iron Ore", "Coal"), handcraftable=True),
@@ -163,10 +175,10 @@ class GameLogic:
             "Copper Ingot": (
                 Recipe("Copper Ingot", "Smelter", ("Copper Ore", ), handcraftable=True),
                 Recipe("Copper Alloy Ingot", "Foundry", ("Copper Ore", "Iron Ore"), minimal_belt_speed=2),
-                Recipe("Pure Copper Ingot", "Refinery", ("Copper Ore", "Water"), needs_pipes=True)),
+                Recipe("Pure Copper Ingot", "Refinery", ("Copper Ore", "Water"))),
             "Caterium Ingot": (
                 Recipe("Caterium Ingot", "Smelter", ("Caterium Ore", ), handcraftable=True),
-                Recipe("Pure Caterium Ingot", "Refinery", ("Caterium Ore", "Water"), needs_pipes=True)),
+                Recipe("Pure Caterium Ingot", "Refinery", ("Caterium Ore", "Water"))),
             "Limestone": (
                 Recipe("Limestone", "Miner Mk.1", None, handcraftable=True), ),
             "Raw Quartz": (
@@ -182,7 +194,7 @@ class GameLogic:
             "Caterium Ore": (
                 Recipe("Caterium Ore", "Miner Mk.1", None, handcraftable=True), ),
             "Petroleum Coke": (
-                Recipe("Petroleum Coke", "Refinery", ("Heavy Oil Residue", ), needs_pipes=True, minimal_belt_speed=2), ),
+                Recipe("Petroleum Coke", "Refinery", ("Heavy Oil Residue", ), minimal_belt_speed=2), ),
             "Compacted Coal": (
                 Recipe("Compacted Coal", "Assembler", ("Coal", "Sulfur")), ),
             "Motor": (
@@ -236,12 +248,96 @@ class GameLogic:
             "Portable Miner": (
                 #Recipe("Portable Miner", "", ("Iron Rod", "Iron Plate"), handcraftable= True), #Handcraft only
                 Recipe("Automated Miner", "Manufacturer", ("Motor", "Steel Pipe", "Iron Rod", "Iron Plate")), ),
-            # turbo fuel
-            # alumina
-            # super computers
+            "Alumina Solution": (
+                Recipe("Alumina Solution", "Refinery", ("Bauxite", "Water"), additional_outputs=("Silica", ), minimal_belt_speed=2), 
+                Recipe("Sloppy Alumina", "Refinery", ("Bauxite", "Water"), minimal_belt_speed=3)),
+            "Aluminum Scrap": (
+                Recipe("Aluminum Scrap", "Refinery", ("Alumina Solution", "Coal"), additional_outputs=("Water", ), minimal_belt_speed=4),
+                Recipe("Electrode - Aluminum Scrap", "Refinery", ("Alumina Solution", "Petroleum Coke"), additional_outputs=("Water", ), minimal_belt_speed=4),  
+                Recipe("Instant Scrap", "Blender", ("Bauxite", "Coal", "Sulfuric Acid", "Water"), additional_outputs=("Water", ), minimal_belt_speed=3)),
+            "Aluminum Ingot": (
+                Recipe("Aluminum Ingot", "Foundry", ("Aluminum Scrap", "Silica"), minimal_belt_speed=2), 
+                Recipe("Pure Aluminum Ingot", "Smelter", ("Aluminum Scrap", ))),
+            "Alclad Aluminum Sheet": (
+                Recipe("Alclad Aluminum Sheet", "Assembler", ("Aluminum Ingot", "Copper Ingot")), ),
+            "Alclad Aluminum Sheet": (
+                Recipe("Alclad Aluminum Sheet", "Assembler", ("Aluminum Ingot", "Copper Ingot")), ),
+            "Aluminum Casing": (
+                Recipe("Aluminum Casing", "Constructor", ("Alclad Aluminum Sheet", )), 
+                Recipe("Alclad Casing", "Assembler", ("Aluminum Ingot", "Copper Ingot"))),
+            "Heat Sink": (
+                Recipe("Heat Sink", "Assembler", ("Alclad Aluminum Sheet", "Silica"), minimal_belt_speed=2), 
+                Recipe("Heat Exchanger", "Assembler", ("Aluminum Casing", "Rubber"), minimal_belt_speed=3)),
+            "Nitrogen Gas": (
+                Recipe("Nitrogen Gas", "Resource Well Pressurizer", None), ),
+            "Nitric Acid": (
+                Recipe("Nitric Acid", "Blender", ("Nitrogen Gas", "Water", "Iron Plate")), ),
+            "Fused Modular Frame": (
+                Recipe("Fused Modular Frame", "Blender", ("Heavy Modular Frame", "Aluminum Casing", "Nitrogen Gas"), minimal_belt_speed=2), 
+                Recipe("Heat-Fused Frame", "Blender", ("Heavy Modular Frame", "Aluminum Ingot", "Nitric Acid", "Fuel"), minimal_belt_speed=3)),
+            "Radio Control Unit": (
+                Recipe("Radio Control Unit", "Manufacturer", ("Aluminum Casing", "Crystal Oscillator", "Computer")),
+                Recipe("Radio Connection Unit", "Manufacturer", ("Heat Sink", "High-Speed Connector", "Quartz Crystal")),  
+                Recipe("Radio Control System", "Manufacturer", ("Crystal Oscillator", "Circuit Board", "Aluminum Casing", "Rubber"), minimal_belt_speed=2)),
+            "Pressure Conversion Cube": (
+                Recipe("Pressure Conversion Cube", "Assembler", ("Fused Modular Frame", "Radio Control Unit")), ),
+            "Cooling System": (
+                Recipe("Cooling System", "Blender", ("Heat Sink", "Rubber", "Water", "Nitrogen Gas")), 
+                Recipe("Cooling Device", "Blender", ("Heat Sink", "Motor", "Nitrogen Gas"))),
+            "Turbo Motor": (
+                Recipe("Turbo Motor", "Manufacturer", ("Cooling System", "Radio Control Unit", "Motor", "Rubber")),
+                Recipe("Turbo Electric Motor", "Manufacturer", ("Motor", "Radio Control Unit", "Electromagnetic Control Rod", "Rotor")),
+                Recipe("Turbo Pressure Motor", "Manufacturer", ("Motor", "Pressure Conversion Cube", "Packaged Nitrogen Gas", "Stator"))),
+            "Battery": (
+                Recipe("Battery", "Blender", ("Sulfuric Acid", "Alumina Solution", "Aluminum Casing"), additional_outputs=("Water", )), 
+                Recipe("Classic Battery", "Manufacturer", ("Sulfur", "Alclad Aluminum Sheet", "Plastic", "Wire"), minimal_belt_speed=2)),
+            "Supercomputer": (
+                Recipe("Supercomputer", "Manufacturer", ("Computer", "AI Limiter", "High-Speed Connector", "Plastic")),
+                Recipe("OC Supercomputer", "Assembler", ("Radio Control Unit", "Cooling System")),
+                Recipe("Super-State Computer", "Manufacturer", ("Computer", "Electromagnetic Control Rod", "Battery", "Wire"))),
+            "Sulfuric Acid": (
+                Recipe("Sulfuric Acid", "Refinery", ("Sulfur", "Water")), 
+                Recipe("Encased Uranium Cell", "Blender", ("Uranium", "Concrete", "Sulfuric Acid"), additional_outputs=("Encased Uranium Cell", ))),
+            "Encased Uranium Cell": (
+                Recipe("Encased Uranium Cell", "Blender", ("Uranium", "Concrete", "Sulfuric Acid"), additional_outputs=("Sulfuric Acid", )), 
+                Recipe("Infused Uranium Cell", "Manufacturer", ("Uranium", "Silica", "Sulfur", "Quickwire"), minimal_belt_speed=2)),
+            "Uranium Fuel Rod": (
+                Recipe("Uranium Fuel Rod", "Manufacturer", ("Encased Uranium Cell", "Encased Industrial Beam", "Electromagnetic Control Rod")), 
+                Recipe("Uranium Fuel Unit", "Manufacturer", ("Encased Uranium Cell", "Electromagnetic Control Rod", "Crystal Oscillator", "Beacon"))),
+            "Beacon": (
+                Recipe("Beacon", "Manufacturer", ("Iron Plate", "Iron Rod", "Wire", "Cable")), 
+                Recipe("Crystal Beacon", "Manufacturer", ("Steel Beam", "Steel Pipe", "Crystal Oscillator"))),
+            #TODO fix this is free
+            "Uranium Waste": (
+                Recipe("Uranium Waste", "Nuclear Power Plant", ("Uranium Fuel Rod", "Water")), ),
+            "Non-fissile Uranium": (
+                Recipe("Non-fissile Uranium", "Blender", ("Uranium Waste", "Silica", "Nitric Acid", "Sulfuric Acid"), additional_outputs=("Water", )), 
+                Recipe("Fertile Uranium", "Blender", ("Uranium", "Uranium Waste", "Nitric Acid", "Sulfuric Acid"), additional_outputs=("Water", ), minimal_belt_speed=2)),
+            "Plutonium Pellet": (
+                Recipe("Plutonium Pellet", "Particle Accelerator", ("Non-fissile Uranium", "Uranium Waste"), minimal_belt_speed=2), ),
+            "Encased Plutonium Cell": (
+                Recipe("Encased Plutonium Cell", "Assembler", ("Plutonium Pellet", "Concrete")), 
+                Recipe("Instant Plutonium Cell", "Particle Accelerator", ("Non-fissile Uranium", "Aluminum Casing"), minimal_belt_speed=2)),
+            "Plutonium Fuel Rod": (
+                Recipe("Plutonium Fuel Rod", "Manufacturer", ("Encased Plutonium Cell", "Steel Beam", "Electromagnetic Control Rod", "Heat Sink")), 
+                Recipe("Plutonium Fuel Unit", "Assembler", ("Encased Plutonium Cell", "Pressure Conversion Cube"))),
 
-            #packaged fuel
+            #Iodine Infused Filter
+
+            # Hazmat Suit
+            # Hover Pack
+
+            # belt recipies
+
+            # Drone / port
+
+            # turbo fuel
+
+            # packaged stuffs - fuel, Nitrogen Gas
+
             #Recipe("Diluted Fuel (refinery)", "Refinery", ("Heavy Oil Residue", "Packaged Water")),
+
+            # ammo - Turbo Rifle Ammo
         }
 
         self.handcraftable_recipes = { part: recipe 
@@ -268,7 +364,8 @@ class GameLogic:
             "Oil Extractor": Building(Recipe("Oil Extractor", None, ("Motor", "Encased Industrial Beam", "Cable"))),
             "Water Extractor": Building(Recipe("Water Extractor", None, ("Copper Sheet", "Reinforced Iron Plate", "Rotor"))),
             "Smelter": Building(Recipe("Smelter", None, ("Iron Rod", "Wire")), PowerLevel.Simpel),
-            "Foundry": Building(Recipe("Foundry", None, ("Modular Frame", "Rotor", "Concrete")), PowerLevel.Simpel)
+            "Foundry": Building(Recipe("Foundry", None, ("Modular Frame", "Rotor", "Concrete")), PowerLevel.Simpel),
+            "Resource Well Pressurizer": Building(Recipe("Resource Well Pressurizer", None, ("Wire", "Rubber", "Encased Industrial Beam", "Motor")), PowerLevel.Advanced),
         }
 
         self.requirement_per_powerlevel = {

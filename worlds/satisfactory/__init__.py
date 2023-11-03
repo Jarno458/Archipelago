@@ -48,7 +48,8 @@ class SatisfactoryWorld(World):
 
 
     def generate_early(self) -> None:
-        self.state_logic = StateLogic(self.player, self.options)
+        initial_unlocked_items = self.get_initial_unlocked_items()
+        self.state_logic = StateLogic(self.player, self.options, initial_unlocked_items)
         self.items = Items(self.player, self.game_logic, self.random)
 
         if self.options.final_elevator_tier.value <= 0 and self.options.final_resource_sink_points.value <= 0:
@@ -64,7 +65,7 @@ class SatisfactoryWorld(World):
 
 
     def create_items(self) -> None:
-        self.create_initial_unlocked_items()
+        #self.create_initial_unlocked_items()
         self.setup_events()
 
         excluded_items = set() #self.get_excluded_items()
@@ -80,7 +81,7 @@ class SatisfactoryWorld(World):
 
         required_parts = self.game_logic.space_elevator_tiers[last_elevator_tier - 1]
         self.multiworld.completion_condition[self.player] = \
-            lambda state: self.state_logic._satisfactory_can_produce_all(state, required_parts)
+            lambda state: self.state_logic.can_produce_all(state, required_parts)
 
 
     def fill_slot_data(self) -> Dict[str, object]:
@@ -114,7 +115,6 @@ class SatisfactoryWorld(World):
 
     def write_spoiler(self, spoiler_handle: TextIO):
         self.items.write_progression_chain(self.multiworld, spoiler_handle)
-        pass
 
 
     def get_filler_item_name(self) -> str:
@@ -144,8 +144,8 @@ class SatisfactoryWorld(World):
         return excluded_items
 
 
-    def create_initial_unlocked_items(self) -> None:
-        initial_unlocked_items: Tuple[str, ...] = (
+    def get_initial_unlocked_items(self) -> Set[str]:
+        return {
             #Tier 0 rewards
             "Building: Constructor",
             "Building: Miner Mk.1",
@@ -171,7 +171,4 @@ class SatisfactoryWorld(World):
             "Recipe: Screw",
             "Recipe: Wire",
             "Recipe: Cable"
-        )
-
-        for item_name in initial_unlocked_items:
-            self.multiworld.push_precollected(self.create_item(item_name))
+        }

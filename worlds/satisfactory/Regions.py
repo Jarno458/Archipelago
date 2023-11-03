@@ -46,7 +46,7 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
 
     def can_produce_all_allowing_handcrafting(parts: Tuple[str, ...]) -> Callable[[CollectionState], bool]:
         def logic_rule(state: CollectionState):
-            return state_logic._satisfactory_can_produce_all_allowing_handcrafting(state, game_logic, parts)
+            return state_logic.can_produce_all_allowing_handcrafting(state, game_logic, parts)
 
         return logic_rule
 

@@ -14,7 +14,7 @@ class ElevatorTier(LocationData):
         ingredients: List[str] = get_elevator_tier_ingredients(game_logic, tier)
 
         super().__init__("Overworld", f"Elevator Tier {tier}", EventId,
-            lambda state: state_logic and state_logic._satisfactory_can_produce_all(state, ingredients))
+            lambda state: state_logic and state_logic.can_produce_all(state, ingredients))
 
 
 class HubSlot(LocationData):
@@ -44,7 +44,7 @@ class Droppod(LocationData):
             #TODO handle power
 
             def logic_rule(state: CollectionState):
-                return state_logic and state_logic._satisfactory_can_produce(state, unlocked_by)
+                return state_logic and state_logic.can_produce(state, unlocked_by)
 
             return logic_rule
 
