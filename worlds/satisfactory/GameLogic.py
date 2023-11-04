@@ -15,9 +15,9 @@ class Recipe():
     handcraftable: bool
     additional_outputs: Tuple[str, ...]
 
-    def __init__(self, name: str, building: str, inputs: Optional[Tuple[str, ...]] = None,
-            minimal_belt_speed: Optional[int] = 1,
-            handcraftable: Optional[bool] = False, additional_outputs: Optional[Tuple[str, ...]] = None):
+    def __init__(self, name: str, building: Optional[str] = None, inputs: Optional[Tuple[str, ...]] = None,
+            minimal_belt_speed: int = 1, handcraftable: bool = False, 
+            additional_outputs: Optional[Tuple[str, ...]] = None):
         self.name = "Recipe: " + name
         self.building = building
         self.inputs = inputs
@@ -26,12 +26,13 @@ class Recipe():
         self.additional_outputs = additional_outputs
 
 
-class Building():
-    recipe: Recipe
+class Building(Recipe):
     power_requirement: Optional[PowerLevel]
 
-    def __init__(self, recipe: Recipe, power_requirement: Optional[PowerLevel] = None):
-        self.recipe = recipe
+    def __init__(self, name: str, inputs: Optional[Tuple[str, ...]] = None,
+            power_requirement: Optional[PowerLevel] = None):
+        super().__init__(name, None, inputs, handcraftable=True)
+        self.name = "Building: " + name
         self.power_requirement = power_requirement
 
 
@@ -135,7 +136,7 @@ class GameLogic:
             "Steel Beam": (
                 Recipe("Steel Beam", "Constructor", ("Steel Ingot", ), handcraftable=True), ),
             "Crude Oil": (
-                Recipe("Crude Oil", "Oil Extractor", None), ),
+                Recipe("Crude Oil", "Oil Extractor"), ),
             "Heavy Oil Residue": (
                 Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin", )),
                 Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs=("Plastic", )),
@@ -150,7 +151,7 @@ class GameLogic:
                 Recipe("Diluted Fuel (blender)", "Blender", ("Heavy Oil Residue", "Water")),
                 Recipe("Residual Fuel", "Refinery", ("Heavy Oil Residue", ))),
             "Water": (
-                Recipe("Water", "Water Extractor", None), ),
+                Recipe("Water", "Water Extractor"), ),
             "Concrete": (
                 Recipe("Concrete", "Constructor", ("Limestone", ), handcraftable= True),
                 Recipe("Fine Concrete", "Assembler", ("Limestone", "Silica")),
@@ -180,19 +181,19 @@ class GameLogic:
                 Recipe("Caterium Ingot", "Smelter", ("Caterium Ore", ), handcraftable=True),
                 Recipe("Pure Caterium Ingot", "Refinery", ("Caterium Ore", "Water"))),
             "Limestone": (
-                Recipe("Limestone", "Miner Mk.1", None, handcraftable=True), ),
+                Recipe("Limestone", "Miner Mk.1", handcraftable=True), ),
             "Raw Quartz": (
-                Recipe("Raw Quartz", "Miner Mk.1", None, handcraftable=True), ),
+                Recipe("Raw Quartz", "Miner Mk.1", handcraftable=True), ),
             "Iron Ore": (
-                Recipe("Iron Ore", "Miner Mk.1", None, handcraftable=True), ),
+                Recipe("Iron Ore", "Miner Mk.1", handcraftable=True), ),
             "Copper Ore": (
-                Recipe("Copper Ore", "Miner Mk.1", None, handcraftable=True), ),
+                Recipe("Copper Ore", "Miner Mk.1", handcraftable=True), ),
             "Coal": (
-                Recipe("Coal", "Miner Mk.1", None, handcraftable=True), ),
+                Recipe("Coal", "Miner Mk.1", handcraftable=True), ),
             "Sulfur": (
-                Recipe("Sulfur", "Miner Mk.1", None, handcraftable=True), ),
+                Recipe("Sulfur", "Miner Mk.1", handcraftable=True), ),
             "Caterium Ore": (
-                Recipe("Caterium Ore", "Miner Mk.1", None, handcraftable=True), ),
+                Recipe("Caterium Ore", "Miner Mk.1", handcraftable=True), ),
             "Petroleum Coke": (
                 Recipe("Petroleum Coke", "Refinery", ("Heavy Oil Residue", ), minimal_belt_speed=2), ),
             "Compacted Coal": (
@@ -260,8 +261,6 @@ class GameLogic:
                 Recipe("Pure Aluminum Ingot", "Smelter", ("Aluminum Scrap", ))),
             "Alclad Aluminum Sheet": (
                 Recipe("Alclad Aluminum Sheet", "Assembler", ("Aluminum Ingot", "Copper Ingot")), ),
-            "Alclad Aluminum Sheet": (
-                Recipe("Alclad Aluminum Sheet", "Assembler", ("Aluminum Ingot", "Copper Ingot")), ),
             "Aluminum Casing": (
                 Recipe("Aluminum Casing", "Constructor", ("Alclad Aluminum Sheet", )), 
                 Recipe("Alclad Casing", "Assembler", ("Aluminum Ingot", "Copper Ingot"))),
@@ -269,7 +268,7 @@ class GameLogic:
                 Recipe("Heat Sink", "Assembler", ("Alclad Aluminum Sheet", "Silica"), minimal_belt_speed=2), 
                 Recipe("Heat Exchanger", "Assembler", ("Aluminum Casing", "Rubber"), minimal_belt_speed=3)),
             "Nitrogen Gas": (
-                Recipe("Nitrogen Gas", "Resource Well Pressurizer", None), ),
+                Recipe("Nitrogen Gas", "Resource Well Pressurizer"), ),
             "Nitric Acid": (
                 Recipe("Nitric Acid", "Blender", ("Nitrogen Gas", "Water", "Iron Plate")), ),
             "Fused Modular Frame": (
@@ -321,8 +320,10 @@ class GameLogic:
             "Plutonium Fuel Rod": (
                 Recipe("Plutonium Fuel Rod", "Manufacturer", ("Encased Plutonium Cell", "Steel Beam", "Electromagnetic Control Rod", "Heat Sink")), 
                 Recipe("Plutonium Fuel Unit", "Assembler", ("Encased Plutonium Cell", "Pressure Conversion Cube"))),
-
-            #Iodine Infused Filter
+            "Gas Filter": (
+                Recipe("Gas Filter", "Manufacturer", ("Coal", "Rubber", "Fabric"), handcraftable=True), ),
+            "Iodine Infused Filter": (
+                Recipe("Iodine Infused Filter", "Manufacturer", ("Gas Filter", "Quickwire", "Aluminum Casing"), handcraftable=True), ),
 
             # Hazmat Suit
             # Hover Pack
@@ -346,26 +347,26 @@ class GameLogic:
         }
 
         self.buildings = {
-            "Constructor": Building(Recipe("Constructor", None, ("Reinforced Iron Plate", "Cable")), PowerLevel.Simpel),
-            "Assembler": Building(Recipe("Assembler", None, ("Reinforced Iron Plate", "Rotor", "Cable")), PowerLevel.Simpel),
-            "Manufacturer": Building(Recipe("Manufacturer", None, ("Motor", "Heavy Modular Frame", "Cable", "Plastic")), PowerLevel.Advanced),
-            "Packager": Building(Recipe("Packager", None, ("Steel Beam", "Rubber", "Plastic")), PowerLevel.Simpel),
-            "Refinery": Building(Recipe("Refinery", None, ("Motor", "Encased Industrial Beam", "Steel Pipe", "Copper Sheet")), PowerLevel.Advanced),
-            "Blender": Building(Recipe("Blender", None, ("Motor", "Heavy Modular Frame", "Aluminum Casing", "Radio Control Unit")), PowerLevel.Complex),
-            "Particle Accelerator": Building(Recipe("Particle Accelerator", None, ("Radio Control Unit", "Electromagnetic Control Rod", "Supercomputer", "Cooling System", "Fused Modular Frame", "Turbo Motor")), PowerLevel.Complex),
-            "Biomass Burner": Building(Recipe("Biomass Burner", None, ("Iron Plate", "Iron Rod", "Wire"))),
-            "Coal Generator": Building(Recipe("Coal Generator", None, ("Reinforced Iron Plate", "Rotor", "Cable"))),
-            "Fuel Generator": Building(Recipe("Coal Generator", None, ("Computer", "Heavy Modular Frame", "Motor", "Rubber", "Quickwire"))),
-            "Geothermal_Generator": Building(Recipe("Geothermal_Generator", None, ("Supercomputer", "Heavy Modular Frame", "High-Speed Connector", "Copper Sheet", "Rubber"))),
-            "Nuclear Power Plant": Building(Recipe("Nuclear Power Plant", None, ("Concrete", "Heavy Modular Frame", "Supercomputer", "Cable", "Alclad Aluminum Sheet"))),
-            "Miner Mk.1": Building(Recipe("Miner Mk.1", None, ("Iron Plate", "Concrete")), PowerLevel.Simpel),
-            "Miner Mk.2": Building(Recipe("Miner Mk.2", None, ("Encased Industrial Beam", "Steel Pipe", "Modular Frame")), PowerLevel.Simpel),
-            "Miner Mk.3": Building(Recipe("Miner Mk.3", None, ("Steel Pipe", "Supercomputer", "Fused Modular Frame", "Turbo Motor")), PowerLevel.Advanced),
-            "Oil Extractor": Building(Recipe("Oil Extractor", None, ("Motor", "Encased Industrial Beam", "Cable"))),
-            "Water Extractor": Building(Recipe("Water Extractor", None, ("Copper Sheet", "Reinforced Iron Plate", "Rotor"))),
-            "Smelter": Building(Recipe("Smelter", None, ("Iron Rod", "Wire")), PowerLevel.Simpel),
-            "Foundry": Building(Recipe("Foundry", None, ("Modular Frame", "Rotor", "Concrete")), PowerLevel.Simpel),
-            "Resource Well Pressurizer": Building(Recipe("Resource Well Pressurizer", None, ("Wire", "Rubber", "Encased Industrial Beam", "Motor")), PowerLevel.Advanced),
+            "Constructor": Building("Constructor", ("Reinforced Iron Plate", "Cable"), PowerLevel.Simpel),
+            "Assembler": Building("Assembler", ("Reinforced Iron Plate", "Rotor", "Cable"), PowerLevel.Simpel),
+            "Manufacturer": Building("Manufacturer", ("Motor", "Heavy Modular Frame", "Cable", "Plastic"), PowerLevel.Advanced),
+            "Packager": Building("Packager", ("Steel Beam", "Rubber", "Plastic"), PowerLevel.Simpel),
+            "Refinery": Building("Refinery", ("Motor", "Encased Industrial Beam", "Steel Pipe", "Copper Sheet"), PowerLevel.Advanced),
+            "Blender": Building("Blender", ("Motor", "Heavy Modular Frame", "Aluminum Casing", "Radio Control Unit"), PowerLevel.Complex),
+            "Particle Accelerator": Building("Particle Accelerator", ("Radio Control Unit", "Electromagnetic Control Rod", "Supercomputer", "Cooling System", "Fused Modular Frame", "Turbo Motor"), PowerLevel.Complex),
+            "Biomass Burner": Building("Biomass Burner", ("Iron Plate", "Iron Rod", "Wire")),
+            "Coal Generator": Building("Coal Generator", ("Reinforced Iron Plate", "Rotor", "Cable")),
+            "Fuel Generator": Building("Coal Generator", ("Computer", "Heavy Modular Frame", "Motor", "Rubber", "Quickwire")),
+            "Geothermal_Generator": Building("Geothermal_Generator", ("Supercomputer", "Heavy Modular Frame", "High-Speed Connector", "Copper Sheet", "Rubber")),
+            "Nuclear Power Plant": Building("Nuclear Power Plant", ("Concrete", "Heavy Modular Frame", "Supercomputer", "Cable", "Alclad Aluminum Sheet")),
+            "Miner Mk.1": Building("Miner Mk.1", ("Iron Plate", "Concrete"), PowerLevel.Simpel),
+            "Miner Mk.2": Building("Miner Mk.2", ("Encased Industrial Beam", "Steel Pipe", "Modular Frame"), PowerLevel.Simpel),
+            "Miner Mk.3": Building("Miner Mk.3", ("Steel Pipe", "Supercomputer", "Fused Modular Frame", "Turbo Motor"), PowerLevel.Advanced),
+            "Oil Extractor": Building("Oil Extractor", ("Motor", "Encased Industrial Beam", "Cable")),
+            "Water Extractor": Building("Water Extractor", ("Copper Sheet", "Reinforced Iron Plate", "Rotor")),
+            "Smelter": Building("Smelter", ("Iron Rod", "Wire"), PowerLevel.Simpel),
+            "Foundry": Building("Foundry", ("Modular Frame", "Rotor", "Concrete"), PowerLevel.Simpel),
+            "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor"), PowerLevel.Advanced),
         }
 
         self.requirement_per_powerlevel = {
@@ -374,7 +375,7 @@ class GameLogic:
                 Recipe("Coal Generator Power", "Coal Generator", ("Coal", "Water"))
             ),
             PowerLevel.Advanced: (
-                Recipe("Geothermal Generator Power", "Geothermal Generator", None),
+                Recipe("Geothermal Generator Power", "Geothermal Generator"),
                 Recipe("Fuel Generator Power (Fuel)","Fuel Generator", ("Fuel", )),
                 Recipe("Fuel Generator Power (Turbofuel)","Fuel Generator", ("Turbofuel", )),
                 Recipe("Fuel Generator Power (Liquid Biofuel)","Fuel Generator", ("Liquid Biofuel", )),

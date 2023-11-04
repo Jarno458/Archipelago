@@ -2,8 +2,8 @@ from typing import Dict, List, Set, Tuple, TextIO, Optional, ClassVar
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 from .GameLogic import GameLogic
 from .Items import Items
-from .Locations import get_locations, LocationData
-from .Rules import EventId, StateLogic
+from .Locations import Locations, LocationData
+from .StateLogic import EventId, StateLogic
 from .Options import SatisfactoryOptions
 from .Regions import create_regions_and_return_locations
 from ..AutoWorld import World, WebWorld
@@ -36,16 +36,12 @@ class SatisfactoryWorld(World):
     web = SatisfactoryWebWorld()
 
     item_name_to_id = Items.item_names_and_ids
-    location_name_to_id = {location.name: location.code for location in get_locations(None, None, None)}
+    location_name_to_id = Locations().get_all_location_ids_by_name()
     item_name_groups = Items.get_item_names_per_category()
 
     game_logic: ClassVar[GameLogic] = GameLogic()
     state_logic: StateLogic
     items: Items
-    
-    def __init__(self, world: MultiWorld, player: int):
-        super().__init__(world, player)
-
 
     def generate_early(self) -> None:
         initial_unlocked_items = self.get_initial_unlocked_items()
@@ -59,9 +55,8 @@ class SatisfactoryWorld(World):
 
 
     def create_regions(self) -> None:
-        locations: Tuple[LocationData, ...] = get_locations(self.game_logic, self.state_logic, self.items)
-        create_regions_and_return_locations(
-            self.multiworld, self.player, self.game_logic, self.state_logic, locations)
+        locations: List[LocationData] = Locations(self.game_logic, self.state_logic, self.items).get_locations()
+        create_regions_and_return_locations(self.multiworld, self.player, self.game_logic, self.state_logic, locations)
 
 
     def create_items(self) -> None:
@@ -99,12 +94,12 @@ class SatisfactoryWorld(World):
                 "HubLayout": hub_layout,
                 "SlotsPerMilestone": self.game_logic.slots_per_milestone,
                 "Options": {
-                    "ElevatorTier": int(self.options.final_elevator_tier),
-                    "ResourceSinkPoints": int(self.options.final_resource_sink_points),
+                    "ElevatorTier": self.options.final_elevator_tier.value,
+                    "ResourceSinkPoints": self.options.final_resource_sink_points.value,
                     "AllowDroppodProgression": bool(self.options.allow_droppod_progression),
-                    "FreeSampleEquipment": int(self.options.free_sample_equipment),
-                    "FreeSampleBuildings": int(self.options.free_sample_buildings),
-                    "FreeSampleParts": int(self.options.free_sample_parts),
+                    "FreeSampleEquipment": self.options.free_sample_equipment.value,
+                    "FreeSampleBuildings": self.options.free_sample_buildings.value,
+                    "FreeSampleParts": self.options.free_sample_parts.value,
                     "FreeSampleRadioactive": bool(self.options.free_sample_radioactive),
                     "DeathLink": bool(self.options.death_link),
                     "EnergyLink": bool(self.options.energy_link)
@@ -150,7 +145,7 @@ class SatisfactoryWorld(World):
             "Building: Constructor",
             "Building: Miner Mk.1",
             "Building: Smelter",
-
+            
             "Recipe: Limestone",
             "Recipe: Raw Quartz",
             "Recipe: Iron Ore",
@@ -159,6 +154,7 @@ class SatisfactoryWorld(World):
             "Recipe: Sulfur",
             "Recipe: Caterium Ore",
             "Recipe: Water",
+            "Recipe: Nitrogen Gas",
 
             "Recipe: Iron Ingot",
             "Recipe: Copper Ingot",
@@ -167,8 +163,11 @@ class SatisfactoryWorld(World):
             "Recipe: Iron Plate",
             "Recipe: Iron Rod",
 
+            "Recipe: Portable Miner"
             "Recipe: Reinforced Iron Plate",
             "Recipe: Screw",
             "Recipe: Wire",
             "Recipe: Cable"
+
+            "Recipe: Uranium Waste",
         }

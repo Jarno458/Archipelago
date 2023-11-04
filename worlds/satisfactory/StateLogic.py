@@ -1,0 +1,54 @@
+from typing import Tuple, Optional, Set
+from BaseClasses import CollectionState
+from .GameLogic import GameLogic, Recipe
+from .Options import SatisfactoryOptions
+from .Items import Items
+
+EventId: Optional[int] = None
+
+part_event_prefix = "Can Produce: "
+building_event_prefix = "Can Build: "
+
+class StateLogic:
+    player: int
+    options: SatisfactoryOptions
+    initial_unlocked_items: Set[str]
+
+    def __init__(self, player: int, options: SatisfactoryOptions, initial_unlocked_items: Set[str]):
+        self.player = player
+        self.options = options
+        self.initial_unlocked_items = initial_unlocked_items
+
+    def has(self, state: CollectionState, item_name: str):
+        return item_name in self.initial_unlocked_items or state.has(item_name, self.player)
+
+    def can_produce(self, state: CollectionState, part_name: str) -> bool:
+        return state.has(part_event_prefix + part_name, self.player)
+
+    def can_produce_all(self, state: CollectionState, parts: Optional[Tuple[str, ...]]) -> bool:
+        return parts is None or \
+            state.has_all({part_event_prefix + part_name for part_name in parts}, self.player)
+
+    def can_produce_all_allowing_handcrafting(self, state: CollectionState, logic: GameLogic, 
+            parts: Optional[Tuple[str, ...]]) -> bool:
+
+        def can_handcraft_part(part: str) -> bool:
+            if state.has(part_event_prefix + part, self.player):
+                return True
+            elif part not in logic.handcraftable_recipes:
+                return False
+
+            recipe: Recipe = logic.handcraftable_recipes[part]
+
+            return (recipe.name in self.initial_unlocked_items or state.has(recipe.name, self.player)) \
+                and self.can_produce_all_allowing_handcrafting(state, logic, recipe.inputs)
+
+        return not parts or all(self.can_produce(state, part) or can_handcraft_part(part) for part in parts)
+
+    def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
+        #TODO, check if we got enough belt through put, check if pipes are needed, check if advanced power infrastructure is needed
+        return (recipe.name in self.initial_unlocked_items or state.has(recipe.name, self.player)) \
+            and (recipe.building is None or state.has(building_event_prefix + recipe.building, self.player)) \
+            and self.can_produce_all(state, recipe.inputs)
+
+

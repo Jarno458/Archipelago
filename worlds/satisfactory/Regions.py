@@ -2,7 +2,7 @@ from typing import List, Set, Dict, Tuple, Optional, Callable
 from BaseClasses import MultiWorld, Region, Entrance, Location, CollectionState
 from .Locations import LocationData
 from .GameLogic import GameLogic
-from .Rules import StateLogic
+from .StateLogic import StateLogic
 
 def create_regions_and_return_locations(world: MultiWorld, player: int, 
             game_logic: GameLogic, state_logic: StateLogic, locations: Tuple[LocationData, ...]):
@@ -59,8 +59,8 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
 def throwIfAnyLocationIsNotAssignedToARegion(regions: Dict[str, Region], regionNames: Set[str]):
     existingRegions = set()
 
-    for region in regions.values():
-        existingRegions.add(region.name)
+    for region in regions.keys():
+        existingRegions.add(region)
 
     if (regionNames - existingRegions):
         raise Exception(f"Satisfactory: the following regions are used in locations: {regionNames - existingRegions}, but no such region exists")

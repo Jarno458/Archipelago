@@ -214,13 +214,13 @@ class Items:
         "Recipe: Steamed Copper Sheet": ItemData("Recipe", 1338234, type=ItemClassification.progression),
         "Recipe: Steel Pipe": ItemData("Recipe", 1338235, type=ItemClassification.progression),
         "Recipe: Steel Beam": ItemData("Recipe", 1338236, type=ItemClassification.progression),
-        "Recipe: Crude Oil": ItemData("Recipe", 1338237, type=ItemClassification.progression),
+        "Recipe: Crude Oil": ItemData("Recipe", 1338237),
         "Recipe: Heavy Oil Residue": ItemData("Recipe", 1338238, type=ItemClassification.progression),
         "Recipe: Polymer Resin": ItemData("Recipe", 1338239, type=ItemClassification.progression),
         "Recipe: Fuel": ItemData("Recipe", 1338240, type=ItemClassification.progression),
         "Recipe: Residual Fuel": ItemData("Recipe", 1338241, type=ItemClassification.progression),
         "Recipe: Diluted Fuel (refinery)": ItemData("Recipe", 1338242, type=ItemClassification.progression),
-        "Recipe: Water": ItemData("Recipe", 1338243, type=ItemClassification.progression),
+        "Recipe: Water": ItemData("Recipe", 1338243),
         "Recipe: Concrete": ItemData("Recipe", 1338244, type=ItemClassification.progression),
         "Recipe: Rubber Concrete": ItemData("Recipe", 1338245, type=ItemClassification.progression),
         "Recipe: Wet Concrete": ItemData("Recipe", 1338246, type=ItemClassification.progression),
@@ -241,12 +241,12 @@ class Items:
         "Recipe: Pure Copper Ingot": ItemData("Recipe", 1338261, type=ItemClassification.progression),
         "Recipe: Caterium Ingot": ItemData("Recipe", 1338262, type=ItemClassification.progression),
         "Recipe: Pure Caterium Ingot": ItemData("Recipe", 1338263, type=ItemClassification.progression),
-        "Recipe: Limestone": ItemData("Recipe", 1338264, type=ItemClassification.progression),
-        "Recipe: Raw Quartz": ItemData("Recipe", 1338265, type=ItemClassification.progression),
-        "Recipe: Iron Ore": ItemData("Recipe", 1338266, type=ItemClassification.progression),
-        "Recipe: Copper Ore": ItemData("Recipe", 1338267, type=ItemClassification.progression),
-        "Recipe: Coal": ItemData("Recipe", 1338268, type=ItemClassification.progression),
-        "Recipe: Sulfur": ItemData("Recipe", 1338269, type=ItemClassification.progression),
+        "Recipe: Limestone": ItemData("Recipe", 1338264),
+        "Recipe: Raw Quartz": ItemData("Recipe", 1338265),
+        "Recipe: Iron Ore": ItemData("Recipe", 1338266),
+        "Recipe: Copper Ore": ItemData("Recipe", 1338267),
+        "Recipe: Coal": ItemData("Recipe", 1338268),
+        "Recipe: Sulfur": ItemData("Recipe", 1338269),
         "Recipe: Caterium Ore": ItemData("Recipe", 1338270, type=ItemClassification.progression),
         "Recipe: Petroleum Coke": ItemData("Recipe", 1338271, type=ItemClassification.progression),
         "Recipe: Compacted Coal": ItemData("Recipe", 1338272, type=ItemClassification.progression),
@@ -287,6 +287,55 @@ class Items:
         "Recipe: Alumina Solution": ItemData("Recipe", 1338307, type=ItemClassification.progression),
         "Recipe: Automated Miner": ItemData("Recipe", 1338308, type=ItemClassification.progression),
 
+        ### New
+        "Recipe: Aluminum Scrap": ItemData("Recipe", 1338309, type=ItemClassification.progression),
+        "Recipe: Electrode - Aluminum Scrap": ItemData("Recipe", 1338310, type=ItemClassification.progression),
+        "Recipe: Instant Scrap": ItemData("Recipe", 1338311, type=ItemClassification.progression),
+        "Recipe: Aluminum Ingot": ItemData("Recipe", 1338312, type=ItemClassification.progression),
+        "Recipe: Pure Aluminum Ingot": ItemData("Recipe", 1338313, type=ItemClassification.progression),
+        "Recipe: Alclad Aluminum Sheet": ItemData("Recipe", 1338314, type=ItemClassification.progression),
+        "Recipe: Aluminum Casing": ItemData("Recipe", 1338315, type=ItemClassification.progression),
+        "Recipe: Alclad Casing": ItemData("Recipe", 1338316, type=ItemClassification.progression),
+        "Recipe: Heat Sink": ItemData("Recipe", 1338317, type=ItemClassification.progression),
+        "Recipe: Heat Exchanger": ItemData("Recipe", 1338318, type=ItemClassification.progression),
+        "Recipe: Nitrogen Gas": ItemData("Recipe", 1338319, type=ItemClassification.progression),
+        "Recipe: Nitric Acid": ItemData("Recipe", 1338320, type=ItemClassification.progression),
+        "Recipe: Fused Modular Frame": ItemData("Recipe", 1338321, type=ItemClassification.progression),
+        "Recipe: Heat-Fused Frame": ItemData("Recipe", 1338322, type=ItemClassification.progression),
+        "Recipe: Radio Control Unit": ItemData("Recipe", 1338323, type=ItemClassification.progression),
+        "Recipe: Radio Connection Unit": ItemData("Recipe", 1338324, type=ItemClassification.progression),
+        "Recipe: Radio Control System": ItemData("Recipe", 1338325, type=ItemClassification.progression),
+        "Recipe: Pressure Conversion Cube": ItemData("Recipe", 1338326, type=ItemClassification.progression),
+        "Recipe: Cooling System": ItemData("Recipe", 1338327, type=ItemClassification.progression),
+        "Recipe: Cooling Device": ItemData("Recipe", 1338328, type=ItemClassification.progression),
+        "Recipe: Turbo Motor": ItemData("Recipe", 1338329, type=ItemClassification.progression),
+        "Recipe: Turbo Electric Motor": ItemData("Recipe", 1338330, type=ItemClassification.progression),
+        "Recipe: Turbo Pressure Motor": ItemData("Recipe", 1338331, type=ItemClassification.progression),
+        "Recipe: Battery": ItemData("Recipe", 1338332, type=ItemClassification.progression),
+        "Recipe: Classic Battery": ItemData("Recipe", 1338333, type=ItemClassification.progression),
+        "Recipe: Supercomputer": ItemData("Recipe", 1338334, type=ItemClassification.progression),
+        "Recipe: OC Supercomputer": ItemData("Recipe", 1338335, type=ItemClassification.progression),
+        "Recipe: Super-State Computer": ItemData("Recipe", 1338336, type=ItemClassification.progression),
+        "Recipe: Sulfuric Acid": ItemData("Recipe", 1338337, type=ItemClassification.progression),
+        "Recipe: Encased Uranium Cell": ItemData("Recipe", 1338338, type=ItemClassification.progression),
+        "Recipe: Encased Uranium Cell": ItemData("Recipe", 1338339, type=ItemClassification.progression),
+        "Recipe: Infused Uranium Cell": ItemData("Recipe", 1338340, type=ItemClassification.progression),
+        "Recipe: Uranium Fuel Rod": ItemData("Recipe", 1338341, type=ItemClassification.progression),
+        "Recipe: Uranium Fuel Unit": ItemData("Recipe", 1338342, type=ItemClassification.progression),
+        "Recipe: Beacon": ItemData("Recipe", 1338343, type=ItemClassification.progression),
+        "Recipe: Crystal Beacon": ItemData("Recipe", 1338344, type=ItemClassification.progression),
+        "Recipe: Uranium Waste": ItemData("Recipe", 1338345, type=ItemClassification.progression),
+        "Recipe: Non-fissile Uranium": ItemData("Recipe", 1338346, type=ItemClassification.progression),
+        "Recipe: Fertile Uranium": ItemData("Recipe", 1338347, type=ItemClassification.progression),
+        "Recipe: Plutonium Pellet": ItemData("Recipe", 1338348, type=ItemClassification.progression),
+        "Recipe: Encased Plutonium Cell": ItemData("Recipe", 1338349, type=ItemClassification.progression),
+        "Recipe: Instant Plutonium Cell": ItemData("Recipe", 1338350, type=ItemClassification.progression),
+        "Recipe: Plutonium Fuel Rod": ItemData("Recipe", 1338351, type=ItemClassification.progression),
+        "Recipe: Plutonium Fuel Unit": ItemData("Recipe", 1338352, type=ItemClassification.progression),
+        "Recipe: Gas Filter": ItemData("Recipe", 1338352, type=ItemClassification.progression),
+        "Recipe: Iodine Infused Filter": ItemData("Recipe", 1338352, type=ItemClassification.progression),
+        ###
+
         #1338312 - 1338399 Reserved for future recipes
 
         #1338400 - 1338899 buildings / others
@@ -296,11 +345,11 @@ class Items:
         "Building: Packager": ItemData("Building", 1338403, type=ItemClassification.progression),
         "Building: Refinery": ItemData("Building", 1338404, type=ItemClassification.progression),
         "Building: Blender": ItemData("Building", 1338405, type=ItemClassification.progression),
-        #"Building: Particle Accelerator": ItemData("Building", 1338406, type=ItemClassification.progression),
+        "Building: Particle Accelerator": ItemData("Building", 1338406, type=ItemClassification.progression),
         "Building: Biomass Burner": ItemData("Building", 1338407, type=ItemClassification.progression),
         "Building: Coal Generator": ItemData("Building", 1338408, type=ItemClassification.progression),
-        #"Building: Geothermal_Generator": ItemData("Building", 1338409, type=ItemClassification.progression),
-        #"Building: Nuclear Power Plant": ItemData("Building", 1338410, type=ItemClassification.progression),
+        "Building: Geothermal_Generator": ItemData("Building", 1338409, type=ItemClassification.progression),
+        "Building: Nuclear Power Plant": ItemData("Building", 1338410, type=ItemClassification.progression),
         "Building: Miner Mk.1": ItemData("Building", 1338411, type=ItemClassification.progression),
         #"Building: Miner Mk.2": ItemData("Building", 1338412, type=ItemClassification.progression),
         #"Building: Miner Mk.3": ItemData("Building", 1338413, type=ItemClassification.progression),
@@ -308,7 +357,13 @@ class Items:
         "Building: Water Extractor": ItemData("Building", 1338415, type=ItemClassification.progression),
         "Building: Smelter": ItemData("Building", 1338416, type=ItemClassification.progression),
         "Building: Foundry": ItemData("Building", 1338417, type=ItemClassification.progression),
+
+        ### New
+        "Building: Resource Well Pressurizer": ItemData("Building", 1338418, type=ItemClassification.progression),
+        ###
+
         "Building: Space Elevator": ItemData("Building", 1338999, type=ItemClassification.progression),
+
 
         #1338900 - 1338998 Handled by trap system
         # Regenerate via /Script/Blutility.EditorUtilityWidgetBlueprint'/Archipelago/Debug/EU_GenerateTrapIds.EU_GenerateTrapIds'
@@ -359,7 +414,7 @@ class Items:
         self.logic = logic
         self.random = random
 
-        if False:
+        if False: # major performance boost if we can get it stable
             self.precalculated_progression_recipes = self.select_progression_recipes() 
         else:
             self.precalculated_progression_recipes = None

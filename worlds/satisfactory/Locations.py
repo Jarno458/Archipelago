@@ -1,8 +1,73 @@
-from typing import List, Optional, Callable
+from typing import List, Optional, Callable, Tuple, Dict
 from BaseClasses import CollectionState
-from .GameLogic import GameLogic
-from .Rules import StateLogic, LocationData, EventId, get_logical_event_locations
+from .GameLogic import GameLogic, Recipe, Building, PowerLevel
+from .StateLogic import StateLogic, EventId, part_event_prefix, building_event_prefix
 from .Items import Items
+
+
+class LocationData():
+    region: str
+    name: str
+    code: Optional[int]
+    rule: Optional[Callable[[CollectionState], bool]]
+
+    def __init__(self, region: str, name: str, code: Optional[int], 
+                 rule: Optional[Callable[[CollectionState], bool]] = None):
+        self.region = region
+        self.name = name
+        self.code = code
+        self.rule = rule
+
+
+class Part(LocationData):
+    def __init__(self, state_logic: StateLogic, recipes: Tuple[Recipe, ...], name: str, items: Items):
+        super().__init__("Overworld", part_event_prefix + name, EventId,
+            self.can_produce_any_recipe_for_part(state_logic, recipes, name, items))
+
+    def can_produce_any_recipe_for_part(self, state_logic: StateLogic, recipes: Tuple[Recipe, ...], 
+                                        name: str, items: Items) -> Callable[[CollectionState], bool]:
+        
+        def logic_rule(state: CollectionState) -> bool:
+            return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) 
+                for recipe in recipes)
+
+        def specific_logic_rule(state: CollectionState) -> bool:
+            return state_logic.can_produce_specific_recipe_for_part( 
+                state, items.precalculated_progression_recipes[name])
+        
+        return specific_logic_rule if items.precalculated_progression_recipes else logic_rule 
+
+
+class EventBuilding(LocationData):
+    def __init__(self, game_logic: GameLogic, state_logic: StateLogic, building_name: str, building: Building):
+        super().__init__("Overworld", building_event_prefix + building_name, EventId, 
+            self.can_create_building(game_logic, state_logic, building))
+
+    def can_create_building(self, game_logic: GameLogic, state_logic: StateLogic, building: Building
+            ) -> Callable[[CollectionState], bool]:
+
+        def logic_rule(state: CollectionState) -> bool:
+            return state_logic.has(state, building.name) and \
+                state_logic.can_produce_all_allowing_handcrafting(state, game_logic, building.inputs)
+
+        return logic_rule
+
+
+class PowerInfrastructure(LocationData):
+    def __init__(self, game_logic: GameLogic, state_logic: StateLogic, 
+                 powerLevel: PowerLevel, recipes: Tuple[Recipe, ...]):
+        super().__init__("Overworld", building_event_prefix + str(powerLevel), EventId, 
+            self.can_create_power_infrastructure(game_logic, state_logic, powerLevel, recipes))
+
+    def can_create_power_infrastructure(self, game_logic: GameLogic, state_logic: StateLogic, 
+                                        powerLevel: PowerLevel, recipes: Tuple[Recipe, ...]
+            ) -> Callable[[CollectionState], bool]:
+
+        def logic_rule(state: CollectionState) -> bool:
+            return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) 
+                for recipe in recipes)
+
+        return logic_rule
 
 class ElevatorTier(LocationData):
     def __init__(self, tier: int, state_logic: Optional[StateLogic], game_logic: Optional[GameLogic]):
@@ -52,53 +117,85 @@ class Droppod(LocationData):
                 get_rule(unlocked_by, needs_power))
 
 
-def get_locations(game_logic: Optional[GameLogic], state_logic: Optional[StateLogic], items: Optional[Items]) \
-        -> List[LocationData]:
-
-    location_table: List[LocationData] = [
-        ElevatorTier(1, state_logic, game_logic),
-        ElevatorTier(2, state_logic, game_logic),
-        ElevatorTier(3, state_logic, game_logic),
-        ElevatorTier(4, state_logic, game_logic),
-        #Droppod(0, 0, 0, "Motor", state_logic, 1337605)),
-        #Droppod(0, 0, 0, "Motor", state_logic, 1337605)),
-        #Droppod(0, 0, 0, "Motor", state_logic, 1337605)),
-    ]
+class Locations():
+    game_logic: Optional[GameLogic]
+    state_logic: Optional[StateLogic]
+    items: Optional[Items]
 
     hub_location: int = 1338000
     max_tiers: int = 10
     max_milestones: int = 5
     max_slots: int = 10
 
-    if game_logic:
-        # Only used locations
-        for tier in range(1, max_tiers + 1):
-            for milestone in range(1, max_milestones + 1):
-                for slot in range(1, max_slots + 1):
-                    if tier <= len(game_logic.hub_layout) \
-                            and milestone <= len(game_logic.hub_layout[tier - 1]) \
-                            and slot <= game_logic.slots_per_milestone:
-                        location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, hub_location))
+    def __init__(self, game_logic: Optional[GameLogic] = None, 
+                 state_logic: Optional[StateLogic] = None, items: Optional[Items] = None):
+        self.game_logic = game_logic
+        self.state_logic = state_logic
+        self.items = items
 
-                    hub_location += 1
+    def get_base_location_table(self) -> List[LocationData]:
+        return [
+            #Droppod(0, 0, 0, "Motor", self.state_logic, 1337605)),
+            #Droppod(0, 0, 0, "Motor", self.state_logic, 1337605)),
+            #Droppod(0, 0, 0, "Motor", self.state_logic, 1337605)),
+        ]
 
-        # TODO mam slots
-        # location_table.append(MamSlot(f"Mam TODO"))
+    def get_all_location_ids_by_name(self) -> Dict[str, int]:
+        location_table = self.get_base_location_table()
 
-        if state_logic and items:
-            location_table.extend(get_logical_event_locations(game_logic, state_logic, items))
-        
-    else:
         # All possible locations
-        for tier in range(1, max_tiers + 1):
-            for milestone in range(1, max_milestones + 1):
-                for slot in range(1, max_slots + 1):
-                    location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, hub_location))
-                    hub_location += 1
+        for tier in range(1, self.max_tiers + 1):
+            for milestone in range(1, self.max_milestones + 1):
+                for slot in range(1, self.max_slots + 1):
+                    location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, self.hub_location))
+                    self.hub_location += 1
 
         # TODO mam slots
         # location_table.append(MamSlot(f"Mam TODO"))
 
         location_table.append(LocationData("Overworld", "UpperBound", 1338999))
- 
-    return location_table
+
+        return {location.name: location.code for location in location_table}
+
+    def get_locations(self) -> List[LocationData]:
+        if not self.game_logic or not self.state_logic or not self.items:
+            raise Exception("Locations need to be initialized with logic and items before using this method")
+
+        location_table = self.get_base_location_table()
+
+        # Only used locations
+        for tier in range(1, self.max_tiers + 1):
+            for milestone in range(1, self.max_milestones + 1):
+                for slot in range(1, self.max_slots + 1):
+                    if tier <= len(self.game_logic.hub_layout) \
+                            and milestone <= len(self.game_logic.hub_layout[tier - 1]) \
+                            and slot <= self.game_logic.slots_per_milestone:
+                        location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, self.hub_location))
+
+                    self.hub_location += 1
+
+        # TODO mam slots
+        # location_table.append(MamSlot(f"Mam TODO"))
+
+        location_table.extend(self.get_logical_event_locations())
+
+        return location_table
+
+
+    def get_logical_event_locations(self) -> List[LocationData]:
+        location_table: List[LocationData] = []
+
+        location_table.extend(
+            ElevatorTier(index, self.state_logic, self.game_logic) for index, parts 
+            in enumerate(self.game_logic.space_elevator_tiers))
+        location_table.extend(
+            Part(self.state_logic, recipes, part, self.items) for part, recipes 
+            in self.game_logic.recipes.items())
+        location_table.extend(
+            EventBuilding(self.game_logic, self.state_logic, name, building) for name, building 
+            in self.game_logic.buildings.items())
+        location_table.extend(
+            PowerInfrastructure(self.game_logic, self.state_logic, power_level, recipes) for power_level, recipes 
+            in self.game_logic.requirement_per_powerlevel.items())
+
+        return location_table
