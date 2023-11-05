@@ -28,7 +28,7 @@ class Part(LocationData):
                                         name: str, items: Items) -> Callable[[CollectionState], bool]:
         
         def can_build_by_any_recipe(state: CollectionState) -> bool:
-            if name in { "Crude Oil" }:
+            if name in { "Assembly Director System", "Magnetic Field Generator", "Nuclear Pasta", "Thermal Propulsion Rocket" }:
                 debugger = "Attach"
 
             return any(can_build_by_specific_recipe(state, recipe) for recipe in recipes)

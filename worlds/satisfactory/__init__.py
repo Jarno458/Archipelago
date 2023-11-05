@@ -158,6 +158,7 @@ class SatisfactoryWorld(World):
             "Recipe: Coal",
             "Recipe: Sulfur",
             "Recipe: Caterium Ore",
+            "Recipe: Bauxite",
             "Recipe: Water",
             "Recipe: Crude Oil",
             "Recipe: Nitrogen Gas",
