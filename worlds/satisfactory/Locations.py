@@ -69,17 +69,11 @@ class PowerInfrastructure(LocationData):
 
         return logic_rule
 
-class ElevatorTier(LocationData):
-    def __init__(self, tier: int, state_logic: Optional[StateLogic], game_logic: Optional[GameLogic]):
-        def get_elevator_tier_ingredients(game_logic: Optional[GameLogic], tier: int) -> List[str]:
-            if not game_logic:
-                return []
-            return game_logic.space_elevator_tiers[tier - 1].keys()
-        
-        ingredients: List[str] = get_elevator_tier_ingredients(game_logic, tier)
 
-        super().__init__("Overworld", f"Elevator Tier {tier}", EventId,
-            lambda state: state_logic and state_logic.can_produce_all(state, ingredients))
+class ElevatorTier(LocationData):
+    def __init__(self, tier: int, state_logic: StateLogic, game_logic: GameLogic):
+        super().__init__("Overworld", f"Elevator Tier {tier + 1}", EventId,
+            lambda state: state_logic.can_produce_all(state, game_logic.space_elevator_tiers[tier].keys()))
 
 
 class HubSlot(LocationData):
