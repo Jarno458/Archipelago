@@ -332,8 +332,8 @@ class Items:
         "Recipe: Instant Plutonium Cell": ItemData("Recipe", 1338350, type=ItemClassification.progression),
         "Recipe: Plutonium Fuel Rod": ItemData("Recipe", 1338351, type=ItemClassification.progression),
         "Recipe: Plutonium Fuel Unit": ItemData("Recipe", 1338352, type=ItemClassification.progression),
-        "Recipe: Gas Filter": ItemData("Recipe", 1338352, type=ItemClassification.progression),
-        "Recipe: Iodine Infused Filter": ItemData("Recipe", 1338352, type=ItemClassification.progression),
+        "Recipe: Gas Filter": ItemData("Recipe", 1338353, type=ItemClassification.progression),
+        "Recipe: Iodine Infused Filter": ItemData("Recipe", 1338354, type=ItemClassification.progression),
         ###
 
         #1338312 - 1338399 Reserved for future recipes
@@ -351,8 +351,8 @@ class Items:
         "Building: Geothermal_Generator": ItemData("Building", 1338409, type=ItemClassification.progression),
         "Building: Nuclear Power Plant": ItemData("Building", 1338410, type=ItemClassification.progression),
         "Building: Miner Mk.1": ItemData("Building", 1338411, type=ItemClassification.progression),
-        #"Building: Miner Mk.2": ItemData("Building", 1338412, type=ItemClassification.progression),
-        #"Building: Miner Mk.3": ItemData("Building", 1338413, type=ItemClassification.progression),
+        "Building: Miner Mk.2": ItemData("Building", 1338412, type=ItemClassification.progression),
+        "Building: Miner Mk.3": ItemData("Building", 1338413, type=ItemClassification.progression),
         "Building: Oil Extractor": ItemData("Building", 1338414, type=ItemClassification.progression),
         "Building: Water Extractor": ItemData("Building", 1338415, type=ItemClassification.progression),
         "Building: Smelter": ItemData("Building", 1338416, type=ItemClassification.progression),
@@ -360,6 +360,7 @@ class Items:
 
         ### New
         "Building: Resource Well Pressurizer": ItemData("Building", 1338418, type=ItemClassification.progression),
+        "Building: Equipment Workshop": ItemData("Building", 1338419, type=ItemClassification.progression),
         ###
 
         "Building: Space Elevator": ItemData("Building", 1338999, type=ItemClassification.progression),
@@ -474,14 +475,15 @@ class Items:
 
         return selected_recipes
 
+    @classmethod
+    def create_item(cls, instance: Optional["Items"], name: str, player: int) -> Item:
+        data: ItemData = cls.item_data[name]
 
-    def create_item(self, name: str) -> Item:
-        data: ItemData = self.item_data[name]
+        if instance and instance.precalculated_progression_recipes and \
+                name not in instance.precalculated_progression_recipes:
+            return Item(name, ItemClassification.useful, data.code, instance.player)
 
-        if self.precalculated_progression_recipes and name not in self.precalculated_progression_recipes:
-            return Item(name, ItemClassification.useful, data.code, self.player)
-
-        return Item(name, data.type, data.code, self.player)
+        return Item(name, data.type, data.code, player)
 
 
     def get_filler_item_name(self, random: Random, options: SatisfactoryOptions) -> str:
@@ -501,16 +503,16 @@ class Items:
 
         for name, data in self.item_data.items():
             if name not in excluded_items and data.category in { "Recipe", "Building" }:
-                item = self.create_item(name)
+                item = self.create_item(self, name, self.player)
                 pool.append(item)
 
         # enquipment items that unlock logical progression
         for name in { "Gas Mask", "Hazmat Suit", "Jetpack", "Hover Pack", "Nobelisk Detonator" }:
-            item = self.create_item(name)
+            item = self.create_item(self, name, self.player)
             pool.append(item)
 
         for _ in range(size - len(pool)):
-            item = self.create_item(self.get_filler_item_name(random, options))
+            item = self.create_item(self, self.get_filler_item_name(random, options), self.player)
             pool.append(item)
 
         return pool

@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, Set
+from typing import Tuple, Optional, Set, Iterable
 from BaseClasses import CollectionState
 from .GameLogic import GameLogic, Recipe
 from .Options import SatisfactoryOptions
@@ -25,7 +25,7 @@ class StateLogic:
     def can_produce(self, state: CollectionState, part_name: str) -> bool:
         return state.has(part_event_prefix + part_name, self.player)
 
-    def can_produce_all(self, state: CollectionState, parts: Optional[Tuple[str, ...]]) -> bool:
+    def can_produce_all(self, state: CollectionState, parts: Optional[Iterable[str]]) -> bool:
         return parts is None or \
             state.has_all({part_event_prefix + part_name for part_name in parts}, self.player)
 

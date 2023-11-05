@@ -43,6 +43,10 @@ class SatisfactoryWorld(World):
     state_logic: StateLogic
     items: Items
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        self.items = None
+
     def generate_early(self) -> None:
         initial_unlocked_items = self.get_initial_unlocked_items()
         self.state_logic = StateLogic(self.player, self.options, initial_unlocked_items)
@@ -126,7 +130,7 @@ class SatisfactoryWorld(World):
 
 
     def create_item(self, name: str) -> Item:
-        return self.items.create_item(name)
+        return Items.create_item(self.items, name, self.player)
 
 
     def get_excluded_items(self) -> Set[str]:
@@ -145,6 +149,7 @@ class SatisfactoryWorld(World):
             "Building: Constructor",
             "Building: Miner Mk.1",
             "Building: Smelter",
+            "Building: Equipment Workshop",
             
             "Recipe: Limestone",
             "Recipe: Raw Quartz",
@@ -154,6 +159,7 @@ class SatisfactoryWorld(World):
             "Recipe: Sulfur",
             "Recipe: Caterium Ore",
             "Recipe: Water",
+            "Recipe: Crude Oil",
             "Recipe: Nitrogen Gas",
 
             "Recipe: Iron Ingot",

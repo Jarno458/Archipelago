@@ -121,7 +121,7 @@ class GameLogic:
                 Recipe("Iron Wire", "Constructor", ("Iron Ingot", )),
                 Recipe("Caterium Wire", "Constructor", ("Caterium Ingot", ), minimal_belt_speed=2)),
             "Cable": (
-                Recipe("Cable", "Constructor", ("Wire", ), handcraftable= True),
+                Recipe("Cable", "Constructor", ("Wire", ), handcraftable=True),
                 Recipe("Coated Cable", "Refinery", ("Wire", "Heavy Oil Residue"), minimal_belt_speed=2),
                 Recipe("Insulated Cable", "Assembler", ("Wire", "Rubber"), minimal_belt_speed=2),
                 Recipe("Quickwire Cable", "Assembler", ("Quickwire", "Rubber"))),
@@ -153,13 +153,13 @@ class GameLogic:
             "Water": (
                 Recipe("Water", "Water Extractor"), ),
             "Concrete": (
-                Recipe("Concrete", "Constructor", ("Limestone", ), handcraftable= True),
+                Recipe("Concrete", "Constructor", ("Limestone", ), handcraftable=True),
                 Recipe("Fine Concrete", "Assembler", ("Limestone", "Silica")),
                 Recipe("Rubber Concrete", "Assembler", ("Limestone", "Rubber")),
                 Recipe("Wet Concrete", "Refinery", ("Limestone", "Water"), minimal_belt_speed=2)),
             "Silica": (
-                Recipe("Alumina Solution", "Refinery", ("Bauxite", "Water"), additional_outputs=("Alumina Solution", ), minimal_belt_speed=2),
                 Recipe("Silica", "Constructor", ("Raw Quartz", ), handcraftable=True),
+                Recipe("Alumina Solution", "Refinery", ("Bauxite", "Water"), additional_outputs=("Alumina Solution", ), minimal_belt_speed=2),
                 Recipe("Cheap Silica", "Assembler", ("Raw Quartz", "Limestone"))),
             "Quartz Crystal": (
                 Recipe("Quartz Crystal", "Constructor", ("Raw Quartz", ), handcraftable=True),
@@ -214,7 +214,7 @@ class GameLogic:
                 Recipe("Encased Industrial Beam", "Assembler", ("Steel Beam", "Concrete"), handcraftable=True),
                 Recipe("Encased Industrial Pipe", "Assembler", ("Steel Pipe", "Concrete"))),
             "Computer": (
-                Recipe("Computer", "Manufacturer", ("Circuit Board", "Cable", "Plastic", "Screw"), minimal_belt_speed=3, handcraftable= True),
+                Recipe("Computer", "Manufacturer", ("Circuit Board", "Cable", "Plastic", "Screw"), minimal_belt_speed=3, handcraftable=True),
                 Recipe("Crystal Computer", "Assembler", ("Circuit Board", "Crystal Oscillator")),
                 Recipe("Caterium Computer", "Manufacturer", ("Circuit Board", "Quickwire", "Rubber"), minimal_belt_speed=2)),
             "Circuit Board": (
@@ -247,7 +247,7 @@ class GameLogic:
             "Adaptive Control Unit": (
                 Recipe("Adaptive Control Unit", "Manufacturer", ("Automated Wiring", "Circuit Board", "Heavy Modular Frame", "Computer")), ),
             "Portable Miner": (
-                #Recipe("Portable Miner", "", ("Iron Rod", "Iron Plate"), handcraftable= True), #Handcraft only
+                Recipe("Portable Miner", "Equipment Workshop", ("Iron Rod", "Iron Plate"), handcraftable=True),
                 Recipe("Automated Miner", "Manufacturer", ("Motor", "Steel Pipe", "Iron Rod", "Iron Plate")), ),
             "Alumina Solution": (
                 Recipe("Alumina Solution", "Refinery", ("Bauxite", "Water"), additional_outputs=("Silica", ), minimal_belt_speed=2), 
@@ -257,15 +257,15 @@ class GameLogic:
                 Recipe("Electrode - Aluminum Scrap", "Refinery", ("Alumina Solution", "Petroleum Coke"), additional_outputs=("Water", ), minimal_belt_speed=4),  
                 Recipe("Instant Scrap", "Blender", ("Bauxite", "Coal", "Sulfuric Acid", "Water"), additional_outputs=("Water", ), minimal_belt_speed=3)),
             "Aluminum Ingot": (
-                Recipe("Aluminum Ingot", "Foundry", ("Aluminum Scrap", "Silica"), minimal_belt_speed=2), 
+                Recipe("Aluminum Ingot", "Foundry", ("Aluminum Scrap", "Silica"), minimal_belt_speed=2, handcraftable=True), 
                 Recipe("Pure Aluminum Ingot", "Smelter", ("Aluminum Scrap", ))),
             "Alclad Aluminum Sheet": (
-                Recipe("Alclad Aluminum Sheet", "Assembler", ("Aluminum Ingot", "Copper Ingot")), ),
+                Recipe("Alclad Aluminum Sheet", "Assembler", ("Aluminum Ingot", "Copper Ingot"), handcraftable=True), ),
             "Aluminum Casing": (
-                Recipe("Aluminum Casing", "Constructor", ("Alclad Aluminum Sheet", )), 
+                Recipe("Aluminum Casing", "Constructor", ("Alclad Aluminum Sheet", ), handcraftable=True), 
                 Recipe("Alclad Casing", "Assembler", ("Aluminum Ingot", "Copper Ingot"))),
             "Heat Sink": (
-                Recipe("Heat Sink", "Assembler", ("Alclad Aluminum Sheet", "Silica"), minimal_belt_speed=2), 
+                Recipe("Heat Sink", "Assembler", ("Alclad Aluminum Sheet", "Silica"), minimal_belt_speed=2, handcraftable=True), 
                 Recipe("Heat Exchanger", "Assembler", ("Aluminum Casing", "Rubber"), minimal_belt_speed=3)),
             "Nitrogen Gas": (
                 Recipe("Nitrogen Gas", "Resource Well Pressurizer"), ),
@@ -275,23 +275,23 @@ class GameLogic:
                 Recipe("Fused Modular Frame", "Blender", ("Heavy Modular Frame", "Aluminum Casing", "Nitrogen Gas"), minimal_belt_speed=2), 
                 Recipe("Heat-Fused Frame", "Blender", ("Heavy Modular Frame", "Aluminum Ingot", "Nitric Acid", "Fuel"), minimal_belt_speed=3)),
             "Radio Control Unit": (
-                Recipe("Radio Control Unit", "Manufacturer", ("Aluminum Casing", "Crystal Oscillator", "Computer")),
+                Recipe("Radio Control Unit", "Manufacturer", ("Aluminum Casing", "Crystal Oscillator", "Computer"), handcraftable=True),
                 Recipe("Radio Connection Unit", "Manufacturer", ("Heat Sink", "High-Speed Connector", "Quartz Crystal")),  
                 Recipe("Radio Control System", "Manufacturer", ("Crystal Oscillator", "Circuit Board", "Aluminum Casing", "Rubber"), minimal_belt_speed=2)),
             "Pressure Conversion Cube": (
-                Recipe("Pressure Conversion Cube", "Assembler", ("Fused Modular Frame", "Radio Control Unit")), ),
+                Recipe("Pressure Conversion Cube", "Assembler", ("Fused Modular Frame", "Radio Control Unit"), handcraftable=True), ),
             "Cooling System": (
                 Recipe("Cooling System", "Blender", ("Heat Sink", "Rubber", "Water", "Nitrogen Gas")), 
                 Recipe("Cooling Device", "Blender", ("Heat Sink", "Motor", "Nitrogen Gas"))),
             "Turbo Motor": (
-                Recipe("Turbo Motor", "Manufacturer", ("Cooling System", "Radio Control Unit", "Motor", "Rubber")),
+                Recipe("Turbo Motor", "Manufacturer", ("Cooling System", "Radio Control Unit", "Motor", "Rubber"), handcraftable=True),
                 Recipe("Turbo Electric Motor", "Manufacturer", ("Motor", "Radio Control Unit", "Electromagnetic Control Rod", "Rotor")),
                 Recipe("Turbo Pressure Motor", "Manufacturer", ("Motor", "Pressure Conversion Cube", "Packaged Nitrogen Gas", "Stator"))),
             "Battery": (
                 Recipe("Battery", "Blender", ("Sulfuric Acid", "Alumina Solution", "Aluminum Casing"), additional_outputs=("Water", )), 
                 Recipe("Classic Battery", "Manufacturer", ("Sulfur", "Alclad Aluminum Sheet", "Plastic", "Wire"), minimal_belt_speed=2)),
             "Supercomputer": (
-                Recipe("Supercomputer", "Manufacturer", ("Computer", "AI Limiter", "High-Speed Connector", "Plastic")),
+                Recipe("Supercomputer", "Manufacturer", ("Computer", "AI Limiter", "High-Speed Connector", "Plastic"), handcraftable=True),
                 Recipe("OC Supercomputer", "Assembler", ("Radio Control Unit", "Cooling System")),
                 Recipe("Super-State Computer", "Manufacturer", ("Computer", "Electromagnetic Control Rod", "Battery", "Wire"))),
             "Sulfuric Acid": (
@@ -304,9 +304,9 @@ class GameLogic:
                 Recipe("Uranium Fuel Rod", "Manufacturer", ("Encased Uranium Cell", "Encased Industrial Beam", "Electromagnetic Control Rod")), 
                 Recipe("Uranium Fuel Unit", "Manufacturer", ("Encased Uranium Cell", "Electromagnetic Control Rod", "Crystal Oscillator", "Beacon"))),
             "Beacon": (
-                Recipe("Beacon", "Manufacturer", ("Iron Plate", "Iron Rod", "Wire", "Cable")), 
+                Recipe("Beacon", "Equipment Workshop", ("Iron Plate", "Iron Rod", "Wire", "Cable"), handcraftable=True), 
+                Recipe("Beacon", "Manufacturer", ("Iron Plate", "Iron Rod", "Wire", "Cable")),
                 Recipe("Crystal Beacon", "Manufacturer", ("Steel Beam", "Steel Pipe", "Crystal Oscillator"))),
-            #TODO fix this is free
             "Uranium Waste": (
                 Recipe("Uranium Waste", "Nuclear Power Plant", ("Uranium Fuel Rod", "Water")), ),
             "Non-fissile Uranium": (
@@ -324,6 +324,16 @@ class GameLogic:
                 Recipe("Gas Filter", "Manufacturer", ("Coal", "Rubber", "Fabric"), handcraftable=True), ),
             "Iodine Infused Filter": (
                 Recipe("Iodine Infused Filter", "Manufacturer", ("Gas Filter", "Quickwire", "Aluminum Casing"), handcraftable=True), ),
+            "Assembly Director System": (
+               Recipe("Assembly Director System", "Assembler", ("Adaptive Control Unit", "Supercomputer")), ),
+            "Magnetic Field Generator": (
+                Recipe("Magnetic Field Generator", "Manufacturer", ("Versatile Framework", "Electromagnetic Control Rod", "Battery")), ),
+            "Copper Powder": (
+                Recipe("Copper Powder", "Constructor", ("Copper Ingot", ), handcraftable=True), ),
+            "Nuclear Pasta": (
+                Recipe("Nuclear Pasta", "Particle Accelerator", ("Copper Powder", "Pressure Conversion Cube")), ),
+            "Thermal Propulsion Rocket": (
+                Recipe("Thermal Propulsion Rocket", "Manufacturer", ("Modular Engine", "Turbo Motor", "Cooling System", "Fused Modular Frame")), ),
 
             # Hazmat Suit
             # Hover Pack
@@ -367,6 +377,7 @@ class GameLogic:
             "Smelter": Building("Smelter", ("Iron Rod", "Wire"), PowerLevel.Simpel),
             "Foundry": Building("Foundry", ("Modular Frame", "Rotor", "Concrete"), PowerLevel.Simpel),
             "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor"), PowerLevel.Advanced),
+            "Equipment Workshop": Building("Equipment Workshop", ("Iron Plate", "Iron Rod")),
         }
 
         self.requirement_per_powerlevel = {

@@ -27,15 +27,23 @@ class Part(LocationData):
     def can_produce_any_recipe_for_part(self, state_logic: StateLogic, recipes: Tuple[Recipe, ...], 
                                         name: str, items: Items) -> Callable[[CollectionState], bool]:
         
-        def logic_rule(state: CollectionState) -> bool:
-            return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) 
-                for recipe in recipes)
+        def can_build_by_any_recipe(state: CollectionState) -> bool:
+            if name in { "Crude Oil" }:
+                debugger = "Attach"
 
-        def specific_logic_rule(state: CollectionState) -> bool:
+            return any(can_build_by_specific_recipe(state, recipe) for recipe in recipes)
+
+        def can_build_by_precalculated_recipe(state: CollectionState) -> bool:
             return state_logic.can_produce_specific_recipe_for_part( 
                 state, items.precalculated_progression_recipes[name])
         
-        return specific_logic_rule if items.precalculated_progression_recipes else logic_rule 
+        def can_build_by_specific_recipe(state: CollectionState, recipe: Recipe) -> bool:
+            return state_logic.can_produce_specific_recipe_for_part(state, recipe)
+
+        if items.precalculated_progression_recipes:
+            return can_build_by_precalculated_recipe
+        else:
+            return can_build_by_any_recipe
 
 
 class EventBuilding(LocationData):
@@ -46,11 +54,14 @@ class EventBuilding(LocationData):
     def can_create_building(self, game_logic: GameLogic, state_logic: StateLogic, building: Building
             ) -> Callable[[CollectionState], bool]:
 
-        def logic_rule(state: CollectionState) -> bool:
+        def can_build(state: CollectionState) -> bool:
+            if building.name == "Building: Refinery":
+                debugger = "Attach"
+
             return state_logic.has(state, building.name) and \
                 state_logic.can_produce_all_allowing_handcrafting(state, game_logic, building.inputs)
 
-        return logic_rule
+        return can_build
 
 
 class PowerInfrastructure(LocationData):
@@ -63,11 +74,11 @@ class PowerInfrastructure(LocationData):
                                         powerLevel: PowerLevel, recipes: Tuple[Recipe, ...]
             ) -> Callable[[CollectionState], bool]:
 
-        def logic_rule(state: CollectionState) -> bool:
+        def can_power(state: CollectionState) -> bool:
             return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) 
                 for recipe in recipes)
 
-        return logic_rule
+        return can_power
 
 
 class ElevatorTier(LocationData):
