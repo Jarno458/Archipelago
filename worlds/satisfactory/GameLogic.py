@@ -13,16 +13,18 @@ class Recipe():
     inputs: Tuple[str, ...]
     minimal_belt_speed: int
     handcraftable: bool
+    implicitly_unlocked: bool
     additional_outputs: Tuple[str, ...]
 
     def __init__(self, name: str, building: Optional[str] = None, inputs: Optional[Tuple[str, ...]] = None,
-            minimal_belt_speed: int = 1, handcraftable: bool = False, 
+            minimal_belt_speed: int = 1, handcraftable: bool = False, implicitly_unlocked: bool = False,
             additional_outputs: Optional[Tuple[str, ...]] = None):
         self.name = "Recipe: " + name
         self.building = building
         self.inputs = inputs
         self.minimal_belt_speed = minimal_belt_speed
         self.handcraftable = handcraftable
+        self.implicitly_unlocked = implicitly_unlocked
         self.additional_outputs = additional_outputs
 
 
@@ -121,7 +123,7 @@ class GameLogic:
         "Steel Beam": (
             Recipe("Steel Beam", "Constructor", ("Steel Ingot", ), handcraftable=True), ),
         "Crude Oil": (
-            Recipe("Crude Oil", "Oil Extractor"), ),
+            Recipe("Crude Oil", "Oil Extractor", implicitly_unlocked=True), ),
         "Heavy Oil Residue": (
             Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin", )),
             Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs=("Plastic", )),
@@ -133,10 +135,10 @@ class GameLogic:
             Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs=("Heavy Oil Residue", ), minimal_belt_speed=3)),
         "Fuel": (
             Recipe("Fuel", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin")),
-            Recipe("Diluted Fuel (blender)", "Blender", ("Heavy Oil Residue", "Water")),
+            Recipe("Diluted Fuel", "Blender", ("Heavy Oil Residue", "Water")),
             Recipe("Residual Fuel", "Refinery", ("Heavy Oil Residue", ))),
         "Water": (
-            Recipe("Water", "Water Extractor"), ),
+            Recipe("Water", "Water Extractor", implicitly_unlocked=True), ),
         "Concrete": (
             Recipe("Concrete", "Constructor", ("Limestone", ), handcraftable=True),
             Recipe("Fine Concrete", "Assembler", ("Limestone", "Silica")),
@@ -166,19 +168,19 @@ class GameLogic:
             Recipe("Caterium Ingot", "Smelter", ("Caterium Ore", ), handcraftable=True),
             Recipe("Pure Caterium Ingot", "Refinery", ("Caterium Ore", "Water"))),
         "Limestone": (
-            Recipe("Limestone", "Miner Mk.1", handcraftable=True), ),
+            Recipe("Limestone", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Raw Quartz": (
-            Recipe("Raw Quartz", "Miner Mk.1", handcraftable=True), ),
+            Recipe("Raw Quartz", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Iron Ore": (
-            Recipe("Iron Ore", "Miner Mk.1", handcraftable=True), ),
+            Recipe("Iron Ore", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Copper Ore": (
-            Recipe("Copper Ore", "Miner Mk.1", handcraftable=True), ),
+            Recipe("Copper Ore", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Coal": (
-            Recipe("Coal", "Miner Mk.1", handcraftable=True), ),
+            Recipe("Coal", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Sulfur": (
-            Recipe("Sulfur", "Miner Mk.1", handcraftable=True), ),
+            Recipe("Sulfur", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Caterium Ore": (
-            Recipe("Caterium Ore", "Miner Mk.1", handcraftable=True), ),
+            Recipe("Caterium Ore", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Petroleum Coke": (
             Recipe("Petroleum Coke", "Refinery", ("Heavy Oil Residue", ), minimal_belt_speed=2), ),
         "Compacted Coal": (
@@ -235,7 +237,7 @@ class GameLogic:
             Recipe("Portable Miner", "Equipment Workshop", ("Iron Rod", "Iron Plate"), handcraftable=True),
             Recipe("Automated Miner", "Manufacturer", ("Motor", "Steel Pipe", "Iron Rod", "Iron Plate")), ),
         "Bauxite": (
-            Recipe("Bauxite", "Miner Mk.1", handcraftable=True), ),
+            Recipe("Bauxite", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Alumina Solution": (
             Recipe("Alumina Solution", "Refinery", ("Bauxite", "Water"), additional_outputs=("Silica", ), minimal_belt_speed=2), 
             Recipe("Sloppy Alumina", "Refinery", ("Bauxite", "Water"), minimal_belt_speed=3)),
@@ -255,7 +257,7 @@ class GameLogic:
             Recipe("Heat Sink", "Assembler", ("Alclad Aluminum Sheet", "Silica"), minimal_belt_speed=2, handcraftable=True), 
             Recipe("Heat Exchanger", "Assembler", ("Aluminum Casing", "Rubber"), minimal_belt_speed=3)),
         "Nitrogen Gas": (
-            Recipe("Nitrogen Gas", "Resource Well Pressurizer"), ),
+            Recipe("Nitrogen Gas", "Resource Well Pressurizer", implicitly_unlocked=True), ),
         "Nitric Acid": (
             Recipe("Nitric Acid", "Blender", ("Nitrogen Gas", "Water", "Iron Plate")), ),
         "Fused Modular Frame": (
@@ -281,6 +283,8 @@ class GameLogic:
             Recipe("Supercomputer", "Manufacturer", ("Computer", "AI Limiter", "High-Speed Connector", "Plastic"), handcraftable=True),
             Recipe("OC Supercomputer", "Assembler", ("Radio Control Unit", "Cooling System")),
             Recipe("Super-State Computer", "Manufacturer", ("Computer", "Electromagnetic Control Rod", "Battery", "Wire"))),
+        "Uranium": (
+            Recipe("Uranium", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Sulfuric Acid": (
             Recipe("Sulfuric Acid", "Refinery", ("Sulfur", "Water")), 
             Recipe("Encased Uranium Cell", "Blender", ("Uranium", "Concrete", "Sulfuric Acid"), additional_outputs=("Encased Uranium Cell", ))),
@@ -295,7 +299,7 @@ class GameLogic:
             Recipe("Beacon", "Manufacturer", ("Iron Plate", "Iron Rod", "Wire", "Cable")),
             Recipe("Crystal Beacon", "Manufacturer", ("Steel Beam", "Steel Pipe", "Crystal Oscillator"))),
         "Uranium Waste": (
-            Recipe("Uranium Waste", "Nuclear Power Plant", ("Uranium Fuel Rod", "Water")), ),
+            Recipe("Uranium Waste", "Nuclear Power Plant", ("Uranium Fuel Rod", "Water"), implicitly_unlocked=True), ),
         "Non-fissile Uranium": (
             Recipe("Non-fissile Uranium", "Blender", ("Uranium Waste", "Silica", "Nitric Acid", "Sulfuric Acid"), additional_outputs=("Water", )), 
             Recipe("Fertile Uranium", "Blender", ("Uranium", "Uranium Waste", "Nitric Acid", "Sulfuric Acid"), additional_outputs=("Water", ), minimal_belt_speed=2)),
@@ -321,20 +325,75 @@ class GameLogic:
             Recipe("Nuclear Pasta", "Particle Accelerator", ("Copper Powder", "Pressure Conversion Cube")), ),
         "Thermal Propulsion Rocket": (
             Recipe("Thermal Propulsion Rocket", "Manufacturer", ("Modular Engine", "Turbo Motor", "Cooling System", "Fused Modular Frame")), ),
+        "Leaves": (
+            Recipe("Leaves", handcraftable=True, implicitly_unlocked=True), ),
+        "Wood": (
+            Recipe("Wood", handcraftable=True, implicitly_unlocked=True), ),
+        "Hatcher Remains": (
+            Recipe("Hatcher Remains", handcraftable=True), ),
+        "Hog Remains": (
+            Recipe("Hog Remains", handcraftable=True), ),
+        "Plasma Spitter Remains": (
+            Recipe("Plasma Spitter Remains", handcraftable=True), ),
+        "Stinger Remains": (
+            Recipe("Stinger Remains", handcraftable=True), ),
+        "Alien Protein": (
+            Recipe("Hatcher Protein", "Constructor", ("Hatcher Remains", ), handcraftable=True),
+            Recipe("Hog Protein", "Constructor", ("Hog Remains", ), handcraftable=True),
+            Recipe("Spitter Protein", "Constructor", ("Plasma Spitter Remains", ), handcraftable=True),
+            Recipe("Stinger Protein", "Constructor", ("Stinger Remains", ), handcraftable=True)),
+        "Biomass": (
+            Recipe("Biomass (Leaves)", "Constructor", ("Leaves", ), minimal_belt_speed=2, handcraftable=True),
+            Recipe("Biomass (Wood)", "Constructor", ("Wood", ), minimal_belt_speed=4, handcraftable=True),
+            Recipe("Biomass (Mycelia)", "Constructor", ("Mycelia", ), minimal_belt_speed=3, handcraftable=True),
+            Recipe("Biomass (Alien Protein)", "Constructor", ("Alien Protein", ), minimal_belt_speed=5, handcraftable=True)),
+        "Mycelia": (
+            Recipe("Mycelia", handcraftable=True), ),
+        "Fabric": (
+            Recipe("Fabric", "Assembler", ("Biomass", "Mycelia"), handcraftable=True, minimal_belt_speed=2), 
+            Recipe("Polyester Fabric", "Refinery", ("Polymer Resin", "Water"))),
+        "Solid Biofuel": (
+            Recipe("Solid Biofuel", "Constructor", ("Biomass", ), minimal_belt_speed=2, handcraftable=True), ),
+        "Liquid Biofuel": (
+            Recipe("Liquid Biofuel", "Refinery", ("Solid Biofuel", "Water"), minimal_belt_speed=2), ),
+        "Empty Canister": (
+            Recipe("Empty Canister", "Constructor", ("Plastic", ), handcraftable=True),
+            Recipe("Coated Iron Canister", "Assembler", ("Iron Plate", "Copper Sheet")),
+            Recipe("Steel Canister", "Constructor", ("Steel Ingot", ))),
+        "Empty Fluid Tank": (
+            Recipe("Empty Fluid Tank", "Constructor", ("Aluminum Ingot", ), handcraftable=True), ),
+        "Packaged Alumina Solution": (
+            Recipe("Packaged Alumina Solution", "Packager", ("Alumina Solution", "Empty Canister"), minimal_belt_speed=2), ),
+        "Packaged Fuel": (
+            Recipe("Packaged Fuel", "Packager", ("Fuel", "Empty Canister")),
+            Recipe("Diluted Packaged Fuel", "Refinery", ("Heavy Oil Residue", "Packaged Water"))),
+        "Packaged Heavy Oil Residue": (
+            Recipe("Packaged Heavy Oil Residue", "Packager", ("Heavy Oil Residue", "Empty Canister")), ),
+        "Packaged Liquid Biofuel": (
+            Recipe("Packaged Liquid Biofuel", "Packager", ("Liquid Biofuel", "Empty Canister")), ),
+        "Packaged Nitric Acid": (
+            Recipe("Packaged Nitric Acid", "Packager", ("Nitric Acid", "Empty Fluid Tank")), ),
+        "Packaged Nitrogen Gas": (
+            Recipe("Packaged Nitrogen Gas", "Packager", ("Nitrogen Gas", "Empty Fluid Tank")), ),
+        "Packaged Oil": (
+            Recipe("Packaged Oil", "Packager", ("Crude Oil", "Empty Fluid Tank")), ),
+        "Packaged Sulfuric Acid": (
+            Recipe("Packaged Sulfuric Acid", "Packager", ("Sulfuric Acid", "Empty Fluid Tank")), ),
+        "Packaged Turbofuel": (
+            Recipe("Packaged Turbofuel", "Packager", ("Turbofuel", "Empty Fluid Tank")), ),
+        "Packaged Water": (
+            Recipe("Packaged Water", "Packager", ("Water", "Empty Fluid Tank")), ),
+        "Turbofuel": (
+            Recipe("Turbofuel", "Refinery", ("Fuel", "Compacted Coal")),
+            Recipe("Turbo Heavy Fuel", "Refinery", ("Heavy Oil Residue", "Compacted Coal")),
+            Recipe("Turbo Blend Fuel", "Blender", ("Fuel", "Heavy Oil Residue", "Sulfur", "Petroleum Coke"))),
 
         # Hazmat Suit
         # Hover Pack
-
         # belt recipies
-
         # Drone / port
-
-        # turbo fuel
-
-        # packaged stuffs - fuel, Nitrogen Gas
-
-        #Recipe("Diluted Fuel (refinery)", "Refinery", ("Heavy Oil Residue", "Packaged Water")),
-
+        # vehicles
+        # weapons
         # ammo - Turbo Rifle Ammo
     }
 
@@ -369,18 +428,18 @@ class GameLogic:
 
     requirement_per_powerlevel: Dict[PowerLevel, Tuple[Recipe, ...]] = {
         PowerLevel.Simpel: (
-            Recipe("Biomass Power", "Biomass Burner", ("Solid Biomass", )),
-            Recipe("Coal Generator Power", "Coal Generator", ("Coal", "Water"))
+            Recipe("Biomass Power", "Biomass Burner", ("Solid Biofuel", ), implicitly_unlocked=True),
+            Recipe("Coal Generator Power", "Coal Generator", ("Coal", "Water"), implicitly_unlocked=True)
         ),
         PowerLevel.Advanced: (
-            Recipe("Geothermal Generator Power", "Geothermal Generator"),
-            Recipe("Fuel Generator Power (Fuel)","Fuel Generator", ("Fuel", )),
-            Recipe("Fuel Generator Power (Turbofuel)","Fuel Generator", ("Turbofuel", )),
-            Recipe("Fuel Generator Power (Liquid Biofuel)","Fuel Generator", ("Liquid Biofuel", )),
+            Recipe("Geothermal Generator Power", "Geothermal Generator", implicitly_unlocked=True),
+            Recipe("Fuel Generator Power (Liquid Biofuel)","Fuel Generator", ("Liquid Biofuel", ), implicitly_unlocked=True),
+            Recipe("Fuel Generator Power (Fuel)","Fuel Generator", ("Fuel", ), implicitly_unlocked=True),
         ),
         PowerLevel.Complex: (
-            Recipe("Nuclear Power Plant Power (Uranium)","Nuclear Power Plant", ("Uranium Fuel Rod", "Water")),
-            Recipe("Nuclear Power Plant Power (Plutonium)","Nuclear Power Plant", ("Plutonium Fuel Rod", "Water")),
+            Recipe("Fuel Generator Power (Turbofuel)","Fuel Generator", ("Turbofuel", ), implicitly_unlocked=True),
+            Recipe("Nuclear Power Plant Power (Uranium)","Nuclear Power Plant", ("Uranium Fuel Rod", "Water"), implicitly_unlocked=True),
+            Recipe("Nuclear Power Plant Power (Plutonium)","Nuclear Power Plant", ("Plutonium Fuel Rod", "Water"), implicitly_unlocked=True),
         )
     }
 
@@ -422,8 +481,7 @@ class GameLogic:
         ),
         ( # Tier 6
             {"Heavy Modular Frame":50, "Computer":100, "Encased Industrial Beam":200, "Rubber":400, }, # Schematic: Logistics Mk.4 (Schematic_6-1_C)
-            # "Packaged Fuel":50, removed as packaging is not yet in logic
-            {"Motor":50, "Plastic":100, "Rubber":100, }, # Schematic: Jetpack (Schematic_6-2_C)
+            {"Motor":50, "Plastic":100, "Rubber":100, "Packaged Fuel":50 }, # Schematic: Jetpack (Schematic_6-2_C)
             {"Computer":50, "Heavy Modular Frame":100, "Steel Beam":500, "Steel Pipe":600, }, # Schematic: Monorail Train Technology (Schematic_6-3_C)
             {"Copper Sheet":1000, "Plastic":400, "Rubber":400, "Heavy Modular Frame":50, }, # Schematic: Pipeline Engineering Mk.2 (Schematic_6-5_C)
         ),

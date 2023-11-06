@@ -28,9 +28,6 @@ class Part(LocationData):
                                         name: str, items: Items) -> Callable[[CollectionState], bool]:
         
         def can_build_by_any_recipe(state: CollectionState) -> bool:
-            if name in { "Assembly Director System", "Magnetic Field Generator", "Nuclear Pasta", "Thermal Propulsion Rocket" }:
-                debugger = "Attach"
-
             return any(can_build_by_specific_recipe(state, recipe) for recipe in recipes)
 
         def can_build_by_precalculated_recipe(state: CollectionState) -> bool:
@@ -55,9 +52,6 @@ class EventBuilding(LocationData):
             ) -> Callable[[CollectionState], bool]:
 
         def can_build(state: CollectionState) -> bool:
-            if building.name == "Building: Refinery":
-                debugger = "Attach"
-
             return state_logic.has(state, building.name) and \
                 state_logic.can_produce_all_allowing_handcrafting(state, game_logic, building.inputs)
 

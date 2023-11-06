@@ -151,17 +151,11 @@ class SatisfactoryWorld(World):
             "Building: Smelter",
             "Building: Equipment Workshop",
             
-            "Recipe: Limestone",
-            "Recipe: Raw Quartz",
-            "Recipe: Iron Ore",
-            "Recipe: Copper Ore",
-            "Recipe: Coal",
-            "Recipe: Sulfur",
-            "Recipe: Caterium Ore",
-            "Recipe: Bauxite",
-            "Recipe: Water",
-            "Recipe: Crude Oil",
-            "Recipe: Nitrogen Gas",
+            "Recipe: Hatcher Remains", 
+            "Recipe: Hog Remains", 
+            "Recipe: Plasma Spitter Remains", 
+            "Recipe: Stinger Remains",
+            "Recipe: Mycelia",
 
             "Recipe: Iron Ingot",
             "Recipe: Copper Ingot",
@@ -175,6 +169,4 @@ class SatisfactoryWorld(World):
             "Recipe: Screw",
             "Recipe: Wire",
             "Recipe: Cable"
-
-            "Recipe: Uranium Waste",
         }

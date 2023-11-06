@@ -2,7 +2,6 @@ from typing import Tuple, Optional, Set, Iterable
 from BaseClasses import CollectionState
 from .GameLogic import GameLogic, Recipe
 from .Options import SatisfactoryOptions
-from .Items import Items
 
 EventId: Optional[int] = None
 
@@ -40,14 +39,19 @@ class StateLogic:
 
             recipe: Recipe = logic.handcraftable_recipes[part]
 
-            return (recipe.name in self.initial_unlocked_items or state.has(recipe.name, self.player)) \
+            return self.has_access_to_recipe(state, recipe) \
                 and self.can_produce_all_allowing_handcrafting(state, logic, recipe.inputs)
 
         return not parts or all(self.can_produce(state, part) or can_handcraft_part(part) for part in parts)
+    
+    def has_access_to_recipe(self, state: CollectionState, recipe: Recipe) -> bool:
+        return recipe.implicitly_unlocked \
+            or recipe.name in self.initial_unlocked_items \
+            or state.has(recipe.name, self.player)
 
     def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
         #TODO, check if we got enough belt through put, check if pipes are needed, check if advanced power infrastructure is needed
-        return (recipe.name in self.initial_unlocked_items or state.has(recipe.name, self.player)) \
+        return self.has_access_to_recipe(state, recipe) \
             and (recipe.building is None or state.has(building_event_prefix + recipe.building, self.player)) \
             and self.can_produce_all(state, recipe.inputs)
 
