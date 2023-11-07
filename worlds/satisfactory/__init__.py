@@ -123,7 +123,9 @@ class SatisfactoryWorld(World):
     def setup_events(self):
         for location in self.multiworld.get_locations(self.player):
             if location.address == EventId:
-                item = Item(location.name, ItemClassification.progression, EventId, self.player)
+                item_name = location.name.split(";")[0]
+
+                item = Item(item_name, ItemClassification.progression, EventId, self.player)
 
                 location.place_locked_item(item)
                 location.show_in_spoiler = False

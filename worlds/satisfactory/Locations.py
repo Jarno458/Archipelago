@@ -31,7 +31,7 @@ class Part(LocationData):
                 for region, recipes_for_region in recipes_per_region.items()]
 
     def __init__(self, state_logic: StateLogic, region: str, recipes: Iterable[Recipe], name: str, items: Items):
-        super().__init__(region, part_event_prefix + name, EventId,
+        super().__init__(region, part_event_prefix + name + "; " + region, EventId,
             self.can_produce_any_recipe_for_part(state_logic, recipes, name, items))
 
     def can_produce_any_recipe_for_part(self, state_logic: StateLogic, recipes: Tuple[Recipe, ...], 

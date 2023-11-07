@@ -234,7 +234,7 @@ class GameLogic:
         "Adaptive Control Unit": (
             Recipe("Adaptive Control Unit", "Manufacturer", ("Automated Wiring", "Circuit Board", "Heavy Modular Frame", "Computer")), ),
         "Portable Miner": (
-            Recipe("Portable Miner", "Equipment Workshop", ("Iron Rod", "Iron Plate"), handcraftable=True),
+            Recipe("Portable Miner", "Equipment Workshop", ("Iron Rod", "Iron Plate"), handcraftable=True, implicitly_unlocked=True),
             Recipe("Automated Miner", "Manufacturer", ("Motor", "Steel Pipe", "Iron Rod", "Iron Plate")), ),
         "Bauxite": (
             Recipe("Bauxite", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
