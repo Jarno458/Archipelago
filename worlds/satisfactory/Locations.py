@@ -1,4 +1,4 @@
-from typing import List, Optional, Callable, Tuple, Dict
+from typing import List, Optional, Callable, Tuple, Dict, Iterable
 from BaseClasses import CollectionState
 from .GameLogic import GameLogic, Recipe, Building, PowerLevel
 from .StateLogic import StateLogic, EventId, part_event_prefix, building_event_prefix
@@ -20,22 +20,29 @@ class LocationData():
 
 
 class Part(LocationData):
-    def __init__(self, state_logic: StateLogic, recipes: Tuple[Recipe, ...], name: str, items: Items):
-        super().__init__("Overworld", part_event_prefix + name, EventId,
+    @staticmethod
+    def get_parts(state_logic: StateLogic, recipes: Tuple[Recipe, ...], name: str, items: Items) -> List[LocationData]:
+        recipes_per_region: Dict[str, List[Recipe]] = {}
+
+        for recipe in recipes:
+            recipes_per_region.setdefault(recipe.building or "Overworld", []).append(recipe)
+
+        return [Part(state_logic, region, recipes_for_region, name, items) 
+                for region, recipes_for_region in recipes_per_region.items()]
+
+    def __init__(self, state_logic: StateLogic, region: str, recipes: Iterable[Recipe], name: str, items: Items):
+        super().__init__(region, part_event_prefix + name, EventId,
             self.can_produce_any_recipe_for_part(state_logic, recipes, name, items))
 
     def can_produce_any_recipe_for_part(self, state_logic: StateLogic, recipes: Tuple[Recipe, ...], 
                                         name: str, items: Items) -> Callable[[CollectionState], bool]:
         
         def can_build_by_any_recipe(state: CollectionState) -> bool:
-            return any(can_build_by_specific_recipe(state, recipe) for recipe in recipes)
+            return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) for recipe in recipes)
 
         def can_build_by_precalculated_recipe(state: CollectionState) -> bool:
             return state_logic.can_produce_specific_recipe_for_part( 
                 state, items.precalculated_progression_recipes[name])
-        
-        def can_build_by_specific_recipe(state: CollectionState, recipe: Recipe) -> bool:
-            return state_logic.can_produce_specific_recipe_for_part(state, recipe)
 
         if items.precalculated_progression_recipes:
             return can_build_by_precalculated_recipe
@@ -185,16 +192,17 @@ class Locations():
         location_table: List[LocationData] = []
 
         location_table.extend(
-            ElevatorTier(index, self.state_logic, self.game_logic) for index, parts 
-            in enumerate(self.game_logic.space_elevator_tiers))
+            ElevatorTier(index, self.state_logic, self.game_logic) 
+            for index, parts in enumerate(self.game_logic.space_elevator_tiers))
         location_table.extend(
-            Part(self.state_logic, recipes, part, self.items) for part, recipes 
-            in self.game_logic.recipes.items())
+            part 
+            for part_name, recipes in self.game_logic.recipes.items() 
+            for part in Part.get_parts(self.state_logic, recipes, part_name, self.items))
         location_table.extend(
-            EventBuilding(self.game_logic, self.state_logic, name, building) for name, building 
-            in self.game_logic.buildings.items())
+            EventBuilding(self.game_logic, self.state_logic, name, building) 
+            for name, building in self.game_logic.buildings.items())
         location_table.extend(
-            PowerInfrastructure(self.game_logic, self.state_logic, power_level, recipes) for power_level, recipes 
-            in self.game_logic.requirement_per_powerlevel.items())
+            PowerInfrastructure(self.game_logic, self.state_logic, power_level, recipes) 
+            for power_level, recipes in self.game_logic.requirement_per_powerlevel.items())
 
         return location_table

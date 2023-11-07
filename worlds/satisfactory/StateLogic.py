@@ -52,7 +52,7 @@ class StateLogic:
     def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
         #TODO, check if we got enough belt through put, check if pipes are needed, check if advanced power infrastructure is needed
         return self.has_access_to_recipe(state, recipe) \
-            and (recipe.building is None or state.has(building_event_prefix + recipe.building, self.player)) \
-            and self.can_produce_all(state, recipe.inputs)
+            and self.can_produce_all(state, recipe.inputs) \
+            #and (recipe.building is None or state.has(building_event_prefix + recipe.building, self.player))
 
 

@@ -2,7 +2,8 @@ from typing import List, Set, Dict, Tuple, Optional, Callable
 from BaseClasses import MultiWorld, Region, Entrance, Location, CollectionState
 from .Locations import LocationData
 from .GameLogic import GameLogic
-from .StateLogic import StateLogic
+from .StateLogic import StateLogic, building_event_prefix
+
 
 def create_regions_and_return_locations(world: MultiWorld, player: int, 
             game_logic: GameLogic, state_logic: StateLogic, locations: Tuple[LocationData, ...]):
@@ -21,6 +22,9 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
 
         for minestone, _ in enumerate(milestones_per_hub_tier, 1):
             region_names.append(f"Hub {hub_tier}-{minestone}")
+
+    for building in game_logic.buildings.keys():
+        region_names.append(building)
 
     locations_per_region: Dict[str, LocationData] = get_locations_per_region(locations)
     regions: Dict[str, Region] = create_regions(world, player, locations_per_region, region_names)
@@ -54,6 +58,10 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
         for minestone, parts_per_milestone in enumerate(milestones_per_hub_tier, 1):
             connect(player, regions, f"Hub Tier {hub_tier}", f"Hub {hub_tier}-{minestone}", 
                 can_produce_all_allowing_handcrafting(parts_per_milestone.keys()))
+            
+    for building in game_logic.buildings.keys():
+        connect(player, regions, "Overworld", building, 
+            lambda state: state.has(building_event_prefix + building, player))
 
 
 def throwIfAnyLocationIsNotAssignedToARegion(regions: Dict[str, Region], regionNames: Set[str]):
