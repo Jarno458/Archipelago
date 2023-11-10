@@ -1,7 +1,7 @@
 from typing import Tuple, Optional, Dict, ClassVar, Set
 from enum import Enum
 
-class PowerLevel(Enum):
+class PowerInfrastructureLevel(Enum):
     Simpel = 1
     Advanced = 2
     Complex = 3
@@ -29,10 +29,10 @@ class Recipe():
 
 
 class Building(Recipe):
-    power_requirement: Optional[PowerLevel]
+    power_requirement: Optional[PowerInfrastructureLevel]
 
     def __init__(self, name: str, inputs: Optional[Tuple[str, ...]] = None,
-            power_requirement: Optional[PowerLevel] = None):
+            power_requirement: Optional[PowerInfrastructureLevel] = None):
         super().__init__(name, None, inputs, handcraftable=True)
         self.name = "Building: " + name
         self.power_requirement = power_requirement
@@ -68,6 +68,18 @@ class GameLogic:
         "Sulfuric Acid",
         "Nitrogen Gas",
         "Nitric Acid"
+    }
+
+    radioactives: Set[str] = {
+        "Uranium",
+        "Encased Uranium Cell",
+        "Uranium Fuel Rod"
+        "Uranium Waste",
+        "Non-fissile Uranium",
+        "Plutonium Pellet",
+        "Encased Plutonium Cell",
+        "Plutonium Fuel Rod",
+        "Plutonium Waste"
     }
 
     recipes: Dict[str, Tuple[Recipe, ...]] = {
@@ -330,13 +342,13 @@ class GameLogic:
         "Wood": (
             Recipe("Wood", handcraftable=True, implicitly_unlocked=True), ),
         "Hatcher Remains": (
-            Recipe("Hatcher Remains", handcraftable=True), ),
+            Recipe("Hatcher Remains", handcraftable=True, implicitly_unlocked=True), ),
         "Hog Remains": (
-            Recipe("Hog Remains", handcraftable=True), ),
+            Recipe("Hog Remains", handcraftable=True, implicitly_unlocked=True), ),
         "Plasma Spitter Remains": (
-            Recipe("Plasma Spitter Remains", handcraftable=True), ),
+            Recipe("Plasma Spitter Remains", handcraftable=True, implicitly_unlocked=True), ),
         "Stinger Remains": (
-            Recipe("Stinger Remains", handcraftable=True), ),
+            Recipe("Stinger Remains", handcraftable=True, implicitly_unlocked=True), ),
         "Alien Protein": (
             Recipe("Hatcher Protein", "Constructor", ("Hatcher Remains", ), handcraftable=True),
             Recipe("Hog Protein", "Constructor", ("Hog Remains", ), handcraftable=True),
@@ -395,6 +407,10 @@ class GameLogic:
         # vehicles
         # weapons
         # ammo - Turbo Rifle Ammo
+
+        # TODO fix multiple handcraftable recipes per part
+        # TODO fix buildings should not be locked behind a certain power region
+
     }
 
     handcraftable_recipes: Dict[str, Recipe] = { part: recipe 
@@ -403,40 +419,40 @@ class GameLogic:
     }
 
     buildings: Dict[str, Building] = {
-        "Constructor": Building("Constructor", ("Reinforced Iron Plate", "Cable"), PowerLevel.Simpel),
-        "Assembler": Building("Assembler", ("Reinforced Iron Plate", "Rotor", "Cable"), PowerLevel.Simpel),
-        "Manufacturer": Building("Manufacturer", ("Motor", "Heavy Modular Frame", "Cable", "Plastic"), PowerLevel.Advanced),
-        "Packager": Building("Packager", ("Steel Beam", "Rubber", "Plastic"), PowerLevel.Simpel),
-        "Refinery": Building("Refinery", ("Motor", "Encased Industrial Beam", "Steel Pipe", "Copper Sheet"), PowerLevel.Advanced),
-        "Blender": Building("Blender", ("Motor", "Heavy Modular Frame", "Aluminum Casing", "Radio Control Unit"), PowerLevel.Complex),
-        "Particle Accelerator": Building("Particle Accelerator", ("Radio Control Unit", "Electromagnetic Control Rod", "Supercomputer", "Cooling System", "Fused Modular Frame", "Turbo Motor"), PowerLevel.Complex),
+        "Constructor": Building("Constructor", ("Reinforced Iron Plate", "Cable"), PowerInfrastructureLevel.Simpel),
+        "Assembler": Building("Assembler", ("Reinforced Iron Plate", "Rotor", "Cable"), PowerInfrastructureLevel.Simpel),
+        "Manufacturer": Building("Manufacturer", ("Motor", "Heavy Modular Frame", "Cable", "Plastic"), PowerInfrastructureLevel.Advanced),
+        "Packager": Building("Packager", ("Steel Beam", "Rubber", "Plastic"), PowerInfrastructureLevel.Simpel),
+        "Refinery": Building("Refinery", ("Motor", "Encased Industrial Beam", "Steel Pipe", "Copper Sheet"), PowerInfrastructureLevel.Advanced),
+        "Blender": Building("Blender", ("Motor", "Heavy Modular Frame", "Aluminum Casing", "Radio Control Unit"), PowerInfrastructureLevel.Complex),
+        "Particle Accelerator": Building("Particle Accelerator", ("Radio Control Unit", "Electromagnetic Control Rod", "Supercomputer", "Cooling System", "Fused Modular Frame", "Turbo Motor"), PowerInfrastructureLevel.Complex),
         "Biomass Burner": Building("Biomass Burner", ("Iron Plate", "Iron Rod", "Wire")),
         "Coal Generator": Building("Coal Generator", ("Reinforced Iron Plate", "Rotor", "Cable")),
-        "Fuel Generator": Building("Coal Generator", ("Computer", "Heavy Modular Frame", "Motor", "Rubber", "Quickwire")),
-        "Geothermal_Generator": Building("Geothermal_Generator", ("Supercomputer", "Heavy Modular Frame", "High-Speed Connector", "Copper Sheet", "Rubber")),
+        "Fuel Generator": Building("Fuel Generator", ("Computer", "Heavy Modular Frame", "Motor", "Rubber", "Quickwire")),
+        "Geothermal Generator": Building("Geothermal Generator", ("Supercomputer", "Heavy Modular Frame", "High-Speed Connector", "Copper Sheet", "Rubber")),
         "Nuclear Power Plant": Building("Nuclear Power Plant", ("Concrete", "Heavy Modular Frame", "Supercomputer", "Cable", "Alclad Aluminum Sheet")),
-        "Miner Mk.1": Building("Miner Mk.1", ("Iron Plate", "Concrete"), PowerLevel.Simpel),
-        "Miner Mk.2": Building("Miner Mk.2", ("Encased Industrial Beam", "Steel Pipe", "Modular Frame"), PowerLevel.Simpel),
-        "Miner Mk.3": Building("Miner Mk.3", ("Steel Pipe", "Supercomputer", "Fused Modular Frame", "Turbo Motor"), PowerLevel.Advanced),
+        "Miner Mk.1": Building("Miner Mk.1", ("Iron Plate", "Concrete"), PowerInfrastructureLevel.Simpel),
+        "Miner Mk.2": Building("Miner Mk.2", ("Encased Industrial Beam", "Steel Pipe", "Modular Frame"), PowerInfrastructureLevel.Simpel),
+        "Miner Mk.3": Building("Miner Mk.3", ("Steel Pipe", "Supercomputer", "Fused Modular Frame", "Turbo Motor"), PowerInfrastructureLevel.Advanced),
         "Oil Extractor": Building("Oil Extractor", ("Motor", "Encased Industrial Beam", "Cable")),
         "Water Extractor": Building("Water Extractor", ("Copper Sheet", "Reinforced Iron Plate", "Rotor")),
-        "Smelter": Building("Smelter", ("Iron Rod", "Wire"), PowerLevel.Simpel),
-        "Foundry": Building("Foundry", ("Modular Frame", "Rotor", "Concrete"), PowerLevel.Simpel),
-        "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor"), PowerLevel.Advanced),
+        "Smelter": Building("Smelter", ("Iron Rod", "Wire"), PowerInfrastructureLevel.Simpel),
+        "Foundry": Building("Foundry", ("Modular Frame", "Rotor", "Concrete"), PowerInfrastructureLevel.Simpel),
+        "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor"), PowerInfrastructureLevel.Advanced),
         "Equipment Workshop": Building("Equipment Workshop", ("Iron Plate", "Iron Rod")),
     }
 
-    requirement_per_powerlevel: Dict[PowerLevel, Tuple[Recipe, ...]] = {
-        PowerLevel.Simpel: (
+    requirement_per_powerlevel: Dict[PowerInfrastructureLevel, Tuple[Recipe, ...]] = {
+        PowerInfrastructureLevel.Simpel: (
             Recipe("Biomass Power", "Biomass Burner", ("Solid Biofuel", ), implicitly_unlocked=True),
             Recipe("Coal Generator Power", "Coal Generator", ("Coal", "Water"), implicitly_unlocked=True)
         ),
-        PowerLevel.Advanced: (
+        PowerInfrastructureLevel.Advanced: (
             Recipe("Geothermal Generator Power", "Geothermal Generator", implicitly_unlocked=True),
             Recipe("Fuel Generator Power (Liquid Biofuel)","Fuel Generator", ("Liquid Biofuel", ), implicitly_unlocked=True),
             Recipe("Fuel Generator Power (Fuel)","Fuel Generator", ("Fuel", ), implicitly_unlocked=True),
         ),
-        PowerLevel.Complex: (
+        PowerInfrastructureLevel.Complex: (
             Recipe("Fuel Generator Power (Turbofuel)","Fuel Generator", ("Turbofuel", ), implicitly_unlocked=True),
             Recipe("Nuclear Power Plant Power (Uranium)","Nuclear Power Plant", ("Uranium Fuel Rod", "Water"), implicitly_unlocked=True),
             Recipe("Nuclear Power Plant Power (Plutonium)","Nuclear Power Plant", ("Plutonium Fuel Rod", "Water"), implicitly_unlocked=True),

@@ -1,6 +1,6 @@
 from typing import List, Optional, Callable, Tuple, Dict, Iterable
 from BaseClasses import CollectionState
-from .GameLogic import GameLogic, Recipe, Building, PowerLevel
+from .GameLogic import GameLogic, Recipe, Building, PowerInfrastructureLevel
 from .StateLogic import StateLogic, EventId, part_event_prefix, building_event_prefix
 from .Items import Items
 
@@ -8,15 +8,17 @@ from .Items import Items
 class LocationData():
     region: str
     name: str
+    event_name: str
     code: Optional[int]
     rule: Optional[Callable[[CollectionState], bool]]
 
-    def __init__(self, region: str, name: str, code: Optional[int], 
+    def __init__(self, region: str, name: str, code: Optional[int], event_name: Optional[str] = None,
                  rule: Optional[Callable[[CollectionState], bool]] = None):
         self.region = region
         self.name = name
         self.code = code
         self.rule = rule
+        self.event_name = event_name or name
 
 
 class Part(LocationData):
@@ -31,13 +33,14 @@ class Part(LocationData):
                 for region, recipes_for_region in recipes_per_region.items()]
 
     def __init__(self, state_logic: StateLogic, region: str, recipes: Iterable[Recipe], name: str, items: Items):
-        super().__init__(region, part_event_prefix + name + "; " + region, EventId,
+        super().__init__(region, part_event_prefix + name + region, EventId, part_event_prefix + name,
             self.can_produce_any_recipe_for_part(state_logic, recipes, name, items))
 
     def can_produce_any_recipe_for_part(self, state_logic: StateLogic, recipes: Tuple[Recipe, ...], 
                                         name: str, items: Items) -> Callable[[CollectionState], bool]:
-        
         def can_build_by_any_recipe(state: CollectionState) -> bool:
+            if name == "Water":
+                debugger="attach"
             return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) for recipe in recipes)
 
         def can_build_by_precalculated_recipe(state: CollectionState) -> bool:
@@ -67,16 +70,20 @@ class EventBuilding(LocationData):
 
 class PowerInfrastructure(LocationData):
     def __init__(self, game_logic: GameLogic, state_logic: StateLogic, 
-                 powerLevel: PowerLevel, recipes: Tuple[Recipe, ...]):
+                 powerLevel: PowerInfrastructureLevel, recipes: Tuple[Recipe, ...]):
         super().__init__("Overworld", building_event_prefix + str(powerLevel), EventId, 
             self.can_create_power_infrastructure(game_logic, state_logic, powerLevel, recipes))
 
     def can_create_power_infrastructure(self, game_logic: GameLogic, state_logic: StateLogic, 
-                                        powerLevel: PowerLevel, recipes: Tuple[Recipe, ...]
+                                        powerLevel: PowerInfrastructureLevel, recipes: Tuple[Recipe, ...]
             ) -> Callable[[CollectionState], bool]:
 
         def can_power(state: CollectionState) -> bool:
-            return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) 
+            if powerLevel == PowerInfrastructureLevel.Simpel:
+                debugger="attach"
+
+            return any(state_logic.can_build(state, recipe.building) and 
+                       state_logic.can_produce_all_allowing_handcrafting(state, game_logic, recipe.inputs) 
                 for recipe in recipes)
 
         return can_power

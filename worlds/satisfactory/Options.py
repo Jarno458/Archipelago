@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from Options import PerGameCommonOptions, DeathLink, Range, Toggle, SpecialRange, OptionList
+from Options import PerGameCommonOptions, DeathLink, Range, Toggle, SpecialRange, OptionList, StartInventoryPool
 
 class ElevatorTier(SpecialRange):
     """Ship these Space Elevator packages to finish"""
@@ -182,3 +182,4 @@ class SatisfactoryOptions(PerGameCommonOptions):
     traps: Traps
     death_link: DeathLink
     energy_link: EnergyLink
+    start_inventory_from_pool: StartInventoryPool

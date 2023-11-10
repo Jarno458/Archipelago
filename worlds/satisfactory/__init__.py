@@ -1,11 +1,11 @@
-from typing import Dict, List, Set, Tuple, TextIO, Optional, ClassVar
+from typing import Dict, List, Set, TextIO, ClassVar, Iterable
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 from .GameLogic import GameLogic
 from .Items import Items
 from .Locations import Locations, LocationData
 from .StateLogic import EventId, StateLogic
 from .Options import SatisfactoryOptions
-from .Regions import create_regions_and_return_locations
+from .Regions import SatisfactoryLocation, create_regions_and_return_locations
 from ..AutoWorld import World, WebWorld
 
 
@@ -121,9 +121,10 @@ class SatisfactoryWorld(World):
 
 
     def setup_events(self):
+        location: SatisfactoryLocation
         for location in self.multiworld.get_locations(self.player):
             if location.address == EventId:
-                item_name = location.name.split(";")[0]
+                item_name = location.event_name
 
                 item = Item(item_name, ItemClassification.progression, EventId, self.player)
 

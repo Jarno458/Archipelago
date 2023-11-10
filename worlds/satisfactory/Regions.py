@@ -4,6 +4,22 @@ from .Locations import LocationData
 from .GameLogic import GameLogic
 from .StateLogic import StateLogic, building_event_prefix
 
+class SatisfactoryLocation(Location):
+    game: str = "Satisfactory"
+    event_name: Optional[str]
+
+    def __init__(self, player: int, data: LocationData, region: Region):
+        super().__init__(player, data.name, data.code, region)
+
+        self.event_name = data.event_name
+
+        if data.code is None:
+            self.event = True
+            self.locked = True
+
+        if (data.rule):
+            self.access_rule = data.rule
+
 
 def create_regions_and_return_locations(world: MultiWorld, player: int, 
             game_logic: GameLogic, state_logic: StateLogic, locations: Tuple[LocationData, ...]):
@@ -23,8 +39,8 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
         for minestone, _ in enumerate(milestones_per_hub_tier, 1):
             region_names.append(f"Hub {hub_tier}-{minestone}")
 
-    for building in game_logic.buildings.keys():
-        region_names.append(building)
+    for building_name in game_logic.buildings.keys():
+        region_names.append(building_name)
 
     locations_per_region: Dict[str, LocationData] = get_locations_per_region(locations)
     regions: Dict[str, Region] = create_regions(world, player, locations_per_region, region_names)
@@ -59,9 +75,9 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
             connect(player, regions, f"Hub Tier {hub_tier}", f"Hub {hub_tier}-{minestone}", 
                 can_produce_all_allowing_handcrafting(parts_per_milestone.keys()))
             
-    for building in game_logic.buildings.keys():
-        connect(player, regions, "Overworld", building, 
-            lambda state: state.has(building_event_prefix + building, player))
+    for building_name in game_logic.buildings.keys():
+        connect(player, regions, "Overworld", building_name, 
+            lambda state: state.has(building_event_prefix + building_name, player))
 
 
 def throwIfAnyLocationIsNotAssignedToARegion(regions: Dict[str, Region], regionNames: Set[str]):
@@ -74,19 +90,6 @@ def throwIfAnyLocationIsNotAssignedToARegion(regions: Dict[str, Region], regionN
         raise Exception(f"Satisfactory: the following regions are used in locations: {regionNames - existingRegions}, but no such region exists")
 
 
-def create_location(player: int, location_data: LocationData, region: Region) -> Location:
-    location = Location(player, location_data.name, location_data.code, region)
-
-    if (location_data.rule):
-        location.access_rule = location_data.rule
-
-    if id is None:
-        location.event = True
-        location.locked = True
-
-    return location
-
-
 def create_region(world: MultiWorld, player: int, 
         locations_per_region: Dict[str, List[LocationData]], name: str) -> Region:
 
@@ -94,7 +97,7 @@ def create_region(world: MultiWorld, player: int,
 
     if name in locations_per_region:
         for location_data in locations_per_region[name]:
-            location = create_location(player, location_data, region)
+            location = SatisfactoryLocation(player, location_data, region)
             region.locations.append(location)
 
     return region
