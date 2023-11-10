@@ -28,7 +28,7 @@ class StateLogic:
         return state.has(part_event_prefix + part_name, self.player)
     
     def can_power(self, state: CollectionState, power_level: Optional[PowerInfrastructureLevel]) -> bool:
-        return power_level and state.has(str(power_level), self.player)
+        return power_level is None or state.has(str(power_level), self.player)
 
     def can_produce_all(self, state: CollectionState, parts: Optional[Iterable[str]]) -> bool:
         return parts is None or \

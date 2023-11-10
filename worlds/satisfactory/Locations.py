@@ -62,6 +62,9 @@ class EventBuilding(LocationData):
             ) -> Callable[[CollectionState], bool]:
 
         def can_build(state: CollectionState) -> bool:
+            if building.name == "Building: Coal Generator":
+                debugger="attack"
+
             return state_logic.has(state, building.name) \
                 and state_logic.can_power(state, building.power_requirement) \
                 and state_logic.can_produce_all_allowing_handcrafting(state, game_logic, building.inputs)
