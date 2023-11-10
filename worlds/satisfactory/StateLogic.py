@@ -1,6 +1,6 @@
 from typing import Tuple, Optional, Set, Iterable
 from BaseClasses import CollectionState
-from .GameLogic import GameLogic, Recipe
+from .GameLogic import GameLogic, Recipe, PowerInfrastructureLevel
 from .Options import SatisfactoryOptions
 
 EventId: Optional[int] = None
@@ -26,6 +26,9 @@ class StateLogic:
 
     def can_produce(self, state: CollectionState, part_name: str) -> bool:
         return state.has(part_event_prefix + part_name, self.player)
+    
+    def can_power(self, state: CollectionState, power_level: Optional[PowerInfrastructureLevel]) -> bool:
+        return power_level and state.has(str(power_level), self.player)
 
     def can_produce_all(self, state: CollectionState, parts: Optional[Iterable[str]]) -> bool:
         return parts is None or \

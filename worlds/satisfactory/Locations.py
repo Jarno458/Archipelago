@@ -36,7 +36,7 @@ class Part(LocationData):
         super().__init__(region, part_event_prefix + name + region, EventId, part_event_prefix + name,
             self.can_produce_any_recipe_for_part(state_logic, recipes, name, items))
 
-    def can_produce_any_recipe_for_part(self, state_logic: StateLogic, recipes: Tuple[Recipe, ...], 
+    def can_produce_any_recipe_for_part(self, state_logic: StateLogic, recipes: Iterable[Recipe], 
                                         name: str, items: Items) -> Callable[[CollectionState], bool]:
         def can_build_by_any_recipe(state: CollectionState) -> bool:
             if name == "Water":
@@ -56,26 +56,27 @@ class Part(LocationData):
 class EventBuilding(LocationData):
     def __init__(self, game_logic: GameLogic, state_logic: StateLogic, building_name: str, building: Building):
         super().__init__("Overworld", building_event_prefix + building_name, EventId, 
-            self.can_create_building(game_logic, state_logic, building))
+            rule = self.can_create_building(game_logic, state_logic, building))
 
     def can_create_building(self, game_logic: GameLogic, state_logic: StateLogic, building: Building
             ) -> Callable[[CollectionState], bool]:
 
         def can_build(state: CollectionState) -> bool:
-            return state_logic.has(state, building.name) and \
-                state_logic.can_produce_all_allowing_handcrafting(state, game_logic, building.inputs)
+            return state_logic.has(state, building.name) \
+                and state_logic.can_power(state, building.power_requirement) \
+                and state_logic.can_produce_all_allowing_handcrafting(state, game_logic, building.inputs)
 
         return can_build
 
 
 class PowerInfrastructure(LocationData):
     def __init__(self, game_logic: GameLogic, state_logic: StateLogic, 
-                 powerLevel: PowerInfrastructureLevel, recipes: Tuple[Recipe, ...]):
+                 powerLevel: PowerInfrastructureLevel, recipes: Iterable[Recipe]):
         super().__init__("Overworld", building_event_prefix + str(powerLevel), EventId, 
-            self.can_create_power_infrastructure(game_logic, state_logic, powerLevel, recipes))
+            rule = self.can_create_power_infrastructure(game_logic, state_logic, powerLevel, recipes))
 
     def can_create_power_infrastructure(self, game_logic: GameLogic, state_logic: StateLogic, 
-                                        powerLevel: PowerInfrastructureLevel, recipes: Tuple[Recipe, ...]
+                                        powerLevel: PowerInfrastructureLevel, recipes: Iterable[Recipe]
             ) -> Callable[[CollectionState], bool]:
 
         def can_power(state: CollectionState) -> bool:
@@ -92,7 +93,7 @@ class PowerInfrastructure(LocationData):
 class ElevatorTier(LocationData):
     def __init__(self, tier: int, state_logic: StateLogic, game_logic: GameLogic):
         super().__init__("Overworld", f"Elevator Tier {tier + 1}", EventId,
-            lambda state: state_logic.can_produce_all(state, game_logic.space_elevator_tiers[tier].keys()))
+            rule = lambda state: state_logic.can_produce_all(state, game_logic.space_elevator_tiers[tier].keys()))
 
 
 class HubSlot(LocationData):
@@ -127,7 +128,7 @@ class Droppod(LocationData):
             return logic_rule
 
         super().__init__(get_region(gassed, radioactive), f"Crash Site ({x}, {y}, {z})", locationId,
-                get_rule(unlocked_by, needs_power))
+                rule = get_rule(unlocked_by, needs_power))
 
 
 class Locations():
