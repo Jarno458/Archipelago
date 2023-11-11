@@ -62,7 +62,7 @@ class EventBuilding(LocationData):
             ) -> Callable[[CollectionState], bool]:
 
         def can_build(state: CollectionState) -> bool:
-            if building.name == "Building: Coal Generator":
+            if building.name == "Building: Constructor":
                 debugger="attack"
 
             return state_logic.has(state, building.name) \

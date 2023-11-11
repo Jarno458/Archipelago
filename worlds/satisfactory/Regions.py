@@ -77,7 +77,7 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
             
     for building_name in game_logic.buildings.keys():
         connect(player, regions, "Overworld", building_name, 
-            lambda state: state.has(building_event_prefix + building_name, player))
+            lambda state, building_name=building_name: state.has(building_event_prefix + building_name, player))
 
 
 def throwIfAnyLocationIsNotAssignedToARegion(regions: Dict[str, Region], regionNames: Set[str]):

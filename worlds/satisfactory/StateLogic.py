@@ -28,7 +28,7 @@ class StateLogic:
         return state.has(part_event_prefix + part_name, self.player)
     
     def can_power(self, state: CollectionState, power_level: Optional[PowerInfrastructureLevel]) -> bool:
-        return power_level is None or state.has(str(power_level), self.player)
+        return power_level is None or state.has(building_event_prefix +  str(power_level), self.player)
 
     def can_produce_all(self, state: CollectionState, parts: Optional[Iterable[str]]) -> bool:
         return parts is None or \
@@ -36,8 +36,6 @@ class StateLogic:
 
     def can_produce_all_allowing_handcrafting(self, state: CollectionState, logic: GameLogic, 
             parts: Optional[Tuple[str, ...]]) -> bool:
-        
-        
         
         def can_handcraft_part(part: str) -> bool:
             if part == "Coal":
