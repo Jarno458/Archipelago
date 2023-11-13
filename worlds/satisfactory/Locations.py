@@ -62,8 +62,8 @@ class EventBuilding(LocationData):
             ) -> Callable[[CollectionState], bool]:
 
         def can_build(state: CollectionState) -> bool:
-            if building.name == "Building: Constructor":
-                debugger="attack"
+            if building.name == "Building: Refinery":
+                debugger = "attach"
 
             return state_logic.has(state, building.name) \
                 and state_logic.can_power(state, building.power_requirement) \
@@ -83,12 +83,13 @@ class PowerInfrastructure(LocationData):
             ) -> Callable[[CollectionState], bool]:
 
         def can_power(state: CollectionState) -> bool:
-            if powerLevel == PowerInfrastructureLevel.Simpel:
+            if powerLevel == PowerInfrastructureLevel.Advanced:
                 debugger="attach"
 
-            return any(state_logic.can_build(state, recipe.building) and 
+            return any(state_logic.can_power(state, level) for level in PowerInfrastructureLevel if level > powerLevel) \
+                or any(state_logic.can_build(state, recipe.building) and 
                        state_logic.can_produce_all_allowing_handcrafting(state, game_logic, recipe.inputs) 
-                for recipe in recipes)
+                        for recipe in recipes)
 
         return can_power
 

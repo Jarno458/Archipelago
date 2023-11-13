@@ -451,7 +451,6 @@ class Items:
 
 
     player: int
-    multiworld: MultiWorld
     logic: GameLogic
     random: Random
     precalculated_progression_recipes: Optional[Dict[str, Recipe]]
@@ -544,8 +543,8 @@ class Items:
             return random.choice(self.filler_items) 
 
 
-    def build_item_pool(self, random: Random, options: SatisfactoryOptions, excluded_items: Set[str], size: int) \
-             -> List[Item]:
+    def build_item_pool(self, random: Random, options: SatisfactoryOptions, excluded_items: Set[str],
+                        number_of_locations: int) -> List[Item]:
         
         pool: List[Item] = []
 
@@ -559,7 +558,7 @@ class Items:
             item = self.create_item(self, name, self.player)
             pool.append(item)
 
-        for _ in range(size - len(pool)):
+        for _ in range(number_of_locations - len(pool)):
             item = self.create_item(self, self.get_filler_item_name(random, options), self.player)
             pool.append(item)
 

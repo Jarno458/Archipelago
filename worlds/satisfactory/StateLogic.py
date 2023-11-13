@@ -21,11 +21,11 @@ class StateLogic:
     def has(self, state: CollectionState, item_name: str):
         return item_name in self.initial_unlocked_items or state.has(item_name, self.player)
     
-    def can_build(self, state: CollectionState, building_name: str) -> bool:
-        return state.has(building_event_prefix + building_name, self.player)
+    def can_build(self, state: CollectionState, building_name: Optional[str]) -> bool:
+        return building_name is None or state.has(building_event_prefix + building_name, self.player)
 
-    def can_produce(self, state: CollectionState, part_name: str) -> bool:
-        return state.has(part_event_prefix + part_name, self.player)
+    def can_produce(self, state: CollectionState, part_name: Optional[str]) -> bool:
+        return part_name is None or state.has(part_event_prefix + part_name, self.player)
     
     def can_power(self, state: CollectionState, power_level: Optional[PowerInfrastructureLevel]) -> bool:
         return power_level is None or state.has(building_event_prefix +  str(power_level), self.player)
@@ -60,9 +60,10 @@ class StateLogic:
             or state.has(recipe.name, self.player)
 
     def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
-        #TODO, check if we got enough belt through put, check if pipes are needed, check if advanced power infrastructure is needed
+        #TODO, check if we got enough belt through put, check if pipes are needed
         return self.has_access_to_recipe(state, recipe) \
-            and self.can_produce_all(state, recipe.inputs) \
-            #and (recipe.building is None or state.has(building_event_prefix + recipe.building, self.player))
+            and self.can_build(state, recipe.building) \
+            and self.can_produce_all(state, recipe.inputs)
+
 
 

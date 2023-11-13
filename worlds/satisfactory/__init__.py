@@ -69,8 +69,10 @@ class SatisfactoryWorld(World):
 
         excluded_items = set() #self.get_excluded_items()
 
-        self.multiworld.itempool += self.items.build_item_pool(self.random, self.options, excluded_items, 
-            len(self.multiworld.get_unfilled_locations(self.player)))
+        number_of_locations: int = len(self.multiworld.get_unfilled_locations(self.player))
+
+        self.multiworld.itempool += self.items.build_item_pool(self.random, self.options, excluded_items,
+                                                                number_of_locations)
 
 
     def set_rules(self) -> None:
