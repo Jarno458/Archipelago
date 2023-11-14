@@ -18,8 +18,10 @@ class StateLogic:
         self.options = options
         self.initial_unlocked_items = initial_unlocked_items
 
-    def has(self, state: CollectionState, item_name: str):
-        return item_name in self.initial_unlocked_items or state.has(item_name, self.player)
+    def has_recipe(self, state: CollectionState, recipe: Recipe):
+        return recipe.implicitly_unlocked \
+            or recipe.name in self.initial_unlocked_items \
+            or state.has(recipe.name, self.player)
     
     def can_build(self, state: CollectionState, building_name: Optional[str]) -> bool:
         return building_name is None or state.has(building_event_prefix + building_name, self.player)
@@ -48,20 +50,15 @@ class StateLogic:
 
             recipe: Recipe = logic.handcraftable_recipes[part]
 
-            return self.has_access_to_recipe(state, recipe) \
+            return self.has_recipe(state, recipe) \
                 and (not recipe.inputs or 
                      self.can_produce_all_allowing_handcrafting(state, logic, recipe.inputs))
 
         return not parts or all(self.can_produce(state, part) or can_handcraft_part(part) for part in parts)
-    
-    def has_access_to_recipe(self, state: CollectionState, recipe: Recipe) -> bool:
-        return recipe.implicitly_unlocked \
-            or recipe.name in self.initial_unlocked_items \
-            or state.has(recipe.name, self.player)
 
     def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
         #TODO, check if we got enough belt through put, check if pipes are needed
-        return self.has_access_to_recipe(state, recipe) \
+        return self.has_recipe(state, recipe) \
             and self.can_build(state, recipe.building) \
             and self.can_produce_all(state, recipe.inputs)
 

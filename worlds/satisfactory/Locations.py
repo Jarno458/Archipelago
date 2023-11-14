@@ -65,7 +65,7 @@ class EventBuilding(LocationData):
             if building.name == "Building: Refinery":
                 debugger = "attach"
 
-            return state_logic.has(state, building.name) \
+            return state_logic.has_recipe(state, building) \
                 and state_logic.can_power(state, building.power_requirement) \
                 and state_logic.can_produce_all_allowing_handcrafting(state, game_logic, building.inputs)
 
