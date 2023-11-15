@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, Dict, Set
+from typing import Tuple, Optional, Dict, Set, List
 from enum import IntEnum
 
 class PowerInfrastructureLevel(IntEnum):
@@ -7,6 +7,30 @@ class PowerInfrastructureLevel(IntEnum):
     Advanced = 3
     Complex = 4
 
+liquids: Set[str] = {
+    "Water",
+    "Liquid Biofuel",
+    "Crude Oil",
+    "Fuel",
+    "Heavy Oil Residue",
+    "Turbofuel",
+    "Alumina Solution",
+    "Sulfuric Acid",
+    "Nitrogen Gas",
+    "Nitric Acid"
+}
+
+radio_actives: Set[str] = {
+    "Uranium",
+    "Encased Uranium Cell",
+    "Uranium Fuel Rod"
+    "Uranium Waste",
+    "Non-fissile Uranium",
+    "Plutonium Pellet",
+    "Encased Plutonium Cell",
+    "Plutonium Fuel Rod",
+    "Plutonium Waste"
+}
 
 class Recipe():
     name: str
@@ -16,6 +40,9 @@ class Recipe():
     handcraftable: bool
     implicitly_unlocked: bool
     additional_outputs: Tuple[str, ...]
+
+    needs_pipes: bool
+    is_radio_active: bool
 
     def __init__(self, name: str, building: Optional[str] = None, inputs: Optional[Tuple[str, ...]] = None,
             minimal_belt_speed: int = 1, handcraftable: bool = False, implicitly_unlocked: bool = False,
@@ -28,6 +55,14 @@ class Recipe():
         self.implicitly_unlocked = implicitly_unlocked
         self.additional_outputs = additional_outputs
 
+        all_parts: List[str] = [name]
+        if inputs:
+            all_parts += inputs
+        if additional_outputs:
+            all_parts += additional_outputs
+
+        self.needs_pipes = liquids.isdisjoint(all_parts)
+        self.is_radio_active = False # radio_actives.isdisjoint(all_parts)
 
 class Building(Recipe):
     power_requirement: Optional[PowerInfrastructureLevel]
@@ -58,31 +93,6 @@ class MamTree():
 
 
 class GameLogic:
-    liquids: Set[str] = {
-        "Water",
-        "Liquid Biofuel",
-        "Crude Oil",
-        "Fuel",
-        "Heavy Oil Residue",
-        "Turbofuel",
-        "Alumina Solution",
-        "Sulfuric Acid",
-        "Nitrogen Gas",
-        "Nitric Acid"
-    }
-
-    radioactives: Set[str] = {
-        "Uranium",
-        "Encased Uranium Cell",
-        "Uranium Fuel Rod"
-        "Uranium Waste",
-        "Non-fissile Uranium",
-        "Plutonium Pellet",
-        "Encased Plutonium Cell",
-        "Plutonium Fuel Rod",
-        "Plutonium Waste"
-    }
-
     recipes: Dict[str, Tuple[Recipe, ...]] = {
         "Reinforced Iron Plate": (
             Recipe("Reinforced Iron Plate", "Assembler", ("Iron Plate", "Screw"), handcraftable=True),
@@ -328,6 +338,8 @@ class GameLogic:
             Recipe("Gas Filter", "Manufacturer", ("Coal", "Rubber", "Fabric"), handcraftable=True), ),
         "Iodine Infused Filter": (
             Recipe("Iodine Infused Filter", "Manufacturer", ("Gas Filter", "Quickwire", "Aluminum Casing"), handcraftable=True), ),
+        "Hazmat Suit": (
+            Recipe("Hazmat Suit", "Equipment Workshop", ("Rubber", "Plastic", "Fabric", "Alclad Aluminum Sheet"), handcraftable=True), ),
         "Assembly Director System": (
             Recipe("Assembly Director System", "Assembler", ("Adaptive Control Unit", "Supercomputer")), ),
         "Magnetic Field Generator": (
@@ -441,6 +453,8 @@ class GameLogic:
         "Foundry": Building("Foundry", ("Modular Frame", "Rotor", "Concrete"), PowerInfrastructureLevel.Basic),
         "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor"), PowerInfrastructureLevel.Advanced),
         "Equipment Workshop": Building("Equipment Workshop", ("Iron Plate", "Iron Rod")),
+
+        "Pipes": Building("Pipes", ("Copper Sheet", "Iron Plate", "Concrete", "Rotor")),
     }
 
     requirement_per_powerlevel: Dict[PowerInfrastructureLevel, Tuple[Recipe, ...]] = {

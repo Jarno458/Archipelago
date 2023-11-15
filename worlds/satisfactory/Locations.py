@@ -203,6 +203,9 @@ class Locations():
     def get_logical_event_locations(self) -> List[LocationData]:
         location_table: List[LocationData] = []
 
+        # for performance plan is to upfront calculated everything we need
+        # and than create one massive state.has_all for each logical gate (hub tiers, elevator tiers)
+
         location_table.extend(
             ElevatorTier(index, self.state_logic, self.game_logic) 
             for index, parts in enumerate(self.game_logic.space_elevator_tiers))

@@ -378,10 +378,17 @@ class Items:
         "Recipe: Turbofuel": ItemData("Recipe", 1338396, type=ItemClassification.progression),
         "Recipe: Turbo Heavy Fuel": ItemData("Recipe", 1338397, type=ItemClassification.progression),
         "Recipe: Turbo Blend Fuel": ItemData("Recipe", 1338398, type=ItemClassification.progression),
-
+        "Recipe: Hazmat Suit": ItemData("Recipe", 1338399, type=ItemClassification.progression),
         ###
 
         #1338312 - 1338399 Reserved for future recipes
+
+
+        ### New
+        "Building: Pipes": ItemData("Building", 1338600, type=ItemClassification.progression),
+        "Building: Pipes Mk.2": ItemData("Building", 1338601, type=ItemClassification.useful),
+        ###
+
 
         ### New numbers
         #1338400 - 1338899 buildings / others

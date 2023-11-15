@@ -34,7 +34,7 @@ class StateLogic:
 
     def can_produce_all(self, state: CollectionState, parts: Optional[Iterable[str]]) -> bool:
         return parts is None or \
-            state.has_all({part_event_prefix + part_name for part_name in parts}, self.player)
+            state.has_all(map(self.to_part_event, parts), self.player)
 
     def can_produce_all_allowing_handcrafting(self, state: CollectionState, logic: GameLogic, 
             parts: Optional[Tuple[str, ...]]) -> bool:
@@ -52,15 +52,27 @@ class StateLogic:
 
             return self.has_recipe(state, recipe) \
                 and (not recipe.inputs or 
-                     self.can_produce_all_allowing_handcrafting(state, logic, recipe.inputs))
+                    self.can_produce_all_allowing_handcrafting(state, logic, recipe.inputs))
 
         return not parts or all(self.can_produce(state, part) or can_handcraft_part(part) for part in parts)
 
     def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
-        #TODO, check if we got enough belt through put, check if pipes are needed
+        #TODO, check if we got enough belt through put
+        if recipe.needs_pipes and not self.can_build(state, "Pipes"):
+            return False
+        
+        if recipe.is_radio_active and (
+                not self.can_produce(state, "Hazmat Suit") or
+                not self.can_produce(state, "Iodine Infused Filter")):
+            return False
+
         return self.has_recipe(state, recipe) \
             and self.can_build(state, recipe.building) \
             and self.can_produce_all(state, recipe.inputs)
+    
+    @staticmethod
+    def to_part_event(part: str) -> str:
+        return part_event_prefix + part
 
 
 
