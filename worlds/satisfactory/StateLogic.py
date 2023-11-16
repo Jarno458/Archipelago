@@ -65,6 +65,9 @@ class StateLogic:
                 not self.can_produce(state, "Hazmat Suit") or
                 not self.can_produce(state, "Iodine Infused Filter")):
             return False
+        
+        if recipe.minimal_belt_speed and not self.can_build(state, f"Logistics Mk.{recipe.minimal_belt_speed}"):
+            return False
 
         return self.has_recipe(state, recipe) \
             and self.can_build(state, recipe.building) \

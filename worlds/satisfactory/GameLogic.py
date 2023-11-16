@@ -455,6 +455,11 @@ class GameLogic:
         "Equipment Workshop": Building("Equipment Workshop", ("Iron Plate", "Iron Rod")),
 
         "Pipes": Building("Pipes", ("Copper Sheet", "Iron Plate", "Concrete", "Rotor")),
+        "Logistics Mk.1": Building("Logistics Mk.1", ("Iron Plate", "Iron Rod", "Concrete")),
+        "Logistics Mk.2": Building("Logistics Mk.2", ("Reinforced Iron Plate", "Iron Plate", "Iron Rod", "Concrete")),
+        "Logistics Mk.3": Building("Logistics Mk.3", ("Steel Beam", "Iron Plate", "Iron Rod", "Concrete")),
+        "Logistics Mk.4": Building("Logistics Mk.4", ("Encased Industrial Beam", "Iron Plate", "Iron Rod", "Concrete")),
+        "Logistics Mk.5": Building("Logistics Mk.5", ("Alclad Aluminum Sheet", "Iron Plate", "Iron Rod", "Concrete")),
     }
 
     requirement_per_powerlevel: Dict[PowerInfrastructureLevel, Tuple[Recipe, ...]] = {

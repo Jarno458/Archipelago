@@ -387,6 +387,11 @@ class Items:
         ### New
         "Building: Pipes": ItemData("Building", 1338600, type=ItemClassification.progression),
         "Building: Pipes Mk.2": ItemData("Building", 1338601, type=ItemClassification.useful),
+        "Building: Logistics Mk.1": ItemData("Building", 1338602, type=ItemClassification.progression),
+        "Building: Logistics Mk.2": ItemData("Building", 1338602, type=ItemClassification.progression),
+        "Building: Logistics Mk.3": ItemData("Building", 1338602, type=ItemClassification.progression),
+        "Building: Logistics Mk.4": ItemData("Building", 1338602, type=ItemClassification.progression),
+        "Building: Logistics Mk.5": ItemData("Building", 1338602, type=ItemClassification.progression),
         ###
 
 
