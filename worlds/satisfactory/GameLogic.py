@@ -61,8 +61,8 @@ class Recipe():
         if additional_outputs:
             all_parts += additional_outputs
 
-        self.needs_pipes = liquids.isdisjoint(all_parts)
-        self.is_radio_active = False # radio_actives.isdisjoint(all_parts)
+        self.needs_pipes = not liquids.isdisjoint(all_parts)
+        self.is_radio_active = not radio_actives.isdisjoint(all_parts)
 
 class Building(Recipe):
     power_requirement: Optional[PowerInfrastructureLevel]
