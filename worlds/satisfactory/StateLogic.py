@@ -25,6 +25,10 @@ class StateLogic:
     
     def can_build(self, state: CollectionState, building_name: Optional[str]) -> bool:
         return building_name is None or state.has(building_event_prefix + building_name, self.player)
+    
+    def can_build_any(self, state: CollectionState, building_names: Optional[Iterable[str]]) -> bool:
+        return building_names is None or \
+            state.has_any(map(self.to_building_event, building_names), self.player)
 
     def can_produce(self, state: CollectionState, part_name: Optional[str]) -> bool:
         return part_name is None or state.has(part_event_prefix + part_name, self.player)
@@ -40,9 +44,6 @@ class StateLogic:
             parts: Optional[Tuple[str, ...]]) -> bool:
         
         def can_handcraft_part(part: str) -> bool:
-            if part == "Coal":
-                debugger="attach"
-
             if state.has(part_event_prefix + part, self.player):
                 return True
             elif part not in logic.handcraftable_recipes:
@@ -57,16 +58,18 @@ class StateLogic:
         return not parts or all(self.can_produce(state, part) or can_handcraft_part(part) for part in parts)
 
     def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
-        #TODO, check if we got enough belt through put
-        if recipe.needs_pipes and not self.can_build(state, "Pipes"):
+        if recipe.needs_pipes and (
+                not self.can_build(state, "Pipeline Support") or
+                not self.can_build_any(state, ("Pipes Mk.1", "Pipes Mk.2")) or
+                not self.can_build_any(state, ("Pipeline Pump Mk.1", "Pipeline Pump Mk.2"))):
             return False
         
-        if recipe.is_radio_active and (
-                not self.can_produce(state, "Hazmat Suit") or
-                not self.can_produce(state, "Iodine Infused Filter")):
+        if recipe.is_radio_active and not self.can_produce_all(state, ("Hazmat Suit", "Iodine Infused Filter")): 
             return False
         
-        if recipe.minimal_belt_speed and not self.can_build(state, f"Logistics Mk.{recipe.minimal_belt_speed}"):
+        if recipe.minimal_belt_speed and (
+                not self.can_build(state, "Conveyor Pole") or 
+                not self.can_build_any(state, map(self.to_belt_name, range(recipe.minimal_belt_speed, 6)))):
             return False
 
         return self.has_recipe(state, recipe) \
@@ -76,6 +79,14 @@ class StateLogic:
     @staticmethod
     def to_part_event(part: str) -> str:
         return part_event_prefix + part
+
+    @staticmethod
+    def to_building_event(part: str) -> str:
+        return part_event_prefix + part
+    
+    @staticmethod
+    def to_belt_name(power_level: int) -> str:
+        return "Conveyor Mk." + power_level
 
 
 

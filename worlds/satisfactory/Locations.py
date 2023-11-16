@@ -39,8 +39,6 @@ class Part(LocationData):
     def can_produce_any_recipe_for_part(self, state_logic: StateLogic, recipes: Iterable[Recipe], 
                                         name: str, items: Items) -> Callable[[CollectionState], bool]:
         def can_build_by_any_recipe(state: CollectionState) -> bool:
-            if name == "Water":
-                debugger="attach"
             return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) for recipe in recipes)
 
         def can_build_by_precalculated_recipe(state: CollectionState) -> bool:
@@ -62,9 +60,6 @@ class EventBuilding(LocationData):
             ) -> Callable[[CollectionState], bool]:
 
         def can_build(state: CollectionState) -> bool:
-            if building.name == "Building: Refinery":
-                debugger = "attach"
-
             return state_logic.has_recipe(state, building) \
                 and state_logic.can_power(state, building.power_requirement) \
                 and state_logic.can_produce_all_allowing_handcrafting(state, game_logic, building.inputs)
@@ -83,9 +78,6 @@ class PowerInfrastructure(LocationData):
             ) -> Callable[[CollectionState], bool]:
 
         def can_power(state: CollectionState) -> bool:
-            if powerLevel == PowerInfrastructureLevel.Advanced:
-                debugger="attach"
-
             return any(state_logic.can_power(state, level) for level in PowerInfrastructureLevel if level > powerLevel) \
                 or any(state_logic.can_build(state, recipe.building) and 
                        state_logic.can_produce_all_allowing_handcrafting(state, game_logic, recipe.inputs) 

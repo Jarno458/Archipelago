@@ -385,13 +385,29 @@ class Items:
 
 
         ### New
-        "Building: Pipes": ItemData("Building", 1338600, type=ItemClassification.progression),
-        "Building: Pipes Mk.2": ItemData("Building", 1338601, type=ItemClassification.useful),
-        "Building: Logistics Mk.1": ItemData("Building", 1338602, type=ItemClassification.progression),
-        "Building: Logistics Mk.2": ItemData("Building", 1338602, type=ItemClassification.progression),
-        "Building: Logistics Mk.3": ItemData("Building", 1338602, type=ItemClassification.progression),
-        "Building: Logistics Mk.4": ItemData("Building", 1338602, type=ItemClassification.progression),
-        "Building: Logistics Mk.5": ItemData("Building", 1338602, type=ItemClassification.progression),
+        "Building: Pipes Mk.1": ItemData("Building", 1338600, type=ItemClassification.progression),
+        "Building: Pipes Mk.2": ItemData("Building", 1338601, type=ItemClassification.progression),
+        "Building: Conveyor Mk.1": ItemData("Building", 1338602, type=ItemClassification.progression),
+        "Building: Conveyor Mk.2": ItemData("Building", 1338603, type=ItemClassification.progression),
+        "Building: Conveyor Mk.3": ItemData("Building", 1338604, type=ItemClassification.progression),
+        "Building: Conveyor Mk.4": ItemData("Building", 1338605, type=ItemClassification.progression),
+        "Building: Conveyor Mk.5": ItemData("Building", 1338606, type=ItemClassification.progression),
+        "Building: Conveyor Pole": ItemData("Building", 1338607, type=ItemClassification.progression),
+        "Building: Stackable Conveyor Pole": ItemData("Building", 1338608, type=ItemClassification.useful),
+        "Building: Conveyor Wall Mount": ItemData("Building", 1338609, type=ItemClassification.useful),
+        "Building: Conveyor Lift Floor Hole": ItemData("Building", 1338610, type=ItemClassification.useful),
+        "Building: Conveyor Ceiling Mount": ItemData("Building", 1338611, type=ItemClassification.useful),
+        "Building: Pipeline Support": ItemData("Building", 1338612, type=ItemClassification.progression),
+        "Building: Stackable Pipeline Support": ItemData("Building", 1338613, type=ItemClassification.useful),
+        "Building: Pipeline Support": ItemData("Building", 1338614, type=ItemClassification.useful),
+        "Building: Pipeline Wall Hole": ItemData("Building", 1338615, type=ItemClassification.useful),
+        "Building: Pipeline Floor Hole": ItemData("Building", 1338616, type=ItemClassification.useful),
+        "Building: Power Pole Mk.1": ItemData("Building", 1338617, type=ItemClassification.progression),
+        "Building: Pipeline Pump Mk.1": ItemData("Building", 1338618, type=ItemClassification.progression),
+        "Building: Pipeline Pump Mk.2": ItemData("Building", 1338619, type=ItemClassification.progression),
+        "Building: Power Pole Mk.2": ItemData("Building", 1338620, type=ItemClassification.useful),
+        "Building: Power Pole Mk.2": ItemData("Building", 1338621, type=ItemClassification.useful),
+        "Building: Storage Container": ItemData("Building", 1338622, type=ItemClassification.filler),
         ###
 
 

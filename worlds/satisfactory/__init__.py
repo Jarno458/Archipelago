@@ -155,6 +155,11 @@ class SatisfactoryWorld(World):
             "Building: Miner Mk.1",
             "Building: Smelter",
             "Building: Equipment Workshop",
+            "Building: Conveyor Mk.1",
+            "Building: Conveyor Pole",
+            "Building: Power Line"
+            "Building: Power Pole Mk.1"
+            "Building: Storage Container"
             
             "Recipe: Hatcher Remains", 
             "Recipe: Hog Remains", 

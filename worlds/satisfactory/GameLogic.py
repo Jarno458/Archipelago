@@ -454,12 +454,18 @@ class GameLogic:
         "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor"), PowerInfrastructureLevel.Advanced),
         "Equipment Workshop": Building("Equipment Workshop", ("Iron Plate", "Iron Rod")),
 
-        "Pipes": Building("Pipes", ("Copper Sheet", "Iron Plate", "Concrete", "Rotor")),
-        "Logistics Mk.1": Building("Logistics Mk.1", ("Iron Plate", "Iron Rod", "Concrete")),
-        "Logistics Mk.2": Building("Logistics Mk.2", ("Reinforced Iron Plate", "Iron Plate", "Iron Rod", "Concrete")),
-        "Logistics Mk.3": Building("Logistics Mk.3", ("Steel Beam", "Iron Plate", "Iron Rod", "Concrete")),
-        "Logistics Mk.4": Building("Logistics Mk.4", ("Encased Industrial Beam", "Iron Plate", "Iron Rod", "Concrete")),
-        "Logistics Mk.5": Building("Logistics Mk.5", ("Alclad Aluminum Sheet", "Iron Plate", "Iron Rod", "Concrete")),
+        "Pipes Mk.1": Building("Pipes Mk.1", ("Copper Sheet")),
+        "Pipes Mk.2": Building("Pipes Mk.2", ("Copper Sheet", "Plastic")),
+        "Pipeline Pump Mk.1": Building("Pipeline Pump Mk.1", ("Copper Sheet", "Rotor")),
+        "Pipeline Pump Mk.2": Building("Pipeline Pump Mk.2", ("Motor", "Encased Industrial Beam", "Plastic")),
+        "Pipeline Support": Building("Pipeline Support", ("Iron Plate", "Concrete")),
+
+        "Conveyor Mk.1": Building("Conveyor Mk.1", ("Iron Plate")),
+        "Conveyor Mk.2": Building("Conveyor Mk.2", ("Reinforced Iron Plate")),
+        "Conveyor Mk.3": Building("Conveyor Mk.3", ("Steel Beam")),
+        "Conveyor Mk.4": Building("Conveyor Mk.4", ("Encased Industrial Beam")),
+        "Conveyor Mk.5": Building("Conveyor Mk.5", ("Alclad Aluminum Sheet",)),
+        "Conveyor Pole": Building("Conveyor Pole", ("Iron Plate", "Iron Rod", "Concrete")),
     }
 
     requirement_per_powerlevel: Dict[PowerInfrastructureLevel, Tuple[Recipe, ...]] = {
