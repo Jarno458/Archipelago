@@ -454,17 +454,17 @@ class GameLogic:
         "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor"), PowerInfrastructureLevel.Advanced),
         "Equipment Workshop": Building("Equipment Workshop", ("Iron Plate", "Iron Rod")),
 
-        "Pipes Mk.1": Building("Pipes Mk.1", ("Copper Sheet")),
+        "Pipes Mk.1": Building("Pipes Mk.1", ("Copper Sheet", )),
         "Pipes Mk.2": Building("Pipes Mk.2", ("Copper Sheet", "Plastic")),
         "Pipeline Pump Mk.1": Building("Pipeline Pump Mk.1", ("Copper Sheet", "Rotor")),
         "Pipeline Pump Mk.2": Building("Pipeline Pump Mk.2", ("Motor", "Encased Industrial Beam", "Plastic")),
         "Pipeline Support": Building("Pipeline Support", ("Iron Plate", "Concrete")),
 
-        "Conveyor Mk.1": Building("Conveyor Mk.1", ("Iron Plate")),
-        "Conveyor Mk.2": Building("Conveyor Mk.2", ("Reinforced Iron Plate")),
-        "Conveyor Mk.3": Building("Conveyor Mk.3", ("Steel Beam")),
-        "Conveyor Mk.4": Building("Conveyor Mk.4", ("Encased Industrial Beam")),
-        "Conveyor Mk.5": Building("Conveyor Mk.5", ("Alclad Aluminum Sheet",)),
+        "Conveyor Mk.1": Building("Conveyor Mk.1", ("Iron Plate", )),
+        "Conveyor Mk.2": Building("Conveyor Mk.2", ("Reinforced Iron Plate", )),
+        "Conveyor Mk.3": Building("Conveyor Mk.3", ("Steel Beam", )),
+        "Conveyor Mk.4": Building("Conveyor Mk.4", ("Encased Industrial Beam", )),
+        "Conveyor Mk.5": Building("Conveyor Mk.5", ("Alclad Aluminum Sheet", )),
         "Conveyor Pole": Building("Conveyor Pole", ("Iron Plate", "Iron Rod", "Concrete")),
     }
 

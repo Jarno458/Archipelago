@@ -44,7 +44,7 @@ class StateLogic:
             parts: Optional[Tuple[str, ...]]) -> bool:
         
         def can_handcraft_part(part: str) -> bool:
-            if state.has(part_event_prefix + part, self.player):
+            if self.can_produce(state, part):
                 return True
             elif part not in logic.handcraftable_recipes:
                 return False
@@ -55,7 +55,7 @@ class StateLogic:
                 and (not recipe.inputs or 
                     self.can_produce_all_allowing_handcrafting(state, logic, recipe.inputs))
 
-        return not parts or all(self.can_produce(state, part) or can_handcraft_part(part) for part in parts)
+        return not parts or all(can_handcraft_part(part) for part in parts)
 
     def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
         if recipe.needs_pipes and (
@@ -68,7 +68,7 @@ class StateLogic:
             return False
         
         if recipe.minimal_belt_speed and (
-                not self.can_build(state, "Conveyor Pole") or 
+                not self.can_build(state, "Conveyor Pole") or
                 not self.can_build_any(state, map(self.to_belt_name, range(recipe.minimal_belt_speed, 6)))):
             return False
 
@@ -82,11 +82,11 @@ class StateLogic:
 
     @staticmethod
     def to_building_event(part: str) -> str:
-        return part_event_prefix + part
+        return building_event_prefix + part
     
     @staticmethod
     def to_belt_name(power_level: int) -> str:
-        return "Conveyor Mk." + power_level
+        return "Conveyor Mk." + str(power_level)
 
 
 

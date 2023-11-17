@@ -399,7 +399,7 @@ class Items:
         "Building: Conveyor Ceiling Mount": ItemData("Building", 1338611, type=ItemClassification.useful),
         "Building: Pipeline Support": ItemData("Building", 1338612, type=ItemClassification.progression),
         "Building: Stackable Pipeline Support": ItemData("Building", 1338613, type=ItemClassification.useful),
-        "Building: Pipeline Support": ItemData("Building", 1338614, type=ItemClassification.useful),
+        "Building: Wall Pipeline Support": ItemData("Building", 1338614, type=ItemClassification.useful),
         "Building: Pipeline Wall Hole": ItemData("Building", 1338615, type=ItemClassification.useful),
         "Building: Pipeline Floor Hole": ItemData("Building", 1338616, type=ItemClassification.useful),
         "Building: Power Pole Mk.1": ItemData("Building", 1338617, type=ItemClassification.progression),
