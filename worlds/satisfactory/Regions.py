@@ -52,15 +52,17 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
 
     connect(player, regions, "Menu", "Overworld")
     connect(player, regions, "Overworld", "Hub Tier 1")
-    connect(player, regions, "Overworld", "Hub Tier 2")
-    connect(player, regions, "Overworld", "Hub Tier 3", lambda state: state.has("Elevator Tier 1", player))
-    connect(player, regions, "Overworld", "Hub Tier 4", lambda state: state.has("Elevator Tier 1", player))
-    connect(player, regions, "Overworld", "Hub Tier 5", lambda state: state.has("Elevator Tier 2", player))
-    connect(player, regions, "Overworld", "Hub Tier 6", lambda state: state.has("Elevator Tier 2", player))
-    connect(player, regions, "Overworld", "Hub Tier 7", lambda state: state.has("Elevator Tier 3", player))
-    connect(player, regions, "Overworld", "Hub Tier 8", lambda state: state.has("Elevator Tier 3", player))
-    connect(player, regions, "Overworld", "Gas Area", lambda state: state.has("Gas Mask", player))
-    connect(player, regions, "Overworld", "Radioactive Area", lambda state: state.has("Hazmat Suit", player))
+    connect(player, regions, "Hub Tier 1", "Hub Tier 2")
+    connect(player, regions, "Hub Tier 2", "Hub Tier 3", lambda state: state.has("Elevator Tier 1", player))
+    connect(player, regions, "Hub Tier 3", "Hub Tier 4")
+    connect(player, regions, "Hub Tier 4", "Hub Tier 5", lambda state: state.has("Elevator Tier 2", player))
+    connect(player, regions, "Hub Tier 5", "Hub Tier 6")
+    connect(player, regions, "Hub Tier 6", "Hub Tier 7", lambda state: state.has("Elevator Tier 3", player))
+    connect(player, regions, "Hub Tier 7", "Hub Tier 8")
+    connect(player, regions, "Overworld", "Gas Area", lambda state: 
+                                state_logic.can_produce_all(state, ("Gas Mask", "Gas Filter")))
+    connect(player, regions, "Overworld", "Radioactive Area", lambda state:
+                                state_logic.can_produce_all(state, ("Hazmat Suit", "Iodine Infused Filter")))
     connect(player, regions, "Overworld", "Mam") # should prob require mam building and seperated tree"s
     connect(player, regions, "Overworld", "AWESOME Shop") # should prob require AWESOME shop building
 

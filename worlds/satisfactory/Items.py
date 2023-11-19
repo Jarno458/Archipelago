@@ -379,6 +379,7 @@ class Items:
         "Recipe: Turbo Heavy Fuel": ItemData("Recipe", 1338397, type=ItemClassification.progression),
         "Recipe: Turbo Blend Fuel": ItemData("Recipe", 1338398, type=ItemClassification.progression),
         "Recipe: Hazmat Suit": ItemData("Recipe", 1338399, type=ItemClassification.progression),
+        "Recipe: Gas Mask": ItemData("Recipe", 1338400, type=ItemClassification.progression),
         ###
 
         #1338312 - 1338399 Reserved for future recipes

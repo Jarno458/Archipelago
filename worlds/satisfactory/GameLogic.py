@@ -412,6 +412,9 @@ class GameLogic:
             Recipe("Turbofuel", "Refinery", ("Fuel", "Compacted Coal")),
             Recipe("Turbo Heavy Fuel", "Refinery", ("Heavy Oil Residue", "Compacted Coal")),
             Recipe("Turbo Blend Fuel", "Blender", ("Fuel", "Heavy Oil Residue", "Sulfur", "Petroleum Coke"))),
+        "Gas Mask": (
+            Recipe("Gas Mask", "Equipment Workshop", ("Rubber", "Plastic", "Fabric"), handcraftable=True), ),
+
 
         # Hazmat Suit
         # Hover Pack
