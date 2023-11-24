@@ -418,7 +418,6 @@ class GameLogic:
 
         # Hazmat Suit
         # Hover Pack
-        # belt recipies
         # Drone / port
         # vehicles
         # weapons
@@ -426,7 +425,6 @@ class GameLogic:
 
         # TODO fix multiple handcraftable recipes per part
         # TODO fix buildings should not be locked behind a certain power region
-
     }
 
     handcraftable_recipes: Dict[str, Recipe] = { part: recipe 
@@ -454,21 +452,28 @@ class GameLogic:
         "Water Extractor": Building("Water Extractor", ("Copper Sheet", "Reinforced Iron Plate", "Rotor")),
         "Smelter": Building("Smelter", ("Iron Rod", "Wire"), PowerInfrastructureLevel.Basic),
         "Foundry": Building("Foundry", ("Modular Frame", "Rotor", "Concrete"), PowerInfrastructureLevel.Basic),
-        "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor"), PowerInfrastructureLevel.Advanced),
+        "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor", "Steel Beam", "Plastic"), PowerInfrastructureLevel.Advanced),
         "Equipment Workshop": Building("Equipment Workshop", ("Iron Plate", "Iron Rod")),
-
+        "AWESOME Sink": Building("AWESOME Sink", ("Reinforced Iron Plate", "Cable", "Concrete")),
+        "AWESOME Shop": Building("AWESOME Shop", ("Screw", "Iron Plate", "Cable")),
+        "MAM": Building("MAM", ("Reinforced Iron Plate", "Wire", "Cable")),
         "Pipes Mk.1": Building("Pipes Mk.1", ("Copper Sheet", )),
         "Pipes Mk.2": Building("Pipes Mk.2", ("Copper Sheet", "Plastic")),
         "Pipeline Pump Mk.1": Building("Pipeline Pump Mk.1", ("Copper Sheet", "Rotor")),
         "Pipeline Pump Mk.2": Building("Pipeline Pump Mk.2", ("Motor", "Encased Industrial Beam", "Plastic")),
         "Pipeline Support": Building("Pipeline Support", ("Iron Plate", "Concrete")),
-
+        "Pipeline Junction Cross": Building("Pipeline Junction Cross", ("Copper Sheet")),
+        "Conveyor Merger": Building("Conveyor Merger", ("Iron Plate", "Iron Rod")),
+        "Conveyor Splitter": Building("Conveyor Splitter", ("Iron Plate", "Cable")),
         "Conveyor Mk.1": Building("Conveyor Mk.1", ("Iron Plate", )),
         "Conveyor Mk.2": Building("Conveyor Mk.2", ("Reinforced Iron Plate", )),
         "Conveyor Mk.3": Building("Conveyor Mk.3", ("Steel Beam", )),
         "Conveyor Mk.4": Building("Conveyor Mk.4", ("Encased Industrial Beam", )),
         "Conveyor Mk.5": Building("Conveyor Mk.5", ("Alclad Aluminum Sheet", )),
         "Conveyor Pole": Building("Conveyor Pole", ("Iron Plate", "Iron Rod", "Concrete")),
+        "Power Pole Mk.1": Building("Conveyor Pole", ("Iron Plate", "Iron Rod", "Concrete")),
+        "Power Pole Mk.2": Building("Conveyor Pole", ("Iron Plate", "Iron Rod", "Concrete")),
+        "Power Pole Mk.3": Building("Conveyor Pole", ("Iron Plate", "Iron Rod", "Concrete")),
     }
 
     requirement_per_powerlevel: Dict[PowerInfrastructureLevel, Tuple[Recipe, ...]] = {

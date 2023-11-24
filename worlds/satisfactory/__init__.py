@@ -1,4 +1,4 @@
-from typing import Dict, List, Set, TextIO, ClassVar, Iterable
+from typing import Dict, List, Set, TextIO, ClassVar, Tuple
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 from .GameLogic import GameLogic
 from .Items import Items
@@ -80,9 +80,15 @@ class SatisfactoryWorld(World):
             len(self.game_logic.space_elevator_tiers) if self.options.final_resource_sink_points.value > 0 \
                 else self.options.final_elevator_tier.value
 
-        required_parts = self.game_logic.space_elevator_tiers[last_elevator_tier - 1]
+        required_parts: Set[str] = set(self.game_logic.space_elevator_tiers[last_elevator_tier - 1].keys())
+
+        if self.options.final_resource_sink_points > 0:
+            required_parts.union(self.game_logic.buildings["AWESOME Sink"].inputs)
+
+        required_parts_tuple: Tuple[str, ...] = tuple(required_parts)
+
         self.multiworld.completion_condition[self.player] = \
-            lambda state: self.state_logic.can_produce_all(state, required_parts)
+            lambda state: self.state_logic.can_produce_all(state, required_parts_tuple)
 
 
     def fill_slot_data(self) -> Dict[str, object]:
@@ -157,9 +163,11 @@ class SatisfactoryWorld(World):
             "Building: Equipment Workshop",
             "Building: Conveyor Mk.1",
             "Building: Conveyor Pole",
-            "Building: Power Line"
-            "Building: Power Pole Mk.1"
-            "Building: Storage Container"
+            "Building: Power Line",
+            "Building: Power Pole Mk.1",
+            "Building: Storage Container",
+            "Building: Craft Bench",
+            "Building: The HUB"
             
             "Recipe: Hatcher Remains", 
             "Recipe: Hog Remains", 
@@ -174,7 +182,7 @@ class SatisfactoryWorld(World):
             "Recipe: Iron Plate",
             "Recipe: Iron Rod",
 
-            "Recipe: Portable Miner"
+            "Recipe: Portable Miner",
             "Recipe: Reinforced Iron Plate",
             "Recipe: Screw",
             "Recipe: Wire",

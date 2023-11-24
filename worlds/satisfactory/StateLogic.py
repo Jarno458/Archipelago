@@ -29,6 +29,10 @@ class StateLogic:
     def can_build_any(self, state: CollectionState, building_names: Optional[Iterable[str]]) -> bool:
         return building_names is None or \
             state.has_any(map(self.to_building_event, building_names), self.player)
+    
+    def can_build_all(self, state: CollectionState, building_names: Optional[Iterable[str]]) -> bool:
+        return building_names is None or \
+            state.has_all(map(self.to_building_event, building_names), self.player)
 
     def can_produce(self, state: CollectionState, part_name: Optional[str]) -> bool:
         return part_name is None or state.has(part_event_prefix + part_name, self.player)
@@ -59,7 +63,7 @@ class StateLogic:
 
     def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
         if recipe.needs_pipes and (
-                not self.can_build(state, "Pipeline Support") or
+                not self.can_build_all(state, "Pipeline Support", "Pipeline Junction Cross") or
                 not self.can_build_any(state, ("Pipes Mk.1", "Pipes Mk.2")) or
                 not self.can_build_any(state, ("Pipeline Pump Mk.1", "Pipeline Pump Mk.2"))):
             return False
@@ -70,6 +74,9 @@ class StateLogic:
         if recipe.minimal_belt_speed and (
                 not self.can_build(state, "Conveyor Pole") or
                 not self.can_build_any(state, map(self.to_belt_name, range(recipe.minimal_belt_speed, 6)))):
+            return False
+        
+        if recipe.minimal_belt_speed > 1 and not self.can_build_all(state, ("Conveyor Merger", "Conveyor Splitter")):
             return False
 
         return self.has_recipe(state, recipe) \
