@@ -414,15 +414,39 @@ class GameLogic:
             Recipe("Turbo Blend Fuel", "Blender", ("Fuel", "Heavy Oil Residue", "Sulfur", "Petroleum Coke"))),
         "Gas Mask": (
             Recipe("Gas Mask", "Equipment Workshop", ("Rubber", "Plastic", "Fabric"), handcraftable=True), ),
+        "Alien DNA Capsule": (
+            Recipe("Alien DNA Capsule", "Constructor", ("Alien Protein", ), handcraftable=True), ),
+        "Black Powder": (
+            Recipe("Black Powder", "Assembler", ("Coal", "Sulfur"), handcraftable=True), 
+            Recipe("Fine Black Powder", "Assembler", ("Sulfur", "Compacted Coal"))),
+        "Smokeless Powder": (
+            Recipe("Smokeless Powder", "Refinery", ("Black Powder", "Heavy Oil Residue"), handcraftable=True), ),
+        "Rifle Ammo": (
+            Recipe("Rifle Ammo", "Assembler", ("Copper Sheet", "Smokeless Powder"), handcraftable=True, minimal_belt_speed=2), ),
+        "Iron Rebar": (
+            Recipe("Iron Rebar", "Constructor", ("Iron Rod", ), handcraftable=True), ),
+        "Nobelisk": (
+            Recipe("Nobelisk", "Assembler", ("Black Powder", "Steel Pipe"), handcraftable=True), ),
+        "Beryl Nut": (
+            Recipe("Beryl Nut", handcraftable=True, implicitly_unlocked=True), ),
+        "Paleberry": (
+            Recipe("Paleberry", handcraftable=True, implicitly_unlocked=True), ),
+        "Bacon Agaric": (
+            Recipe("Bacon Agaric", handcraftable=True, implicitly_unlocked=True), ),
+        "Blue Power Slug": (
+            Recipe("Blue Power Slug", handcraftable=True, implicitly_unlocked=True), ),
+        "Yellow Power Slug": (
+            Recipe("Yellow Power Slug", handcraftable=True, implicitly_unlocked=True), ),
+        "Purple Power Slug": (
+            Recipe("Purple Power Slug", handcraftable=True, implicitly_unlocked=True), ),
+        "Power Shard": (
+            Recipe("Power Shard (1)", "Constructor", ("Blue Power Slug", ), handcraftable=True),
+            Recipe("Power Shard (2)", "Constructor", ("Yellow Power Slug", ), handcraftable=True),
+            Recipe("Power Shard (5)", "Constructor", ("Purple Power Slug", ), handcraftable=True)),
+        "Hard Drive": (
+            Recipe("Hard Drive", handcraftable=True, implicitly_unlocked=True), ),
 
-
-        # Hazmat Suit
-        # Hover Pack
-        # Drone / port
-        # vehicles
-        # weapons
-        # ammo - Turbo Rifle Ammo
-
+        # TODO transport types arent currently in logic
         # TODO fix multiple handcraftable recipes per part
         # TODO fix buildings should not be locked behind a certain power region
     }
