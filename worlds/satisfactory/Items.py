@@ -385,8 +385,8 @@ class Items:
         "Recipe: Gas Nobelisk":  ItemData((G.Recipe, ), 1338407, C.useful),
         "Recipe: Golden Factory Cart":  ItemData((G.Recipe, ), 1338408, C.useful),
         "Recipe: Homing Rifle Ammo": ItemData((G.Recipe, ), 1338409, C.useful),
-        "Recipe: Iron Rebar":  ItemData((G.Recipe, ), 1338410, C.useful),
-        "Recipe: Nobelisk":  ItemData((G.Recipe, ), 1338411, C.useful),
+        "Recipe: Iron Rebar":  ItemData((G.Recipe, ), 1338410, C.progression),
+        "Recipe: Nobelisk":  ItemData((G.Recipe, ), 1338411, C.progression),
         "Recipe: Nuke Nobelisk": ItemData((G.Recipe, ), 1338412, C.useful),
         "Recipe: Nutritional Inhaler":  ItemData((G.Recipe, ), 1338413, C.useful),
         "Recipe: Object Scanner":  ItemData((G.Recipe, ), 1338414, C.useful),
@@ -395,7 +395,7 @@ class Items:
         "Recipe: Pulse Nobelisk":  ItemData((G.Recipe, ), 1338403, C.useful),
         "Recipe: Rebar Gun":  ItemData((G.Recipe, ), 1338417, C.useful),
         "Recipe: Rifle": ItemData((G.Recipe, ), 1338418, C.useful),
-        "Recipe: Rifle Ammo":  ItemData((G.Recipe, ), 1338419, C.useful),
+        "Recipe: Rifle Ammo":  ItemData((G.Recipe, ), 1338419, C.progression),
         "Recipe: Shatter Rebar":  ItemData((G.Recipe, ), 1338420, C.useful),
         "Recipe: Stun Rebar":  ItemData((G.Recipe, ), 1338421, C.useful),
         "Recipe: Therapeutic Inhaler": ItemData((G.Recipe, ), 1338422, C.useful),
@@ -404,7 +404,12 @@ class Items:
         "Recipe: Xeno-Basher": ItemData((G.Recipe, ), 1338425, C.useful),
         "Recipe: Xeno-Zapper":  ItemData((G.Recipe, ), 1338426, C.useful),
         "Recipe: Zipline":  ItemData((G.Recipe, ), 1338427, C.useful),
-
+        "Recipe: Fine Black Powder": ItemData((G.Recipe, ), 1338428, C.progression),
+        "Recipe: Smokeless Powder": ItemData((G.Recipe, ), 1338429, C.progression),
+        "Recipe: Alien DNA Capsule": ItemData((G.Recipe, ), 1338430, C.progression),
+        "Recipe: Power Shard (1)": ItemData((G.Recipe, ), 1338431, C.progression),
+        "Recipe: Power Shard (2)": ItemData((G.Recipe, ), 1338432, C.useful),
+        "Recipe: Power Shard (5)": ItemData((G.Recipe, ), 1338433, C.useful),
         ###
 
         #1338400 - 1338599 Reserved for future recipes
