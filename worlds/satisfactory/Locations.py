@@ -1,4 +1,4 @@
-from typing import List, Optional, Callable, Tuple, Dict, Iterable
+from typing import List, Optional, Callable, Tuple, Dict, Iterable, ClassVar
 from BaseClasses import CollectionState
 from .GameLogic import GameLogic, Recipe, Building, PowerInfrastructureLevel
 from .StateLogic import StateLogic, EventId, part_event_prefix, building_event_prefix
@@ -98,8 +98,8 @@ class HubSlot(LocationData):
 
 
 class MamSlot(LocationData):
-    def __init__(self, name: str, slot: int, locationId: int):
-        super().__init__(name, f"{name}, item {slot}", locationId)
+    def __init__(self, tree: str, name: str, locationId: int):
+        super().__init__(f"{tree}: {name}", name, locationId)
 
 
 class Droppod(LocationData):
@@ -132,12 +132,12 @@ class Locations():
     state_logic: Optional[StateLogic]
     items: Optional[Items]
 
-    hub_location: int = 1338000
-    max_tiers: int = 10
-    max_milestones: int = 5
-    max_slots: int = 10
+    hub_location_start: ClassVar[int] = 1338000
+    max_tiers: ClassVar[int] = 10
+    max_milestones: ClassVar[int] = 5
+    max_slots: ClassVar[int] = 10
 
-    def __init__(self, game_logic: Optional[GameLogic] = None, 
+    def __init__(self, game_logic: Optional[GameLogic] = None,
                  state_logic: Optional[StateLogic] = None, items: Optional[Items] = None):
         self.game_logic = game_logic
         self.state_logic = state_logic
@@ -145,25 +145,97 @@ class Locations():
 
     def get_base_location_table(self) -> List[LocationData]:
         return [
+            # Hardcoded locations, like pickups on the map
             #Droppod(0, 0, 0, "Motor", self.state_logic, 1337605)),
             #Droppod(0, 0, 0, "Motor", self.state_logic, 1337605)),
             #Droppod(0, 0, 0, "Motor", self.state_logic, 1337605)),
+
+            MamSlot("Alien Organisms", "Inflated Pocket Dimension", 1338500),
+            MamSlot("Alien Organisms", "Hostile Organism Detection", 1338501),
+            MamSlot("Alien Organisms", "Expanded Toolbelt", 1338502),
+            MamSlot("Alien Organisms", "Bio-Organic Properties", 1338503),
+            MamSlot("Alien Organisms", "Stinger Research", 1338504),
+            MamSlot("Alien Organisms", "Hatcher Research", 1338505),
+            MamSlot("Alien Organisms", "Hog Research", 1338506),
+            MamSlot("Alien Organisms", "Spitter Research", 1338507),
+            MamSlot("Alien Organisms", "Structural Analysis", 1338508),
+            MamSlot("Alien Organisms", "Protein Inhaler", 1338509),
+            MamSlot("Alien Organisms", "The Rebar Gun", 1338510),
+            MamSlot("Caterium", "Caterium Electronics", 1338511),
+            MamSlot("Caterium", "Bullet Guidance System", 1338512),
+            MamSlot("Caterium", "High-Speed Connector", 1338513),
+            MamSlot("Caterium", "Caterium", 1338514),
+            MamSlot("Caterium", "Caterium Ingots", 1338515),
+            MamSlot("Caterium", "Quickwire", 1338516),
+            MamSlot("Caterium", "Power Switch", 1338517),
+            MamSlot("Caterium", "Power Poles Mk.2", 1338518),
+            MamSlot("Caterium", "AI Limiter", 1338519),
+            MamSlot("Caterium", "Smart Splitter", 1338520),
+            MamSlot("Caterium", "Programmable Splitter", 1338521),
+            MamSlot("Caterium", "Supercomputer", 1338522),
+            MamSlot("Caterium", "Zipline", 1338523),
+            MamSlot("Caterium", "Geothermal Generator", 1338524),
+            MamSlot("Caterium", "Priority Power Switch", 1338525),
+            MamSlot("Caterium", "Stun Rebar", 1338526),
+            MamSlot("Caterium", "Power Poles Mk.3", 1338527),
+            MamSlot("Mycelia", "Therapeutic Inhaler", 1338528),
+            MamSlot("Mycelia", "Expanded Toolbelt", 1338529),
+            MamSlot("Mycelia", "Mycelia", 1338530),
+            MamSlot("Mycelia", "Fabric", 1338531),
+            MamSlot("Mycelia", "Medical Properties", 1338532),
+            MamSlot("Mycelia", "Toxic Cellular Modification", 1338533),
+            MamSlot("Mycelia", "Vitamin Inhaler", 1338534),
+            MamSlot("Mycelia", "Parachute", 1338535),
+            MamSlot("Mycelia", "Synthethic Polyester Fabric", 1338536),
+            MamSlot("Nutrients", "Bacon Agaric", 1338537),
+            MamSlot("Nutrients", "Beryl Nut", 1338538),
+            MamSlot("Nutrients", "Paleberry", 1338539),
+            MamSlot("Nutrients", "Nutritional Processor", 1338540),
+            MamSlot("Nutrients", "Nutritional Inhaler", 1338541),
+            MamSlot("Power Slugs", "Slug Scanning", 1338542),
+            MamSlot("Power Slugs", "Blue Power Slugs", 1338543),
+            MamSlot("Power Slugs", "Yellow Power Shards", 1338544),
+            MamSlot("Power Slugs", "Purple Power Shards", 1338545),
+            MamSlot("Power Slugs", "Overclock Production", 1338546),
+            MamSlot("Quartz", "Crystal Oscillator", 1338547),
+            MamSlot("Quartz", "Quartz Crystals", 1338548),
+            MamSlot("Quartz", "Quartz", 1338549),
+            MamSlot("Quartz", "Shatter Rebar", 1338550),
+            MamSlot("Quartz", "Silica", 1338551),
+            MamSlot("Quartz", "Explosive Resonance Application", 1338552),
+            MamSlot("Quartz", "Blade Runners", 1338553),
+            MamSlot("Quartz", "The Explorer", 1338554),
+            MamSlot("Quartz", "Radio Signal Scanning", 1338555),
+            MamSlot("Quartz", "Inflated Pocket Dimension", 1338556),
+            MamSlot("Quartz", "Radar Technology", 1338557),
+            MamSlot("Sulfur", "The Nobelisk Detonator", 1338558),
+            MamSlot("Sulfur", "Smokeless Powder", 1338559),
+            MamSlot("Sulfur", "Sulfur", 1338560),
+            MamSlot("Sulfur", "Inflated Pocket Dimension", 1338561),
+            MamSlot("Sulfur", "The Rifle", 1338562),
+            MamSlot("Sulfur", "Compacted Coal", 1338563),
+            MamSlot("Sulfur", "Black Powder", 1338564),
+            MamSlot("Sulfur", "Explosive Rebar", 1338565),
+            MamSlot("Sulfur", "Cluster Nobelisk", 1338566),
+            MamSlot("Sulfur", "Experimental Power Generation", 1338567),
+            MamSlot("Sulfur", "Turbo Rifle Ammo", 1338568),
+            MamSlot("Sulfur", "Turbo Fuel", 1338569),
+            MamSlot("Sulfur", "Expanded Toolbelt", 1338570),
+            MamSlot("Sulfur", "Nuclear Deterrent Development", 1338571)
         ]
 
-    def get_all_location_ids_by_name(self) -> Dict[str, int]:
-        location_table = self.get_base_location_table()
+    def get_all_location_ids_by_name(cls) -> Dict[str, int]:
+        location_table = cls.get_base_location_table()
 
         # All possible locations
-        for tier in range(1, self.max_tiers + 1):
-            for milestone in range(1, self.max_milestones + 1):
-                for slot in range(1, self.max_slots + 1):
-                    location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, self.hub_location))
-                    self.hub_location += 1
+        hub_location_id = cls.hub_location_start
+        for tier in range(1, cls.max_tiers + 1):
+            for milestone in range(1, cls.max_milestones + 1):
+                for slot in range(1, cls.max_slots + 1):
+                    location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, hub_location_id))
+                    hub_location_id += 1
 
-        # TODO mam slots
-        # location_table.append(MamSlot(f"Mam TODO"))
-
-        location_table.append(LocationData("Overworld", "UpperBound", 1338999))
+        location_table.append(LocationData("Overworld", "UpperBound", 1339999))
 
         return {location.name: location.code for location in location_table}
 
@@ -174,18 +246,16 @@ class Locations():
         location_table = self.get_base_location_table()
 
         # Only used locations
+        hub_location_id = self.hub_location_start
         for tier in range(1, self.max_tiers + 1):
             for milestone in range(1, self.max_milestones + 1):
                 for slot in range(1, self.max_slots + 1):
                     if tier <= len(self.game_logic.hub_layout) \
                             and milestone <= len(self.game_logic.hub_layout[tier - 1]) \
                             and slot <= self.game_logic.slots_per_milestone:
-                        location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, self.hub_location))
+                        location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, hub_location_id))
 
-                    self.hub_location += 1
-
-        # TODO mam slots
-        # location_table.append(MamSlot(f"Mam TODO"))
+                    hub_location_id += 1
 
         location_table.extend(self.get_logical_event_locations())
 

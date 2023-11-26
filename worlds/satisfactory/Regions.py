@@ -42,6 +42,12 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
     for building_name in game_logic.buildings.keys():
         region_names.append(building_name)
 
+    for tree_name, tree in game_logic.man_trees.items():
+        region_names.append(tree_name)
+
+        for node in tree.nodes:
+            region_names.append(f"{tree_name}: {node.name}")
+
     locations_per_region: Dict[str, LocationData] = get_locations_per_region(locations)
     regions: Dict[str, Region] = create_regions(world, player, locations_per_region, region_names)
 
@@ -79,7 +85,16 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
             
     for building_name in game_logic.buildings.keys():
         connect(player, regions, "Overworld", building_name, 
-            lambda state, building_name=building_name: state.has(building_event_prefix + building_name, player))
+            lambda state, building_name=building_name: state_logic.can_build(state, building_name))
+        
+    for tree_name, tree in game_logic.man_trees.items():
+        connect(player, regions, "Overworld", tree_name, 
+            lambda state, parts=tree.access_items: state_logic.can_build_any(state, parts))
+
+        for node in tree.nodes:
+            for parent in node.depends_on:
+                connect(player, regions, f"{tree_name}: {parent}", f"{tree_name}: {node.name}", 
+                    lambda state, parts=node.unlock_cost.keys(): state_logic.can_build_all(state, parts))
 
 
 def throwIfAnyLocationIsNotAssignedToARegion(regions: Dict[str, Region], regionNames: Set[str]):

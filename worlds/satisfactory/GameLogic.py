@@ -75,20 +75,22 @@ class Building(Recipe):
 
 
 class MamNode():
+    name: str
     unlock_cost: Dict[str, int]
     depends_on: Tuple[str, ...]
 
-    def __init__(self, unlock_cost: Dict[str, int], depends_on: Tuple[str, ...]):
+    def __init__(self, name: str, unlock_cost: Dict[str, int], depends_on: Tuple[str, ...]):
+        self.name = name
         self.unlock_cost = unlock_cost
         self.depends_on = depends_on
 
 
 class MamTree():
     access_items: Tuple[str, ...]
-    nodes: Tuple[str, ...]
+    nodes: Tuple[MamNode, ...]
 
-    def __init__(self, access_items: Tuple[str, ...], nodes: Tuple[str, ...]):
-        self.access_item = access_items
+    def __init__(self, access_items: Tuple[str, ...], nodes: Tuple[MamNode, ...]):
+        self.access_items = access_items
         self.nodes = nodes
 
 
@@ -517,7 +519,7 @@ class GameLogic:
         )
     }
 
-    slots_per_milestone: int = 10
+    slots_per_milestone: int = 8
 
     hub_layout: Tuple[Tuple[Dict[str, int], ...], ...] = (
         # Regenerate via /Script/Engine.Blueprint'/Archipelago/Debug/CC_BuildHubData.CC_BuildHubData'
@@ -581,187 +583,276 @@ class GameLogic:
         { "Assembly Director System": 4000, "Magnetic Field Generator": 4000, "Nuclear Pasta": 1000, "Thermal Propulsion Rocket": 1000 },
     )
 
-        # Regenerate via /Script/Engine.Blueprint'/Archipelago/Debug/CC_BuildMamData.CC_BuildMamData'
-    mam_nodes_layout: Dict[str, MamNode] = {
-        # Alien Organisms (BPD_ResearchTree_AlienOrganisms_C)
-        "Node: Alien Organisms - Inflated Pocket Dimension": MamNode({"Alien Protein":3,"Cable":1000,}, depends_on=("Node: Alien Organisms - Bio-Organic Properties", )), #(Research_AOrgans_3_C)
-        "Node: Alien Organisms - Hostile Organism Detection": MamNode({"Alien DNA Capsule":10,"Crystal Oscillator":5,"High-Speed Connector":5,}, depends_on=("Node: Alien Organisms - Bio-Organic Properties", )), #(Research_AOrganisms_2_C)
-        "Node: Alien Organisms - Expanded Toolbelt": MamNode({"Alien DNA Capsule":5,"Steel Beam":500,}, depends_on=("Node: Alien Organisms - Inflated Pocket Dimension", )), #(Research_ACarapace_3_C)
-        "Node: Alien Organisms - Bio-Organic Properties": MamNode({"Alien Protein":5,}, depends_on=("Node: Alien Organisms - Spitter Research", "Node: Alien Organisms - Hog Research", "Node: Alien Organisms - Hatcher Research", "Node: Alien Organisms - Stinger Research", )), #(Research_AO_DNACapsule_C)
-        "Node: Alien Organisms - Stinger Research": MamNode({"Stinger Remains":1,}, depends_on=()), #(Research_AO_Stinger_C)
-        "Node: Alien Organisms - Hatcher Research": MamNode({"Hatcher Remains":1,}, depends_on=()), #(Research_AO_Hatcher_C)
-        "Node: Alien Organisms - Hog Research": MamNode({"Hog Remains":1,}, depends_on=()), #(Research_ACarapace_0_C)
-        "Node: Alien Organisms - Spitter Research": MamNode({"Plasma Spitter Remains":1,}, depends_on=()), #(Research_AOrgans_0_C)
-        "Node: Alien Organisms - Structural Analysis": MamNode({"Alien DNA Capsule":5,"Iron Rod":100,}, depends_on=("Node: Alien Organisms - Bio-Organic Properties", )), #(Research_AO_Pre_Rebar_C)
-        "Node: Alien Organisms - Protein Inhaler": MamNode({"Alien Protein":2,"Beryl Nut":20,"Rotor":50,}, depends_on=("Node: Alien Organisms - Bio-Organic Properties", )), #(Research_AOrgans_2_C)
-        "Node: Alien Organisms - The Rebar Gun": MamNode({"Rotor":25,"Reinforced Iron Plate":50,"Screw":500,}, depends_on=("Node: Alien Organisms - Structural Analysis", )), #(Research_ACarapace_2_C)
-        # Caterium (BPD_ResearchTree_Caterium_C)
-        "Node: Caterium - Caterium Electronics": MamNode({"Quickwire":100,}, depends_on=("Node: Caterium - Quickwire", "Node: Caterium - Quickwire", "Node: Caterium - Quickwire", )), #(Research_Caterium_3_C)
-        "Node: Caterium - Bullet Guidance System": MamNode({"High-Speed Connector":10,"Rifle Ammo":500,}, depends_on=("Node: Caterium - High-Speed Connector", )), #(Research_Caterium_6_3_C)
-        "Node: Caterium - High-Speed Connector": MamNode({"Quickwire":500,"Plastic":50,}, depends_on=("Node: Caterium - Caterium Electronics", )), #(Research_Caterium_5_C)
-        "Node: Caterium - Caterium": MamNode({"Caterium Ore":10,}, depends_on=()), #(Research_Caterium_0_C)
-        "Node: Caterium - Caterium Ingots": MamNode({"Caterium Ore":50,}, depends_on=("Node: Caterium - Caterium", )), #(Research_Caterium_1_C)
-        "Node: Caterium - Quickwire": MamNode({"Caterium Ingot":50,}, depends_on=("Node: Caterium - Caterium Ingots", )), #(Research_Caterium_2_C)
-        "Node: Caterium - Power Switch": MamNode({"Steel Beam":100,"AI Limiter":50,}, depends_on=("Node: Caterium - AI Limiter", )), #(Research_Caterium_4_1_2_C)
-        "Node: Caterium - Power Poles Mk.2": MamNode({"Quickwire":300,}, depends_on=("Node: Caterium - Caterium Electronics", )), #(Research_Caterium_4_2_C)
-        "Node: Caterium - AI Limiter": MamNode({"Quickwire":200,"Copper Sheet":50,}, depends_on=("Node: Caterium - Caterium Electronics", )), #(Research_Caterium_4_1_C)
-        "Node: Caterium - Smart Splitter": MamNode({"AI Limiter":10,"Reinforced Iron Plate":50,}, depends_on=("Node: Caterium - AI Limiter", )), #(Research_Caterium_4_1_1_C)
-        "Node: Caterium - Programmable Splitter": MamNode({"Supercomputer":50,"Heavy Modular Frame":50,}, depends_on=("Node: Caterium - Supercomputer", )), #(Research_Caterium_7_1_C)
-        "Node: Caterium - Supercomputer": MamNode({"AI Limiter":50,"High-Speed Connector":50,"Computer":50,}, depends_on=("Node: Caterium - AI Limiter", "Node: Caterium - High-Speed Connector", "Node: Caterium - High-Speed Connector", )), #(Research_Caterium_6_1_C)
-        "Node: Caterium - Zipline": MamNode({"Quickwire":100,"Cable":50,}, depends_on=("Node: Caterium - Quickwire", )), #(Research_Caterium_2_1_C)
-        "Node: Caterium - Geothermal Generator": MamNode({"Supercomputer":50,"Heavy Modular Frame":50,"Rubber":300,}, depends_on=("Node: Caterium - Supercomputer", )), #(Research_Caterium_7_2_C)
-        "Node: Caterium - Priority Power Switch": MamNode({"High-Speed Connector":25,"Circuit Board":50,}, depends_on=("Node: Caterium - High-Speed Connector", )), #(Research_Caterium_5_1_C)
-        "Node: Caterium - Stun Rebar": MamNode({"Quickwire":50,"Iron Rebar":10,}, depends_on=("Node: Caterium - Quickwire", )), #(Research_Caterium_3_2_C)
-        "Node: Caterium - Power Poles Mk.3": MamNode({"High-Speed Connector":50,"Steel Pipe":200,}, depends_on=("Node: Caterium - Power Poles Mk.2", )), #(Research_Caterium_6_2_C)
-        # Hard Drive (BPD_ResearchTree_HardDrive_C)
-        # Mycelia (BPD_ResearchTree_Mycelia_C)
-        "Node: Mycelia - Therapeutic Inhaler": MamNode({"Mycelia":15,"Bacon Agaric":1,"Alien Protein":1,}, depends_on=("Node: Mycelia - Medical Properties", )), #(Research_Mycelia_6_C)
-        "Node: Mycelia - Expanded Toolbelt": MamNode({"Fabric":50,"Rotor":100,}, depends_on=("Node: Mycelia - Fabric", )), #(Research_Mycelia_7_C)
-        "Node: Mycelia - Mycelia": MamNode({"Mycelia":5,}, depends_on=()), #(Research_Mycelia_1_C)
-        "Node: Mycelia - Fabric": MamNode({"Mycelia":25,"Biomass":100,}, depends_on=("Node: Mycelia - Mycelia", )), #(Research_Mycelia_2_C)
-        "Node: Mycelia - Medical Properties": MamNode({"Mycelia":25,"Stator":10,}, depends_on=("Node: Mycelia - Mycelia", )), #(Research_Mycelia_4_C)
-        "Node: Mycelia - Toxic Cellular Modification": MamNode({"Nobelisk":10,"Mycelia":100,"Biomass":200,}, depends_on=("Node: Mycelia - Mycelia", )), #(Research_Mycelia_8_C)
-        "Node: Mycelia - Vitamin Inhaler": MamNode({"Mycelia":10,"Paleberry":5,}, depends_on=("Node: Mycelia - Medical Properties", )), #(Research_Mycelia_5_C)
-        "Node: Mycelia - Parachute": MamNode({"Fabric":10,"Cable":50,}, depends_on=("Node: Mycelia - Fabric", )), #(Research_Mycelia_3_C)
-        "Node: Mycelia - Synthethic Polyester Fabric": MamNode({"Fabric":25,"Polymer Resin":100,}, depends_on=("Node: Mycelia - Fabric", "Node: Mycelia - Fabric", )), #(Research_Mycelia_2_1_C)
-        # Nutrients (BPD_ResearchTree_Nutrients_C)
-        "Node: Nutrients - Bacon Agaric": MamNode({"Bacon Agaric":1,}, depends_on=()), #(Research_Nutrients_2_C)
-        "Node: Nutrients - Beryl Nut": MamNode({"Beryl Nut":5,}, depends_on=()), #(Research_Nutrients_1_C)
-        "Node: Nutrients - Paleberry": MamNode({"Paleberry":2,}, depends_on=()), #(Research_Nutrients_0_C)
-        "Node: Nutrients - Nutritional Processor": MamNode({"Modular Frame":25,"Steel Pipe":50,"Wire":500,}, depends_on=("Node: Nutrients - Beryl Nut", "Node: Nutrients - Bacon Agaric", "Node: Nutrients - Paleberry", )), #(Research_Nutrients_3_C)
-        "Node: Nutrients - Nutritional Inhaler": MamNode({"Bacon Agaric":2,"Paleberry":4,"Beryl Nut":10,}, depends_on=("Node: Nutrients - Nutritional Processor", )), #(Research_Nutrients_4_C)
-        # Power Slugs (BPD_ResearchTree_PowerSlugs_C)
-        "Node: Power Slugs - Slug Scanning": MamNode({"Iron Rod":50,"Wire":100,"Screw":200,}, depends_on=("Node: Power Slugs - Blue Power Slugs", )), #(Research_PowerSlugs_3_C)
-        "Node: Power Slugs - Blue Power Slugs": MamNode({"Blue Power Slug":1,}, depends_on=()), #(Research_PowerSlugs_1_C)
-        "Node: Power Slugs - Yellow Power Shards": MamNode({"Yellow Power Slug":1,"Rotor":25,"Cable":100,}, depends_on=("Node: Power Slugs - Blue Power Slugs", )), #(Research_PowerSlugs_4_C)
-        "Node: Power Slugs - Purple Power Shards": MamNode({"Purple Power Slug":1,"Modular Frame":25,"Copper Sheet":100,}, depends_on=("Node: Power Slugs - Yellow Power Shards", )), #(Research_PowerSlugs_5_C)
-        "Node: Power Slugs - Overclock Production": MamNode({"Power Shard":1,"Iron Plate":50,"Wire":50,}, depends_on=("Node: Power Slugs - Blue Power Slugs", )), #(Research_PowerSlugs_2_C)
-        # Quartz (BPD_ResearchTree_Quartz_C)
-        "Node: Quartz - Crystal Oscillator": MamNode({"Quartz Crystal":100,"Reinforced Iron Plate":50,}, depends_on=("Node: Quartz - Quartz Crystals", "Node: Quartz - Quartz Crystals", )), #(Research_Quartz_2_C)
-        "Node: Quartz - Quartz Crystals": MamNode({"Raw Quartz":20,}, depends_on=("Node: Quartz - Quartz", )), #(Research_Quartz_1_1_C)
-        "Node: Quartz - Quartz": MamNode({"Raw Quartz":10,}, depends_on=()), #(Research_Quartz_0_C)
-        "Node: Quartz - Shatter Rebar": MamNode({"Quartz Crystal":30,"Iron Rebar":150,}, depends_on=("Node: Quartz - Quartz Crystals", )), #(Research_Quartz_2_1_C)
-        "Node: Quartz - Silica": MamNode({"Raw Quartz":20,}, depends_on=("Node: Quartz - Quartz", )), #(Research_Quartz_1_2_C)
-        "Node: Quartz - Explosive Resonance Application": MamNode({"Crystal Oscillator":5,"Nobelisk":100,}, depends_on=("Node: Quartz - Crystal Oscillator", )), #(Research_Quartz_3_4_C)
-        "Node: Quartz - Blade Runners": MamNode({"Silica":50,"Modular Frame":10,}, depends_on=("Node: Quartz - Silica", )), #(Research_Caterium_4_3_C)
-        "Node: Quartz - The Explorer": MamNode({"Crystal Oscillator":10,"Modular Frame":100,}, depends_on=("Node: Quartz - Crystal Oscillator", )), #(Research_Quartz_3_1_C)
-        "Node: Quartz - Radio Signal Scanning": MamNode({"Crystal Oscillator":100,"Motor":100,"Object Scanner":1,}, depends_on=("Node: Quartz - Crystal Oscillator", )), #(Research_Quartz_4_1_C)
-        "Node: Quartz - Inflated Pocket Dimension": MamNode({"Silica":200,}, depends_on=("Node: Quartz - Silica", )), #(Research_Caterium_3_1_C)
-        "Node: Quartz - Radar Technology": MamNode({"Crystal Oscillator":50,"Heavy Modular Frame":50,"Circuit Board":100,}, depends_on=("Node: Quartz - Crystal Oscillator", )), #(Research_Quartz_4_C)
-        # Sulfur (BPD_ResearchTree_Sulfur_C)
-        "Node: Sulfur - The Nobelisk Detonator": MamNode({"Black Powder":50,"Steel Pipe":100,"Cable":200,}, depends_on=("Node: Sulfur - Black Powder", )), #(Research_Sulfur_3_1_C)
-        "Node: Sulfur - Smokeless Powder": MamNode({"Black Powder":100,"Plastic":50,}, depends_on=("Node: Sulfur - Black Powder", )), #(Research_Sulfur_3_C)
-        "Node: Sulfur - Sulfur": MamNode({"Sulfur":10,}, depends_on=()), #(Research_Sulfur_0_C)
-        "Node: Sulfur - Inflated Pocket Dimension": MamNode({"Smokeless Powder":50,"Circuit Board":50,}, depends_on=("Node: Sulfur - Nuclear Deterrent Development", "Node: Sulfur - Turbo Rifle Ammo", "Node: Sulfur - Cluster Nobelisk", "Node: Sulfur - The Rifle", )), #(Research_Sulfur_6_C)
-        "Node: Sulfur - The Rifle": MamNode({"Smokeless Powder":50,"Motor":100,"Rubber":200,}, depends_on=("Node: Sulfur - Smokeless Powder", )), #(Research_Sulfur_4_1_C)
-        "Node: Sulfur - Compacted Coal": MamNode({"Hard Drive":1,"Sulfur":25,"Coal":25,}, depends_on=("Node: Sulfur - Experimental Power Generation", )), #(Research_Sulfur_CompactedCoal_C)
-        "Node: Sulfur - Black Powder": MamNode({"Sulfur":50,"Coal":25,}, depends_on=("Node: Sulfur - Sulfur", )), #(Research_Sulfur_1_C)
-        "Node: Sulfur - Explosive Rebar": MamNode({"Smokeless Powder":200,"Iron Rebar":200,"Steel Beam":200,}, depends_on=("Node: Sulfur - Smokeless Powder", )), #(Research_Sulfur_4_2_C)
-        "Node: Sulfur - Cluster Nobelisk": MamNode({"Smokeless Powder":100,"Nobelisk":200,}, depends_on=("Node: Sulfur - Smokeless Powder", )), #(Research_Sulfur_4_C)
-        "Node: Sulfur - Experimental Power Generation": MamNode({"Sulfur":25,"Modular Frame":50,"Rotor":100,}, depends_on=("Node: Sulfur - Sulfur", )), #(Research_Sulfur_ExperimentalPower_C)
-        "Node: Sulfur - Turbo Rifle Ammo": MamNode({"Rifle Ammo":1000,"Packaged Turbofuel":50,"Aluminum Casing":100,}, depends_on=("Node: Sulfur - Smokeless Powder", )), #(Research_Sulfur_5_2_C)
-        "Node: Sulfur - Turbo Fuel": MamNode({"Hard Drive":1,"Compacted Coal":15,"Packaged Fuel":50,}, depends_on=("Node: Sulfur - Experimental Power Generation", )), #(Research_Sulfur_TurboFuel_C)
-        "Node: Sulfur - Expanded Toolbelt": MamNode({"Black Powder":100,"Encased Industrial Beam":50,}, depends_on=("Node: Sulfur - Black Powder", )), #(Research_Sulfur_5_C)
-        "Node: Sulfur - Nuclear Deterrent Development": MamNode({"Nobelisk":500,"Encased Uranium Cell":10,"AI Limiter":100,}, depends_on=("Node: Sulfur - Smokeless Powder", )), #(Research_Sulfur_5_1_C)
+    man_trees: Dict[str, MamTree] = {
+        "Alien Organisms": MamTree(("Hog Remains", "Plasma Spitter Remains"), ( # Alien Organisms (BPD_ResearchTree_AlienOrganisms_C)
+            MamNode("Inflated Pocket Dimension", {"Alien Protein":3,"Cable":1000,}, depends_on=("Bio-Organic Properties", )), #(Research_AOrgans_3_C)
+            MamNode("Hostile Organism Detection", {"Alien DNA Capsule":10,"Crystal Oscillator":5,"High-Speed Connector":5,}, depends_on=("Bio-Organic Properties", )), #(Research_AOrganisms_2_C)
+            MamNode("Expanded Toolbelt", {"Alien DNA Capsule":5,"Steel Beam":500,}, depends_on=("Inflated Pocket Dimension", )), #(Research_ACarapace_3_C)
+            MamNode("Bio-Organic Properties", {"Alien Protein":5,}, depends_on=("Spitter Research", "Hog Research", "Hatcher Research", "Stinger Research")), #(Research_AO_DNACapsule_C)
+            MamNode("Stinger Research", {"Stinger Remains":1,}, depends_on=()), #(Research_AO_Stinger_C)
+            MamNode("Hatcher Research", {"Hatcher Remains":1,}, depends_on=()), #(Research_AO_Hatcher_C)
+            MamNode("Hog Research", {"Hog Remains":1,}, depends_on=()), #(Research_ACarapace_0_C)
+            MamNode("Spitter Research", {"Plasma Spitter Remains":1,}, depends_on=()), #(Research_AOrgans_0_C)
+            MamNode("Structural Analysis", {"Alien DNA Capsule":5,"Iron Rod":100,}, depends_on=("Bio-Organic Properties", )), #(Research_AO_Pre_Rebar_C)
+            MamNode("Protein Inhaler", {"Alien Protein":2,"Beryl Nut":20,"Rotor":50,}, depends_on=("Bio-Organic Properties", )), #(Research_AOrgans_2_C)
+            MamNode("The Rebar Gun", {"Rotor":25,"Reinforced Iron Plate":50,"Screw":500,}, depends_on=("Structural Analysis", )), #(Research_ACarapace_2_C)
+        )),
+        "Caterium": MamTree(("Caterium Ore", ), ( # Caterium (BPD_ResearchTree_Caterium_C)
+            MamNode("Caterium Electronics", {"Quickwire":100,}, depends_on=("Quickwire", )), #(Research_Caterium_3_C)
+            MamNode("Bullet Guidance System", {"High-Speed Connector":10,"Rifle Ammo":500,}, depends_on=("High-Speed Connector", )), #(Research_Caterium_6_3_C)
+            MamNode("High-Speed Connector", {"Quickwire":500,"Plastic":50,}, depends_on=("Caterium Electronics", )), #(Research_Caterium_5_C)
+            MamNode("Caterium", {"Caterium Ore":10,}, depends_on=()), #(Research_Caterium_0_C)
+            MamNode("Caterium Ingots", {"Caterium Ore":50,}, depends_on=("Caterium", )), #(Research_Caterium_1_C)
+            MamNode("Quickwire", {"Caterium Ingot":50,}, depends_on=("Caterium Ingots", )), #(Research_Caterium_2_C)
+            MamNode("Power Switch", {"Steel Beam":100,"AI Limiter":50,}, depends_on=("AI Limiter", )), #(Research_Caterium_4_1_2_C)
+            MamNode("Power Poles Mk.2", {"Quickwire":300,}, depends_on=("Caterium Electronics", )), #(Research_Caterium_4_2_C)
+            MamNode("AI Limiter", {"Quickwire":200,"Copper Sheet":50,}, depends_on=("Caterium Electronics", )), #(Research_Caterium_4_1_C)
+            MamNode("Smart Splitter", {"AI Limiter":10,"Reinforced Iron Plate":50,}, depends_on=("AI Limiter", )), #(Research_Caterium_4_1_1_C)
+            MamNode("Programmable Splitter", {"Supercomputer":50,"Heavy Modular Frame":50,}, depends_on=("Supercomputer", )), #(Research_Caterium_7_1_C)
+            MamNode("Supercomputer", {"AI Limiter":50,"High-Speed Connector":50,"Computer":50,}, depends_on=("AI Limiter", "High-Speed Connector")), #(Research_Caterium_6_1_C)
+            MamNode("Zipline", {"Quickwire":100,"Cable":50,}, depends_on=("Quickwire", )), #(Research_Caterium_2_1_C)
+            MamNode("Geothermal Generator", {"Supercomputer":50,"Heavy Modular Frame":50,"Rubber":300,}, depends_on=("Supercomputer", )), #(Research_Caterium_7_2_C)
+            MamNode("Priority Power Switch", {"High-Speed Connector":25,"Circuit Board":50,}, depends_on=("High-Speed Connector", )), #(Research_Caterium_5_1_C)
+            MamNode("Stun Rebar", {"Quickwire":50,"Iron Rebar":10,}, depends_on=("Quickwire", )), #(Research_Caterium_3_2_C)
+            MamNode("Power Poles Mk.3", {"High-Speed Connector":50,"Steel Pipe":200,}, depends_on=("Power Poles Mk.2", )), #(Research_Caterium_6_2_C)
+        )),
+        "Mycelia": MamTree(("Mycelia", ), ( # Mycelia (BPD_ResearchTree_Mycelia_C)
+            MamNode("Therapeutic Inhaler", {"Mycelia":15,"Bacon Agaric":1,"Alien Protein":1,}, depends_on=("Medical Properties", )), #(Research_Mycelia_6_C)
+            MamNode("Expanded Toolbelt", {"Fabric":50,"Rotor":100,}, depends_on=("Fabric", )), #(Research_Mycelia_7_C)
+            MamNode("Mycelia", {"Mycelia":5,}, depends_on=tuple()), #(Research_Mycelia_1_C)
+            MamNode("Fabric", {"Mycelia":25,"Biomass":100,}, depends_on=("Mycelia", )), #(Research_Mycelia_2_C)
+            MamNode("Medical Properties", {"Mycelia":25,"Stator":10,}, depends_on=("Mycelia", )), #(Research_Mycelia_4_C)
+            MamNode("Toxic Cellular Modification", {"Nobelisk":10,"Mycelia":100,"Biomass":200,}, depends_on=("Mycelia", )), #(Research_Mycelia_8_C)
+            MamNode("Vitamin Inhaler", {"Mycelia":10,"Paleberry":5,}, depends_on=("Medical Properties", )), #(Research_Mycelia_5_C)
+            MamNode("Parachute", {"Fabric":10,"Cable":50,}, depends_on=("Fabric", )), #(Research_Mycelia_3_C)
+            MamNode("Synthethic Polyester Fabric", {"Fabric":25,"Polymer Resin":100,}, depends_on=("Fabric", )), #(Research_Mycelia_2_1_C)
+        )),
+        "Nutrients": MamTree(("Paleberry", "Beryl Nut", "Bacon Agaric"), ( # Nutrients (BPD_ResearchTree_Nutrients_C)
+            MamNode("Bacon Agaric", {"Bacon Agaric":1,}, depends_on=()), #(Research_Nutrients_2_C)
+            MamNode("Beryl Nut", {"Beryl Nut":5,}, depends_on=()), #(Research_Nutrients_1_C)
+            MamNode("Paleberry", {"Paleberry":2,}, depends_on=()), #(Research_Nutrients_0_C)
+            MamNode("Nutritional Processor", {"Modular Frame":25,"Steel Pipe":50,"Wire":500,}, depends_on=("Beryl Nut", "Bacon Agaric", "Paleberry")), #(Research_Nutrients_3_C)
+            MamNode("Nutritional Inhaler", {"Bacon Agaric":2,"Paleberry":4,"Beryl Nut":10,}, depends_on=("Nutritional Processor", )), #(Research_Nutrients_4_C)
+        )),
+        "Power Slugs": MamTree(("Blue Power Slug", ), ( # Power Slugs (BPD_ResearchTree_PowerSlugs_C)
+            MamNode("Slug Scanning", {"Iron Rod":50,"Wire":100,"Screw":200,}, depends_on=("Blue Power Slugs", )), #(Research_PowerSlugs_3_C)
+            MamNode("Blue Power Slugs", {"Blue Power Slug":1,}, depends_on=()), #(Research_PowerSlugs_1_C)
+            MamNode("Yellow Power Shards", {"Yellow Power Slug":1,"Rotor":25,"Cable":100,}, depends_on=("Blue Power Slugs", )), #(Research_PowerSlugs_4_C)
+            MamNode("Purple Power Shards", {"Purple Power Slug":1,"Modular Frame":25,"Copper Sheet":100,}, depends_on=("Yellow Power Shards", )), #(Research_PowerSlugs_5_C)
+            MamNode("Overclock Production", {"Power Shard":1,"Iron Plate":50,"Wire":50,}, depends_on=("Blue Power Slugs", )), #(Research_PowerSlugs_2_C)
+        )),
+        "Quartz": MamTree(("Raw Quartz", ), ( # Quartz (BPD_ResearchTree_Quartz_C)
+            MamNode("Crystal Oscillator", {"Quartz Crystal":100,"Reinforced Iron Plate":50,}, depends_on=("Quartz Crystals", "Quartz Crystals")), #(Research_Quartz_2_C)
+            MamNode("Quartz Crystals", {"Raw Quartz":20,}, depends_on=("Quartz", )), #(Research_Quartz_1_1_C)
+            MamNode("Quartz", {"Raw Quartz":10,}, depends_on=()), #(Research_Quartz_0_C)
+            MamNode("Shatter Rebar", {"Quartz Crystal":30,"Iron Rebar":150,}, depends_on=("Quartz Crystals", )), #(Research_Quartz_2_1_C)
+            MamNode("Silica", {"Raw Quartz":20,}, depends_on=("Quartz", )), #(Research_Quartz_1_2_C)
+            MamNode("Explosive Resonance Application", {"Crystal Oscillator":5,"Nobelisk":100,}, depends_on=("Crystal Oscillator", )), #(Research_Quartz_3_4_C)
+            MamNode("Blade Runners", {"Silica":50,"Modular Frame":10,}, depends_on=("Silica", )), #(Research_Caterium_4_3_C)
+            MamNode("The Explorer", {"Crystal Oscillator":10,"Modular Frame":100,}, depends_on=("Crystal Oscillator", )), #(Research_Quartz_3_1_C)
+            MamNode("Radio Signal Scanning", {"Crystal Oscillator":100,"Motor":100,"Object Scanner":1,}, depends_on=("Crystal Oscillator", )), #(Research_Quartz_4_1_C)
+            MamNode("Inflated Pocket Dimension", {"Silica":200,}, depends_on=("Silica", )), #(Research_Caterium_3_1_C)
+            MamNode("Radar Technology", {"Crystal Oscillator":50,"Heavy Modular Frame":50,"Circuit Board":100,}, depends_on=("Crystal Oscillator", )), #(Research_Quartz_4_C)
+        )),
+        "Sulfur": MamTree(("Sulfur", ), ( # Sulfur (BPD_ResearchTree_Sulfur_C)
+            MamNode("The Nobelisk Detonator", {"Black Powder":50,"Steel Pipe":100,"Cable":200,}, depends_on=("Black Powder", )), #(Research_Sulfur_3_1_C)
+            MamNode("Smokeless Powder", {"Black Powder":100,"Plastic":50,}, depends_on=("Black Powder", )), #(Research_Sulfur_3_C)
+            MamNode("Sulfur", {"Sulfur":10,}, depends_on=()), #(Research_Sulfur_0_C)
+            MamNode("Inflated Pocket Dimension", {"Smokeless Powder":50,"Circuit Board":50,}, depends_on=("Nuclear Deterrent Development", "Turbo Rifle Ammo", "Cluster Nobelisk", "The Rifle")), #(Research_Sulfur_6_C)
+            MamNode("The Rifle", {"Smokeless Powder":50,"Motor":100,"Rubber":200,}, depends_on=("Smokeless Powder", )), #(Research_Sulfur_4_1_C)
+            MamNode("Compacted Coal", {"Hard Drive":1,"Sulfur":25,"Coal":25,}, depends_on=("Experimental Power Generation", )), #(Research_Sulfur_CompactedCoal_C)
+            MamNode("Black Powder", {"Sulfur":50,"Coal":25,}, depends_on=("Sulfur", )), #(Research_Sulfur_1_C)
+            MamNode("Explosive Rebar", {"Smokeless Powder":200,"Iron Rebar":200,"Steel Beam":200,}, depends_on=("Smokeless Powder", )), #(Research_Sulfur_4_2_C)
+            MamNode("Cluster Nobelisk", {"Smokeless Powder":100,"Nobelisk":200,}, depends_on=("Smokeless Powder", )), #(Research_Sulfur_4_C)
+            MamNode("Experimental Power Generation", {"Sulfur":25,"Modular Frame":50,"Rotor":100,}, depends_on=("Sulfur", )), #(Research_Sulfur_ExperimentalPower_C)
+            MamNode("Turbo Rifle Ammo", {"Rifle Ammo":1000,"Packaged Turbofuel":50,"Aluminum Casing":100,}, depends_on=("Smokeless Powder", )), #(Research_Sulfur_5_2_C)
+            MamNode("Turbo Fuel", {"Hard Drive":1,"Compacted Coal":15,"Packaged Fuel":50,}, depends_on=("Experimental Power Generation", )), #(Research_Sulfur_TurboFuel_C)
+            MamNode("Expanded Toolbelt", {"Black Powder":100,"Encased Industrial Beam":50,}, depends_on=("Black Powder", )), #(Research_Sulfur_5_C)
+            MamNode("Nuclear Deterrent Development", {"Nobelisk":500,"Encased Uranium Cell":10,"AI Limiter":100,}, depends_on=("Smokeless Powder", )), #(Research_Sulfur_5_1_C)
+        ))
     }
 
-        # Regenerate via /Script/Engine.Blueprint'/Archipelago/Debug/CC_BuildMamData.CC_BuildMamData'
-    mam_trees_layout: Dict[str, MamTree] = {
-        "Tree: Alien Organisms":
-            MamTree(access_items=("Hog Remains", "Plasma Spitter Remains", ),
-                nodes=("Node: Alien Organisms - Inflated Pocket Dimension",
-                    "Node: Alien Organisms - Hostile Organism Detection",
-                    "Node: Alien Organisms - Expanded Toolbelt",
-                    "Node: Alien Organisms - Bio-Organic Properties",
-                    "Node: Alien Organisms - Stinger Research",
-                    "Node: Alien Organisms - Hatcher Research",
-                    "Node: Alien Organisms - Hog Research",
-                    "Node: Alien Organisms - Spitter Research",
-                    "Node: Alien Organisms - Structural Analysis",
-                    "Node: Alien Organisms - Protein Inhaler",
-                    "Node: Alien Organisms - The Rebar Gun",)
-            ),
-        "Tree: Caterium":
-            MamTree(access_items=("Caterium Ore", ),
-                nodes=("Node: Caterium - Caterium Electronics",
-                    "Node: Caterium - Bullet Guidance System",
-                    "Node: Caterium - High-Speed Connector",
-                    "Node: Caterium - Caterium",
-                    "Node: Caterium - Caterium Ingots",
-                    "Node: Caterium - Quickwire",
-                    "Node: Caterium - Power Switch",
-                    "Node: Caterium - Power Poles Mk.2",
-                    "Node: Caterium - AI Limiter",
-                    "Node: Caterium - Smart Splitter",
-                    "Node: Caterium - Programmable Splitter",
-                    "Node: Caterium - Supercomputer",
-                    "Node: Caterium - Zipline",
-                    "Node: Caterium - Geothermal Generator",
-                    "Node: Caterium - Priority Power Switch",
-                    "Node: Caterium - Stun Rebar",
-                    "Node: Caterium - Power Poles Mk.3",)
-            ),
-        "Tree: Hard Drive":
-            MamTree(access_items=("Hard Drive", ),
-                nodes=()
-            ),
-        "Tree: Mycelia":
-            MamTree(access_items=("Mycelia", ),
-                nodes=("Node: Mycelia - Therapeutic Inhaler",
-                    "Node: Mycelia - Expanded Toolbelt",
-                    "Node: Mycelia - Mycelia",
-                    "Node: Mycelia - Fabric",
-                    "Node: Mycelia - Medical Properties",
-                    "Node: Mycelia - Toxic Cellular Modification",
-                    "Node: Mycelia - Vitamin Inhaler",
-                    "Node: Mycelia - Parachute",
-                    "Node: Mycelia - Synthethic Polyester Fabric",)
-            ),
-        "Tree: Nutrients":
-            MamTree(access_items=("Paleberry", "Beryl Nut", "Bacon Agaric", ),
-                nodes=("Node: Nutrients - Bacon Agaric",
-                    "Node: Nutrients - Beryl Nut",
-                    "Node: Nutrients - Paleberry",
-                    "Node: Nutrients - Nutritional Processor",
-                    "Node: Nutrients - Nutritional Inhaler",)
-            ),
-        "Tree: Power Slugs":
-            MamTree(access_items=("Blue Power Slug", ),
-                nodes=("Node: Power Slugs - Slug Scanning",
-                    "Node: Power Slugs - Blue Power Slugs",
-                    "Node: Power Slugs - Yellow Power Shards",
-                    "Node: Power Slugs - Purple Power Shards",
-                    "Node: Power Slugs - Overclock Production",)
-            ),
-        "Tree: Quartz":
-            MamTree(access_items=("Raw Quartz", ),
-                nodes=("Node: Quartz - Crystal Oscillator",
-                    "Node: Quartz - Quartz Crystals",
-                    "Node: Quartz - Quartz",
-                    "Node: Quartz - Shatter Rebar",
-                    "Node: Quartz - Silica",
-                    "Node: Quartz - Explosive Resonance Application",
-                    "Node: Quartz - Blade Runners",
-                    "Node: Quartz - The Explorer",
-                    "Node: Quartz - Radio Signal Scanning",
-                    "Node: Quartz - Inflated Pocket Dimension",
-                    "Node: Quartz - Radar Technology",)
-            ),
-        "Tree: Sulfur":
-            MamTree(access_items=("Sulfur", ),
-                nodes=("Node: Sulfur - The Nobelisk Detonator",
-                    "Node: Sulfur - Smokeless Powder",
-                    "Node: Sulfur - Sulfur",
-                    "Node: Sulfur - Inflated Pocket Dimension",
-                    "Node: Sulfur - The Rifle",
-                    "Node: Sulfur - Compacted Coal",
-                    "Node: Sulfur - Black Powder",
-                    "Node: Sulfur - Explosive Rebar",
-                    "Node: Sulfur - Cluster Nobelisk",
-                    "Node: Sulfur - Experimental Power Generation",
-                    "Node: Sulfur - Turbo Rifle Ammo",
-                    "Node: Sulfur - Turbo Fuel",
-                    "Node: Sulfur - Expanded Toolbelt",
-                    "Node: Sulfur - Nuclear Deterrent Development",)
-            ),
-        }
+    # # Regenerate via /Script/Engine.Blueprint'/Archipelago/Debug/CC_BuildMamData.CC_BuildMamData'
+    # mam_nodes_layout: Dict[str, MamNode] = {
+    #     # Alien Organisms (BPD_ResearchTree_AlienOrganisms_C)
+    #     "Node: Alien Organisms - Inflated Pocket Dimension": MamNode({"Alien Protein":3,"Cable":1000,}, depends_on=("Node: Alien Organisms - Bio-Organic Properties", )), #(Research_AOrgans_3_C)
+    #     "Node: Alien Organisms - Hostile Organism Detection": MamNode({"Alien DNA Capsule":10,"Crystal Oscillator":5,"High-Speed Connector":5,}, depends_on=("Node: Alien Organisms - Bio-Organic Properties", )), #(Research_AOrganisms_2_C)
+    #     "Node: Alien Organisms - Expanded Toolbelt": MamNode({"Alien DNA Capsule":5,"Steel Beam":500,}, depends_on=("Node: Alien Organisms - Inflated Pocket Dimension", )), #(Research_ACarapace_3_C)
+    #     "Node: Alien Organisms - Bio-Organic Properties": MamNode({"Alien Protein":5,}, depends_on=("Node: Alien Organisms - Spitter Research", "Node: Alien Organisms - Hog Research", "Node: Alien Organisms - Hatcher Research", "Node: Alien Organisms - Stinger Research", )), #(Research_AO_DNACapsule_C)
+    #     "Node: Alien Organisms - Stinger Research": MamNode({"Stinger Remains":1,}, depends_on=()), #(Research_AO_Stinger_C)
+    #     "Node: Alien Organisms - Hatcher Research": MamNode({"Hatcher Remains":1,}, depends_on=()), #(Research_AO_Hatcher_C)
+    #     "Node: Alien Organisms - Hog Research": MamNode({"Hog Remains":1,}, depends_on=()), #(Research_ACarapace_0_C)
+    #     "Node: Alien Organisms - Spitter Research": MamNode({"Plasma Spitter Remains":1,}, depends_on=()), #(Research_AOrgans_0_C)
+    #     "Node: Alien Organisms - Structural Analysis": MamNode({"Alien DNA Capsule":5,"Iron Rod":100,}, depends_on=("Node: Alien Organisms - Bio-Organic Properties", )), #(Research_AO_Pre_Rebar_C)
+    #     "Node: Alien Organisms - Protein Inhaler": MamNode({"Alien Protein":2,"Beryl Nut":20,"Rotor":50,}, depends_on=("Node: Alien Organisms - Bio-Organic Properties", )), #(Research_AOrgans_2_C)
+    #     "Node: Alien Organisms - The Rebar Gun": MamNode({"Rotor":25,"Reinforced Iron Plate":50,"Screw":500,}, depends_on=("Node: Alien Organisms - Structural Analysis", )), #(Research_ACarapace_2_C)
+    #     # Caterium (BPD_ResearchTree_Caterium_C)
+    #     "Node: Caterium - Caterium Electronics": MamNode({"Quickwire":100,}, depends_on=("Node: Caterium - Quickwire", "Node: Caterium - Quickwire", "Node: Caterium - Quickwire", )), #(Research_Caterium_3_C)
+    #     "Node: Caterium - Bullet Guidance System": MamNode({"High-Speed Connector":10,"Rifle Ammo":500,}, depends_on=("Node: Caterium - High-Speed Connector", )), #(Research_Caterium_6_3_C)
+    #     "Node: Caterium - High-Speed Connector": MamNode({"Quickwire":500,"Plastic":50,}, depends_on=("Node: Caterium - Caterium Electronics", )), #(Research_Caterium_5_C)
+    #     "Node: Caterium - Caterium": MamNode({"Caterium Ore":10,}, depends_on=()), #(Research_Caterium_0_C)
+    #     "Node: Caterium - Caterium Ingots": MamNode({"Caterium Ore":50,}, depends_on=("Node: Caterium - Caterium", )), #(Research_Caterium_1_C)
+    #     "Node: Caterium - Quickwire": MamNode({"Caterium Ingot":50,}, depends_on=("Node: Caterium - Caterium Ingots", )), #(Research_Caterium_2_C)
+    #     "Node: Caterium - Power Switch": MamNode({"Steel Beam":100,"AI Limiter":50,}, depends_on=("Node: Caterium - AI Limiter", )), #(Research_Caterium_4_1_2_C)
+    #     "Node: Caterium - Power Poles Mk.2": MamNode({"Quickwire":300,}, depends_on=("Node: Caterium - Caterium Electronics", )), #(Research_Caterium_4_2_C)
+    #     "Node: Caterium - AI Limiter": MamNode({"Quickwire":200,"Copper Sheet":50,}, depends_on=("Node: Caterium - Caterium Electronics", )), #(Research_Caterium_4_1_C)
+    #     "Node: Caterium - Smart Splitter": MamNode({"AI Limiter":10,"Reinforced Iron Plate":50,}, depends_on=("Node: Caterium - AI Limiter", )), #(Research_Caterium_4_1_1_C)
+    #     "Node: Caterium - Programmable Splitter": MamNode({"Supercomputer":50,"Heavy Modular Frame":50,}, depends_on=("Node: Caterium - Supercomputer", )), #(Research_Caterium_7_1_C)
+    #     "Node: Caterium - Supercomputer": MamNode({"AI Limiter":50,"High-Speed Connector":50,"Computer":50,}, depends_on=("Node: Caterium - AI Limiter", "Node: Caterium - High-Speed Connector", "Node: Caterium - High-Speed Connector", )), #(Research_Caterium_6_1_C)
+    #     "Node: Caterium - Zipline": MamNode({"Quickwire":100,"Cable":50,}, depends_on=("Node: Caterium - Quickwire", )), #(Research_Caterium_2_1_C)
+    #     "Node: Caterium - Geothermal Generator": MamNode({"Supercomputer":50,"Heavy Modular Frame":50,"Rubber":300,}, depends_on=("Node: Caterium - Supercomputer", )), #(Research_Caterium_7_2_C)
+    #     "Node: Caterium - Priority Power Switch": MamNode({"High-Speed Connector":25,"Circuit Board":50,}, depends_on=("Node: Caterium - High-Speed Connector", )), #(Research_Caterium_5_1_C)
+    #     "Node: Caterium - Stun Rebar": MamNode({"Quickwire":50,"Iron Rebar":10,}, depends_on=("Node: Caterium - Quickwire", )), #(Research_Caterium_3_2_C)
+    #     "Node: Caterium - Power Poles Mk.3": MamNode({"High-Speed Connector":50,"Steel Pipe":200,}, depends_on=("Node: Caterium - Power Poles Mk.2", )), #(Research_Caterium_6_2_C)
+    #     # Hard Drive (BPD_ResearchTree_HardDrive_C)
+    #     # Mycelia (BPD_ResearchTree_Mycelia_C)
+    #     "Node: Mycelia - Therapeutic Inhaler": MamNode({"Mycelia":15,"Bacon Agaric":1,"Alien Protein":1,}, depends_on=("Node: Mycelia - Medical Properties", )), #(Research_Mycelia_6_C)
+    #     "Node: Mycelia - Expanded Toolbelt": MamNode({"Fabric":50,"Rotor":100,}, depends_on=("Node: Mycelia - Fabric", )), #(Research_Mycelia_7_C)
+    #     "Node: Mycelia - Mycelia": MamNode({"Mycelia":5,}, depends_on=()), #(Research_Mycelia_1_C)
+    #     "Node: Mycelia - Fabric": MamNode({"Mycelia":25,"Biomass":100,}, depends_on=("Node: Mycelia - Mycelia", )), #(Research_Mycelia_2_C)
+    #     "Node: Mycelia - Medical Properties": MamNode({"Mycelia":25,"Stator":10,}, depends_on=("Node: Mycelia - Mycelia", )), #(Research_Mycelia_4_C)
+    #     "Node: Mycelia - Toxic Cellular Modification": MamNode({"Nobelisk":10,"Mycelia":100,"Biomass":200,}, depends_on=("Node: Mycelia - Mycelia", )), #(Research_Mycelia_8_C)
+    #     "Node: Mycelia - Vitamin Inhaler": MamNode({"Mycelia":10,"Paleberry":5,}, depends_on=("Node: Mycelia - Medical Properties", )), #(Research_Mycelia_5_C)
+    #     "Node: Mycelia - Parachute": MamNode({"Fabric":10,"Cable":50,}, depends_on=("Node: Mycelia - Fabric", )), #(Research_Mycelia_3_C)
+    #     "Node: Mycelia - Synthethic Polyester Fabric": MamNode({"Fabric":25,"Polymer Resin":100,}, depends_on=("Node: Mycelia - Fabric", "Node: Mycelia - Fabric", )), #(Research_Mycelia_2_1_C)
+    #     # Nutrients (BPD_ResearchTree_Nutrients_C)
+    #     "Node: Nutrients - Bacon Agaric": MamNode({"Bacon Agaric":1,}, depends_on=()), #(Research_Nutrients_2_C)
+    #     "Node: Nutrients - Beryl Nut": MamNode({"Beryl Nut":5,}, depends_on=()), #(Research_Nutrients_1_C)
+    #     "Node: Nutrients - Paleberry": MamNode({"Paleberry":2,}, depends_on=()), #(Research_Nutrients_0_C)
+    #     "Node: Nutrients - Nutritional Processor": MamNode({"Modular Frame":25,"Steel Pipe":50,"Wire":500,}, depends_on=("Node: Nutrients - Beryl Nut", "Node: Nutrients - Bacon Agaric", "Node: Nutrients - Paleberry", )), #(Research_Nutrients_3_C)
+    #     "Node: Nutrients - Nutritional Inhaler": MamNode({"Bacon Agaric":2,"Paleberry":4,"Beryl Nut":10,}, depends_on=("Node: Nutrients - Nutritional Processor", )), #(Research_Nutrients_4_C)
+    #     # Power Slugs (BPD_ResearchTree_PowerSlugs_C)
+    #     "Node: Power Slugs - Slug Scanning": MamNode({"Iron Rod":50,"Wire":100,"Screw":200,}, depends_on=("Node: Power Slugs - Blue Power Slugs", )), #(Research_PowerSlugs_3_C)
+    #     "Node: Power Slugs - Blue Power Slugs": MamNode({"Blue Power Slug":1,}, depends_on=()), #(Research_PowerSlugs_1_C)
+    #     "Node: Power Slugs - Yellow Power Shards": MamNode({"Yellow Power Slug":1,"Rotor":25,"Cable":100,}, depends_on=("Node: Power Slugs - Blue Power Slugs", )), #(Research_PowerSlugs_4_C)
+    #     "Node: Power Slugs - Purple Power Shards": MamNode({"Purple Power Slug":1,"Modular Frame":25,"Copper Sheet":100,}, depends_on=("Node: Power Slugs - Yellow Power Shards", )), #(Research_PowerSlugs_5_C)
+    #     "Node: Power Slugs - Overclock Production": MamNode({"Power Shard":1,"Iron Plate":50,"Wire":50,}, depends_on=("Node: Power Slugs - Blue Power Slugs", )), #(Research_PowerSlugs_2_C)
+    #     # Quartz (BPD_ResearchTree_Quartz_C)
+    #     "Node: Quartz - Crystal Oscillator": MamNode({"Quartz Crystal":100,"Reinforced Iron Plate":50,}, depends_on=("Node: Quartz - Quartz Crystals", "Node: Quartz - Quartz Crystals", )), #(Research_Quartz_2_C)
+    #     "Node: Quartz - Quartz Crystals": MamNode({"Raw Quartz":20,}, depends_on=("Node: Quartz - Quartz", )), #(Research_Quartz_1_1_C)
+    #     "Node: Quartz - Quartz": MamNode({"Raw Quartz":10,}, depends_on=()), #(Research_Quartz_0_C)
+    #     "Node: Quartz - Shatter Rebar": MamNode({"Quartz Crystal":30,"Iron Rebar":150,}, depends_on=("Node: Quartz - Quartz Crystals", )), #(Research_Quartz_2_1_C)
+    #     "Node: Quartz - Silica": MamNode({"Raw Quartz":20,}, depends_on=("Node: Quartz - Quartz", )), #(Research_Quartz_1_2_C)
+    #     "Node: Quartz - Explosive Resonance Application": MamNode({"Crystal Oscillator":5,"Nobelisk":100,}, depends_on=("Node: Quartz - Crystal Oscillator", )), #(Research_Quartz_3_4_C)
+    #     "Node: Quartz - Blade Runners": MamNode({"Silica":50,"Modular Frame":10,}, depends_on=("Node: Quartz - Silica", )), #(Research_Caterium_4_3_C)
+    #     "Node: Quartz - The Explorer": MamNode({"Crystal Oscillator":10,"Modular Frame":100,}, depends_on=("Node: Quartz - Crystal Oscillator", )), #(Research_Quartz_3_1_C)
+    #     "Node: Quartz - Radio Signal Scanning": MamNode({"Crystal Oscillator":100,"Motor":100,"Object Scanner":1,}, depends_on=("Node: Quartz - Crystal Oscillator", )), #(Research_Quartz_4_1_C)
+    #     "Node: Quartz - Inflated Pocket Dimension": MamNode({"Silica":200,}, depends_on=("Node: Quartz - Silica", )), #(Research_Caterium_3_1_C)
+    #     "Node: Quartz - Radar Technology": MamNode({"Crystal Oscillator":50,"Heavy Modular Frame":50,"Circuit Board":100,}, depends_on=("Node: Quartz - Crystal Oscillator", )), #(Research_Quartz_4_C)
+    #     # Sulfur (BPD_ResearchTree_Sulfur_C)
+    #     "Node: Sulfur - The Nobelisk Detonator": MamNode({"Black Powder":50,"Steel Pipe":100,"Cable":200,}, depends_on=("Node: Sulfur - Black Powder", )), #(Research_Sulfur_3_1_C)
+    #     "Node: Sulfur - Smokeless Powder": MamNode({"Black Powder":100,"Plastic":50,}, depends_on=("Node: Sulfur - Black Powder", )), #(Research_Sulfur_3_C)
+    #     "Node: Sulfur - Sulfur": MamNode({"Sulfur":10,}, depends_on=()), #(Research_Sulfur_0_C)
+    #     "Node: Sulfur - Inflated Pocket Dimension": MamNode({"Smokeless Powder":50,"Circuit Board":50,}, depends_on=("Node: Sulfur - Nuclear Deterrent Development", "Node: Sulfur - Turbo Rifle Ammo", "Node: Sulfur - Cluster Nobelisk", "Node: Sulfur - The Rifle", )), #(Research_Sulfur_6_C)
+    #     "Node: Sulfur - The Rifle": MamNode({"Smokeless Powder":50,"Motor":100,"Rubber":200,}, depends_on=("Node: Sulfur - Smokeless Powder", )), #(Research_Sulfur_4_1_C)
+    #     "Node: Sulfur - Compacted Coal": MamNode({"Hard Drive":1,"Sulfur":25,"Coal":25,}, depends_on=("Node: Sulfur - Experimental Power Generation", )), #(Research_Sulfur_CompactedCoal_C)
+    #     "Node: Sulfur - Black Powder": MamNode({"Sulfur":50,"Coal":25,}, depends_on=("Node: Sulfur - Sulfur", )), #(Research_Sulfur_1_C)
+    #     "Node: Sulfur - Explosive Rebar": MamNode({"Smokeless Powder":200,"Iron Rebar":200,"Steel Beam":200,}, depends_on=("Node: Sulfur - Smokeless Powder", )), #(Research_Sulfur_4_2_C)
+    #     "Node: Sulfur - Cluster Nobelisk": MamNode({"Smokeless Powder":100,"Nobelisk":200,}, depends_on=("Node: Sulfur - Smokeless Powder", )), #(Research_Sulfur_4_C)
+    #     "Node: Sulfur - Experimental Power Generation": MamNode({"Sulfur":25,"Modular Frame":50,"Rotor":100,}, depends_on=("Node: Sulfur - Sulfur", )), #(Research_Sulfur_ExperimentalPower_C)
+    #     "Node: Sulfur - Turbo Rifle Ammo": MamNode({"Rifle Ammo":1000,"Packaged Turbofuel":50,"Aluminum Casing":100,}, depends_on=("Node: Sulfur - Smokeless Powder", )), #(Research_Sulfur_5_2_C)
+    #     "Node: Sulfur - Turbo Fuel": MamNode({"Hard Drive":1,"Compacted Coal":15,"Packaged Fuel":50,}, depends_on=("Node: Sulfur - Experimental Power Generation", )), #(Research_Sulfur_TurboFuel_C)
+    #     "Node: Sulfur - Expanded Toolbelt": MamNode({"Black Powder":100,"Encased Industrial Beam":50,}, depends_on=("Node: Sulfur - Black Powder", )), #(Research_Sulfur_5_C)
+    #     "Node: Sulfur - Nuclear Deterrent Development": MamNode({"Nobelisk":500,"Encased Uranium Cell":10,"AI Limiter":100,}, depends_on=("Node: Sulfur - Smokeless Powder", )), #(Research_Sulfur_5_1_C)
+    # }
+
+    # # Regenerate via /Script/Engine.Blueprint'/Archipelago/Debug/CC_BuildMamData.CC_BuildMamData'
+    # mam_trees_layout: Dict[str, MamTree] = {
+    #     "Tree: Alien Organisms":
+    #         MamTree(access_items=("Hog Remains", "Plasma Spitter Remains", ),
+    #             nodes=("Node: Alien Organisms - Inflated Pocket Dimension",
+    #                 "Node: Alien Organisms - Hostile Organism Detection",
+    #                 "Node: Alien Organisms - Expanded Toolbelt",
+    #                 "Node: Alien Organisms - Bio-Organic Properties",
+    #                 "Node: Alien Organisms - Stinger Research",
+    #                 "Node: Alien Organisms - Hatcher Research",
+    #                 "Node: Alien Organisms - Hog Research",
+    #                 "Node: Alien Organisms - Spitter Research",
+    #                 "Node: Alien Organisms - Structural Analysis",
+    #                 "Node: Alien Organisms - Protein Inhaler",
+    #                 "Node: Alien Organisms - The Rebar Gun",)
+    #         ),
+    #     "Tree: Caterium":
+    #         MamTree(access_items=("Caterium Ore", ),
+    #             nodes=("Node: Caterium - Caterium Electronics",
+    #                 "Node: Caterium - Bullet Guidance System",
+    #                 "Node: Caterium - High-Speed Connector",
+    #                 "Node: Caterium - Caterium",
+    #                 "Node: Caterium - Caterium Ingots",
+    #                 "Node: Caterium - Quickwire",
+    #                 "Node: Caterium - Power Switch",
+    #                 "Node: Caterium - Power Poles Mk.2",
+    #                 "Node: Caterium - AI Limiter",
+    #                 "Node: Caterium - Smart Splitter",
+    #                 "Node: Caterium - Programmable Splitter",
+    #                 "Node: Caterium - Supercomputer",
+    #                 "Node: Caterium - Zipline",
+    #                 "Node: Caterium - Geothermal Generator",
+    #                 "Node: Caterium - Priority Power Switch",
+    #                 "Node: Caterium - Stun Rebar",
+    #                 "Node: Caterium - Power Poles Mk.3",)
+    #         ),
+    #     "Tree: Hard Drive":
+    #         MamTree(access_items=("Hard Drive", ),
+    #             nodes=()
+    #         ),
+    #     "Tree: Mycelia":
+    #         MamTree(access_items=("Mycelia", ),
+    #             nodes=("Node: Mycelia - Therapeutic Inhaler",
+    #                 "Node: Mycelia - Expanded Toolbelt",
+    #                 "Node: Mycelia - Mycelia",
+    #                 "Node: Mycelia - Fabric",
+    #                 "Node: Mycelia - Medical Properties",
+    #                 "Node: Mycelia - Toxic Cellular Modification",
+    #                 "Node: Mycelia - Vitamin Inhaler",
+    #                 "Node: Mycelia - Parachute",
+    #                 "Node: Mycelia - Synthethic Polyester Fabric",)
+    #         ),
+    #     "Tree: Nutrients":
+    #         MamTree(access_items=("Paleberry", "Beryl Nut", "Bacon Agaric", ),
+    #             nodes=("Node: Nutrients - Bacon Agaric",
+    #                 "Node: Nutrients - Beryl Nut",
+    #                 "Node: Nutrients - Paleberry",
+    #                 "Node: Nutrients - Nutritional Processor",
+    #                 "Node: Nutrients - Nutritional Inhaler",)
+    #         ),
+    #     "Tree: Power Slugs":
+    #         MamTree(access_items=("Blue Power Slug", ),
+    #             nodes=("Node: Power Slugs - Slug Scanning",
+    #                 "Node: Power Slugs - Blue Power Slugs",
+    #                 "Node: Power Slugs - Yellow Power Shards",
+    #                 "Node: Power Slugs - Purple Power Shards",
+    #                 "Node: Power Slugs - Overclock Production",)
+    #         ),
+    #     "Tree: Quartz":
+    #         MamTree(access_items=("Raw Quartz", ),
+    #             nodes=("Node: Quartz - Crystal Oscillator",
+    #                 "Node: Quartz - Quartz Crystals",
+    #                 "Node: Quartz - Quartz",
+    #                 "Node: Quartz - Shatter Rebar",
+    #                 "Node: Quartz - Silica",
+    #                 "Node: Quartz - Explosive Resonance Application",
+    #                 "Node: Quartz - Blade Runners",
+    #                 "Node: Quartz - The Explorer",
+    #                 "Node: Quartz - Radio Signal Scanning",
+    #                 "Node: Quartz - Inflated Pocket Dimension",
+    #                 "Node: Quartz - Radar Technology",)
+    #         ),
+    #     "Tree: Sulfur":
+    #         MamTree(access_items=("Sulfur", ),
+    #             nodes=("Node: Sulfur - The Nobelisk Detonator",
+    #                 "Node: Sulfur - Smokeless Powder",
+    #                 "Node: Sulfur - Sulfur",
+    #                 "Node: Sulfur - Inflated Pocket Dimension",
+    #                 "Node: Sulfur - The Rifle",
+    #                 "Node: Sulfur - Compacted Coal",
+    #                 "Node: Sulfur - Black Powder",
+    #                 "Node: Sulfur - Explosive Rebar",
+    #                 "Node: Sulfur - Cluster Nobelisk",
+    #                 "Node: Sulfur - Experimental Power Generation",
+    #                 "Node: Sulfur - Turbo Rifle Ammo",
+    #                 "Node: Sulfur - Turbo Fuel",
+    #                 "Node: Sulfur - Expanded Toolbelt",
+    #                 "Node: Sulfur - Nuclear Deterrent Development",)
+    #         ),
+    #     }

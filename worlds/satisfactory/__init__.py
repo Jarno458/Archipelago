@@ -6,20 +6,8 @@ from .Locations import Locations, LocationData
 from .StateLogic import EventId, StateLogic
 from .Options import SatisfactoryOptions
 from .Regions import SatisfactoryLocation, create_regions_and_return_locations
-from ..AutoWorld import World, WebWorld
-
-
-class SatisfactoryWebWorld(WebWorld):
-    theme = "dirt"
-    setup = Tutorial(
-        "Multiworld Setup Guide",
-        "A guide to setting up the Satisfactory Archipelago mod and connect it to an Archipelago Multiworld",
-        "English",
-        "setup_en.md",
-        "setup/en",
-        ["Robb", "Jarno"]
-    )
-    tutorials = [setup]
+from .Web import SatisfactoryWebWorld
+from ..AutoWorld import World
 
 
 class SatisfactoryWorld(World):
