@@ -63,7 +63,6 @@ class StateLogic:
 
     def can_produce_specific_recipe_for_part(self, state: CollectionState, recipe: Recipe) -> bool:
         if recipe.needs_pipes and (
-                not self.can_build_all(state, "Pipeline Support", "Pipeline Junction Cross") or
                 not self.can_build_any(state, ("Pipes Mk.1", "Pipes Mk.2")) or
                 not self.can_build_any(state, ("Pipeline Pump Mk.1", "Pipeline Pump Mk.2"))):
             return False
@@ -71,9 +70,8 @@ class StateLogic:
         if recipe.is_radio_active and not self.can_produce_all(state, ("Hazmat Suit", "Iodine Infused Filter")): 
             return False
         
-        if recipe.minimal_belt_speed and (
-                not self.can_build(state, "Conveyor Pole") or
-                not self.can_build_any(state, map(self.to_belt_name, range(recipe.minimal_belt_speed, 6)))):
+        if recipe.minimal_belt_speed and \
+                not self.can_build_any(state, map(self.to_belt_name, range(recipe.minimal_belt_speed, 6))):
             return False
         
         if recipe.minimal_belt_speed > 1 and not self.can_build_all(state, ("Conveyor Merger", "Conveyor Splitter")):

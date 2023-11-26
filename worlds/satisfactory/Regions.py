@@ -63,7 +63,7 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
                                 state_logic.can_produce_all(state, ("Gas Mask", "Gas Filter")))
     connect(player, regions, "Overworld", "Radioactive Area", lambda state:
                                 state_logic.can_produce_all(state, ("Hazmat Suit", "Iodine Infused Filter")))
-    connect(player, regions, "Overworld", "Mam", lambda state: state_logic.can_build("MAM")) # should prob require seperated tree"s
+    connect(player, regions, "Overworld", "Mam", lambda state: state_logic.can_build(state, "MAM")) # should prob require seperated tree"s
     connect(player, regions, "Overworld", "AWESOME Shop") # should prob require AWESOME shop building
 
     def can_produce_all_allowing_handcrafting(parts: Tuple[str, ...]) -> Callable[[CollectionState], bool]:

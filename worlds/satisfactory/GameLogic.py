@@ -481,23 +481,21 @@ class GameLogic:
         "AWESOME Sink": Building("AWESOME Sink", ("Reinforced Iron Plate", "Cable", "Concrete")),
         "AWESOME Shop": Building("AWESOME Shop", ("Screw", "Iron Plate", "Cable")),
         "MAM": Building("MAM", ("Reinforced Iron Plate", "Wire", "Cable")),
-        "Pipes Mk.1": Building("Pipes Mk.1", ("Copper Sheet", )),
-        "Pipes Mk.2": Building("Pipes Mk.2", ("Copper Sheet", "Plastic")),
+        "Pipes Mk.1": Building("Pipes Mk.1", ("Copper Sheet", "Iron Plate", "Concrete")),
+        "Pipes Mk.2": Building("Pipes Mk.2", ("Copper Sheet", "Plastic", "Iron Plate", "Concrete")),
         "Pipeline Pump Mk.1": Building("Pipeline Pump Mk.1", ("Copper Sheet", "Rotor")),
         "Pipeline Pump Mk.2": Building("Pipeline Pump Mk.2", ("Motor", "Encased Industrial Beam", "Plastic")),
-        "Pipeline Support": Building("Pipeline Support", ("Iron Plate", "Concrete")),
-        "Pipeline Junction Cross": Building("Pipeline Junction Cross", ("Copper Sheet")),
         "Conveyor Merger": Building("Conveyor Merger", ("Iron Plate", "Iron Rod")),
         "Conveyor Splitter": Building("Conveyor Splitter", ("Iron Plate", "Cable")),
-        "Conveyor Mk.1": Building("Conveyor Mk.1", ("Iron Plate", )),
-        "Conveyor Mk.2": Building("Conveyor Mk.2", ("Reinforced Iron Plate", )),
-        "Conveyor Mk.3": Building("Conveyor Mk.3", ("Steel Beam", )),
-        "Conveyor Mk.4": Building("Conveyor Mk.4", ("Encased Industrial Beam", )),
-        "Conveyor Mk.5": Building("Conveyor Mk.5", ("Alclad Aluminum Sheet", )),
-        "Conveyor Pole": Building("Conveyor Pole", ("Iron Plate", "Iron Rod", "Concrete")),
-        "Power Pole Mk.1": Building("Conveyor Pole", ("Iron Plate", "Iron Rod", "Concrete")),
-        "Power Pole Mk.2": Building("Conveyor Pole", ("Iron Plate", "Iron Rod", "Concrete")),
-        "Power Pole Mk.3": Building("Conveyor Pole", ("Iron Plate", "Iron Rod", "Concrete")),
+        "Conveyor Mk.1": Building("Conveyor Mk.1", ("Iron Plate", "Iron Rod", "Concrete")),
+        "Conveyor Mk.2": Building("Conveyor Mk.2", ("Reinforced Iron Plate", "Iron Plate", "Iron Rod", "Concrete")),
+        "Conveyor Mk.3": Building("Conveyor Mk.3", ("Steel Beam", "Iron Plate", "Iron Rod", "Concrete")),
+        "Conveyor Mk.4": Building("Conveyor Mk.4", ("Encased Industrial Beam", "Iron Plate", "Iron Rod", "Concrete")),
+        "Conveyor Mk.5": Building("Conveyor Mk.5", ("Alclad Aluminum Sheet", "Iron Plate", "Iron Rod", "Concrete")),
+        "Power Pole Mk.1": Building("Power Pole Mk.1", ("Iron Plate", "Iron Rod", "Concrete")),
+        # higher level power poles arent in logic
+        #"Power Pole Mk.2": Building("Power Pole Mk.2", ("Quickwire", "Iron Rod", "Concrete")),
+        #"Power Pole Mk.3": Building("Power Pole Mk.3", ("High-Speed Connector", "Steel Pipe", "Rubber")),
     }
 
     requirement_per_powerlevel: Dict[PowerInfrastructureLevel, Tuple[Recipe, ...]] = {
@@ -519,7 +517,7 @@ class GameLogic:
         )
     }
 
-    slots_per_milestone: int = 8
+    slots_per_milestone: int = 10
 
     hub_layout: Tuple[Tuple[Dict[str, int], ...], ...] = (
         # Regenerate via /Script/Engine.Blueprint'/Archipelago/Debug/CC_BuildHubData.CC_BuildHubData'

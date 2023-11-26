@@ -132,18 +132,18 @@ class Items:
         #1338121 - 1338149 Reserved for future parts
 
         # Equipment / Ammo
-        "Bacon Agaric": ItemData((G.Equipment, ), 1338150),
-        "Beryl Nut": ItemData((G.Equipment, ), 1338151),
+        "Bacon Agaric": ItemData((G.Ammo, ), 1338150),
+        "Beryl Nut": ItemData((G.Ammo, ), 1338151),
         "Blade Runners": ItemData((G.Equipment, ), 1338152),
         "Boom Box": ItemData((G.Equipment, ), 1338153),
         "Chainsaw": ItemData((G.Equipment, ), 1338154),
         "Cluster Nobelisk": ItemData((G.Ammo, ), 1338155),
         #"Color Gun": ItemData((G.Equipment, ), 1338156), Removed in U8
         "Cup": ItemData((G.Equipment, ), 1338157),
-        "Cup (gold)": ItemData((G.Equipment, ), 1338158),
+        "Cup (gold)": ItemData((G.Equipment, ), 1338158, in_pool=False),
         "Explosive Rebar": ItemData((G.Ammo, ), 1338159),
         "Factory Cart": ItemData((G.Equipment, ), 1338160),
-        "Factory Cart (golden)": ItemData((G.Equipment, ), 1338161),
+        "Factory Cart (golden)": ItemData((G.Equipment, ), 1338161, in_pool=False),
         "Gas Mask": ItemData((G.Equipment, ), 1338162, C.progression),
         "Gas Nobelisk": ItemData((G.Ammo, ), 1338163),
         "Hazmat Suit": ItemData((G.Equipment, ), 1338164, C.progression),
@@ -151,12 +151,12 @@ class Items:
         "Hover Pack": ItemData((G.Equipment, ), 1338166, C.progression),
         "Iron Rebar": ItemData((G.Ammo, ), 1338167),
         "Jetpack": ItemData((G.Equipment, ), 1338168, C.progression),
-        "Medicinal Inhaler": ItemData((G.Equipment, ), 1338169),
+        "Medicinal Inhaler": ItemData((G.Ammo, ), 1338169),
         "Nobelisk": ItemData((G.Ammo, ), 1338170),
         "Nobelisk Detonator": ItemData((G.Equipment, ), 1338171, C.progression),
         "Nuke Nobelisk": ItemData((G.Ammo, ), 1338172),
         "Object Scanner": ItemData((G.Equipment, ), 1338173),
-        "Paleberry": ItemData((G.Equipment, ), 1338174),
+        "Paleberry": ItemData((G.Ammo, ), 1338174),
         "Parachute": ItemData((G.Equipment, ), 1338175),
         "Pulse Nobelisk": ItemData((G.Ammo, ), 1338176),
         "Rebar Gun": ItemData((G.Equipment, ), 1338177),
@@ -532,10 +532,10 @@ class Items:
         "Transport: Cyber Wagon": ItemData((G.Transport, G.Trains), 1338808, C.filler),
 
         # Hypertubes (including supports / pipes / entrance / holes)
-        "Transport: Hypertube": ItemData((G.Building, G.HyperTubes), 1338809, C.filler),
-        "Transport: Hypertube Floor Hole": ItemData((G.Building, G.HyperTubes), 1338810, C.filler),
-        "Transport: Hypertube Wall Support": ItemData((G.Building, G.HyperTubes), 1338811, C.filler),
-        "Transport: Hypertube Wall Hole": ItemData((G.Building, G.HyperTubes), 1338812, C.filler),
+        "Transport: Hypertube": ItemData((G.Transport, G.HyperTubes), 1338809, C.filler),
+        "Transport: Hypertube Floor Hole": ItemData((G.Transport, G.HyperTubes), 1338810, C.filler),
+        "Transport: Hypertube Wall Support": ItemData((G.Transport, G.HyperTubes), 1338811, C.filler),
+        "Transport: Hypertube Wall Hole": ItemData((G.Transport, G.HyperTubes), 1338812, C.filler),
 
         #1338900 - 1338998 Handled by trap system
         # Regenerate via /Script/Blutility.EditorUtilityWidgetBlueprint'/Archipelago/Debug/EU_GenerateTrapIds.EU_GenerateTrapIds'
@@ -565,7 +565,7 @@ class Items:
 
     item_names_and_ids: ClassVar[Dict[str, int]] = {name: item_data.code for name, item_data in item_data.items()}
     filler_items: ClassVar[Tuple[str, ...]] = tuple(item for item, details in item_data.items() 
-                                                            if details.category in {G.Parts, G.Ammo})
+                                                  if any(cat for cat in details.category if cat in {G.Parts, G.Ammo}))
 
 
     @classmethod
@@ -668,7 +668,8 @@ class Items:
         pool: List[Item] = []
 
         for name, data in self.item_data.items():
-            if name not in excluded_items and data.category in {G.Recipe, G.Building, G.Equipment, G.Transport}:
+            if name not in excluded_items and data.in_pool and any(
+                    cat for cat in data.category if cat in {G.Recipe, G.Building, G.Equipment, G.Transport}):
                 item = self.create_item(self, name, self.player)
                 pool.append(item)
 

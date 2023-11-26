@@ -2,7 +2,7 @@ from enum import Enum
 from typing import NamedTuple, Tuple
 from BaseClasses import ItemClassification
 
-class ItemGroups(Enum, str):
+class ItemGroups(str, Enum):
     Parts = 1
     Equipment = 2
     Ammo = 3
@@ -31,3 +31,4 @@ class ItemData(NamedTuple):
     category: Tuple[ItemGroups, ...]
     code: int
     type: ItemClassification = ItemClassification.filler
+    in_pool: bool = True
