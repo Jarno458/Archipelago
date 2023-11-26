@@ -583,6 +583,11 @@ class GameLogic:
         { "Assembly Director System": 4000, "Magnetic Field Generator": 4000, "Nuclear Pasta": 1000, "Thermal Propulsion Rocket": 1000 },
     )
 
+    # Turbo Fuel
+# Quartz Crystals
+# Vitamin Inhaler
+# Bacon Agaric
+
     man_trees: Dict[str, MamTree] = {
         "Alien Organisms": MamTree(("Hog Remains", "Plasma Spitter Remains"), ( # Alien Organisms (BPD_ResearchTree_AlienOrganisms_C)
             MamNode("Inflated Pocket Dimension", {"Alien Protein":3,"Cable":1000,}, depends_on=("Bio-Organic Properties", )), #(Research_AOrgans_3_C)

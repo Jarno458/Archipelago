@@ -224,6 +224,13 @@ class Locations():
             MamSlot("Sulfur", "Nuclear Deterrent Development", 1338571)
         ]
 
+
+# Turbo Fuel
+# Quartz Crystals
+# Vitamin Inhaler
+# Bacon Agaric
+
+
     def get_all_location_ids_by_name(cls) -> Dict[str, int]:
         location_table = cls.get_base_location_table()
 
