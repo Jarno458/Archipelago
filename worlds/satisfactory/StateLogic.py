@@ -77,6 +77,9 @@ class StateLogic:
         if recipe.minimal_belt_speed > 1 and not self.can_build_all(state, ("Conveyor Merger", "Conveyor Splitter")):
             return False
 
+        if recipe.name == "Recipe: Object Scanner":
+            debugger = "attach"
+
         return self.has_recipe(state, recipe) \
             and self.can_build(state, recipe.building) \
             and self.can_produce_all(state, recipe.inputs)

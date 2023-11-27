@@ -88,17 +88,16 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
             lambda state, building_name=building_name: state_logic.can_build(state, building_name))
         
     for tree_name, tree in game_logic.man_trees.items():
-        connect(player, regions, "Mam", tree_name, 
-            lambda state, parts=tree.access_items: state_logic.can_build_any(state, parts))
+        connect(player, regions, "Mam", tree_name, can_produce_all_allowing_handcrafting(tree.access_items))
 
         for node in tree.nodes:
             if not node.depends_on:
                 connect(player, regions, tree_name, f"{tree_name}: {node.name}", 
-                    lambda state, parts=node.unlock_cost.keys(): state_logic.can_build_all(state, parts))
+                    lambda state, parts=node.unlock_cost.keys(): state_logic.can_produce_all(state, parts))
             else:
                 for parent in node.depends_on:
                     connect(player, regions, f"{tree_name}: {parent}", f"{tree_name}: {node.name}", 
-                        lambda state, parts=node.unlock_cost.keys(): state_logic.can_build_all(state, parts))
+                        lambda state, parts=node.unlock_cost.keys(): state_logic.can_produce_all(state, parts))
 
 
 def throwIfAnyLocationIsNotAssignedToARegion(regions: Dict[str, Region], regionNames: Set[str]):

@@ -389,7 +389,7 @@ class Items:
         "Recipe: Nobelisk":  ItemData((G.Recipe, ), 1338411, C.progression),
         "Recipe: Nuke Nobelisk": ItemData((G.Recipe, ), 1338412, C.useful),
         "Recipe: Nutritional Inhaler":  ItemData((G.Recipe, ), 1338413, C.useful),
-        "Recipe: Object Scanner":  ItemData((G.Recipe, ), 1338414, C.useful),
+        "Recipe: Object Scanner":  ItemData((G.Recipe, ), 1338414, C.progression),
         "Recipe: Parachute":  ItemData((G.Recipe, ), 1338415, C.useful),
         "Recipe: Protein Inhaler": ItemData((G.Recipe, ), 1338416, C.useful),
         "Recipe: Pulse Nobelisk":  ItemData((G.Recipe, ), 1338403, C.useful),

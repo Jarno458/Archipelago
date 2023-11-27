@@ -259,7 +259,7 @@ class GameLogic:
         "Adaptive Control Unit": (
             Recipe("Adaptive Control Unit", "Manufacturer", ("Automated Wiring", "Circuit Board", "Heavy Modular Frame", "Computer")), ),
         "Portable Miner": (
-            Recipe("Portable Miner", "Equipment Workshop", ("Iron Rod", "Iron Plate"), handcraftable=True, implicitly_unlocked=True),
+            Recipe("Portable Miner", "Equipment Workshop", ("Iron Rod", "Iron Plate"), handcraftable=True, minimal_belt_speed=0, implicitly_unlocked=True),
             Recipe("Automated Miner", "Manufacturer", ("Motor", "Steel Pipe", "Iron Rod", "Iron Plate")), ),
         "Bauxite": (
             Recipe("Bauxite", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
@@ -320,7 +320,7 @@ class GameLogic:
             Recipe("Uranium Fuel Rod", "Manufacturer", ("Encased Uranium Cell", "Encased Industrial Beam", "Electromagnetic Control Rod")), 
             Recipe("Uranium Fuel Unit", "Manufacturer", ("Encased Uranium Cell", "Electromagnetic Control Rod", "Crystal Oscillator", "Beacon"))),
         "Beacon": (
-            Recipe("Beacon", "Equipment Workshop", ("Iron Plate", "Iron Rod", "Wire", "Cable"), handcraftable=True), 
+            Recipe("Beacon", "Equipment Workshop", ("Iron Plate", "Iron Rod", "Wire", "Cable"), handcraftable=True, minimal_belt_speed=0), 
             Recipe("Beacon", "Manufacturer", ("Iron Plate", "Iron Rod", "Wire", "Cable")),
             Recipe("Crystal Beacon", "Manufacturer", ("Steel Beam", "Steel Pipe", "Crystal Oscillator"))),
         "Uranium Waste": (
@@ -341,7 +341,7 @@ class GameLogic:
         "Iodine Infused Filter": (
             Recipe("Iodine Infused Filter", "Manufacturer", ("Gas Filter", "Quickwire", "Aluminum Casing"), handcraftable=True), ),
         "Hazmat Suit": (
-            Recipe("Hazmat Suit", "Equipment Workshop", ("Rubber", "Plastic", "Fabric", "Alclad Aluminum Sheet"), handcraftable=True), ),
+            Recipe("Hazmat Suit", "Equipment Workshop", ("Rubber", "Plastic", "Fabric", "Alclad Aluminum Sheet"), handcraftable=True, minimal_belt_speed=0), ),
         "Assembly Director System": (
             Recipe("Assembly Director System", "Assembler", ("Adaptive Control Unit", "Supercomputer")), ),
         "Magnetic Field Generator": (
@@ -415,7 +415,7 @@ class GameLogic:
             Recipe("Turbo Heavy Fuel", "Refinery", ("Heavy Oil Residue", "Compacted Coal")),
             Recipe("Turbo Blend Fuel", "Blender", ("Fuel", "Heavy Oil Residue", "Sulfur", "Petroleum Coke"))),
         "Gas Mask": (
-            Recipe("Gas Mask", "Equipment Workshop", ("Rubber", "Plastic", "Fabric"), handcraftable=True), ),
+            Recipe("Gas Mask", "Equipment Workshop", ("Rubber", "Plastic", "Fabric"), handcraftable=True, minimal_belt_speed=0), ),
         "Alien DNA Capsule": (
             Recipe("Alien DNA Capsule", "Constructor", ("Alien Protein", ), handcraftable=True), ),
         "Black Powder": (
@@ -447,10 +447,11 @@ class GameLogic:
             Recipe("Power Shard (5)", "Constructor", ("Purple Power Slug", ), handcraftable=True)),
         "Hard Drive": (
             Recipe("Hard Drive", handcraftable=True, implicitly_unlocked=True), ),
+        "Object Scanner": (
+            Recipe("Object Scanner", "Equipment Workshop", ("Reinforced Iron Plate", "Wire", "Screw"), handcraftable=True, minimal_belt_speed=0), ),
 
         # TODO transport types arent currently in logic
         # TODO fix multiple handcraftable recipes per part
-        # TODO fix buildings should not be locked behind a certain power region
     }
 
     handcraftable_recipes: Dict[str, Recipe] = { part: recipe 
