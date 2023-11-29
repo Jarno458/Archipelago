@@ -511,9 +511,15 @@ class Items:
         "Building: Beam Support": ItemData((G.Beams, ), 1338689, C.filler),
         "Building: Beam Connector": ItemData((G.Beams, ), 1338690, C.filler),
         "Building: Beam Connector Double": ItemData((G.Beams, ), 1338691, C.filler),
+        "Building: Foundation": ItemData((G.Foundations, ), 1338692, C.filler),
+        "Building: Half Foundation": ItemData((G.Foundations, ), 1338693, C.filler),
+        "Building: Corner Ramp Pack": ItemData((G.Foundations, ), 1338694, C.filler),
+        "Building: Inverted Ramp Pack": ItemData((G.Foundations, ), 1338695, C.filler),
+        "Building: Inverted Corner Ramp Pack": ItemData((G.Foundations, ), 1338696, C.filler),
+        "Building: Quarter Pipes Pack": ItemData((G.Foundations, ), 1338697, C.filler),
+        "Building: Quarter Pipe Extensions Pack": ItemData((G.Foundations, ), 1338698, C.filler),
 
-
-        #1338600 - 1338799 Reserved for buildings
+        #1338700 - 1338799 Reserved for buildings
 
         # Large Packages (single item, multiple unlocks)
         # Drones (including Drone)
