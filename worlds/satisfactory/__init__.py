@@ -1,5 +1,5 @@
 from typing import Dict, List, Set, TextIO, ClassVar, Tuple
-from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
+from BaseClasses import Item, MultiWorld, ItemClassification
 from .GameLogic import GameLogic
 from .Items import Items
 from .Locations import Locations, LocationData

@@ -2,7 +2,7 @@ from typing import List, Set, Dict, Tuple, Optional, Callable
 from BaseClasses import MultiWorld, Region, Entrance, Location, CollectionState
 from .Locations import LocationData
 from .GameLogic import GameLogic
-from .StateLogic import StateLogic, building_event_prefix
+from .StateLogic import StateLogic
 
 class SatisfactoryLocation(Location):
     game: str = "Satisfactory"
