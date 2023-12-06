@@ -580,8 +580,8 @@ class Items:
 
         for name, data in cls.item_data.items():
             for category in data.category:
-                categories.setdefault(category, set()).add(name)
-
+                categories.setdefault(category.name, set()).add(name)
+                
         return categories
 
 

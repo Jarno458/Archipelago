@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from Options import PerGameCommonOptions, DeathLink, Range, Toggle, SpecialRange, OptionList, StartInventoryPool
+from Options import PerGameCommonOptions, DeathLink, Range, Toggle, OptionList, StartInventoryPool, NamedRange
 
-class ElevatorTier(SpecialRange):
+class ElevatorTier(NamedRange):
     """Ship these Space Elevator packages to finish"""
     display_name = "Goal: Space Elevator shipment"
     default = 2
@@ -15,7 +15,7 @@ class ElevatorTier(SpecialRange):
         "four packages (tiers 7-8)": 4,
     }
 
-class ResourceSinkPoints(SpecialRange):
+class ResourceSinkPoints(NamedRange):
     """Sink an amount of items totalling this amount of points to finish.
 
     In the base game, it takes 208 coupons to unlock every unique crafting recipe, or 1813 coupons to purchase every non-producible item.
@@ -92,7 +92,7 @@ class FreeSampleBuildings(Range):
     range_end = 10
 
 
-class FreeSampleParts(SpecialRange):
+class FreeSampleParts(NamedRange):
     """How free sample items of general crafting components should be given when a recipe for them is unlocked.
     Space Elevator Project Parts are always excluded.
     Negative numbers mean that fraction of a full stack.
