@@ -75,6 +75,12 @@ class Building(Recipe):
 
 
 class MamNode():
+    """
+    Attributes:
+        name
+        unlock_cost: All game items must be submitted to purchase this MamNode
+        depends_on: At least one of these prerequisite MamNodes must be unlocked to purchase this MamNode
+    """
     name: str
     unlock_cost: Dict[str, int]
     depends_on: Tuple[str, ...]
@@ -86,6 +92,11 @@ class MamNode():
 
 
 class MamTree():
+    """
+    Attributes:
+        access_items: At least one of these game items must enter the player inventory for this MamTree to be available
+        nodes
+    """
     access_items: Tuple[str, ...]
     nodes: Tuple[MamNode, ...]
 
