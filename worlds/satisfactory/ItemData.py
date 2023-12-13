@@ -26,6 +26,7 @@ class ItemGroups(str, Enum):
     Signs = 21
     Pilars = 22
     Beams = 23
+    Walls = 24
 
 class ItemData(NamedTuple):
     category: Tuple[ItemGroups, ...]

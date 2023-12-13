@@ -322,8 +322,7 @@ class GameLogic:
         "Uranium": (
             Recipe("Uranium", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Sulfuric Acid": (
-            Recipe("Sulfuric Acid", "Refinery", ("Sulfur", "Water")), 
-            Recipe("Encased Uranium Cell", "Blender", ("Uranium", "Concrete", "Sulfuric Acid"), additional_outputs=("Encased Uranium Cell", ))),
+            Recipe("Sulfuric Acid", "Refinery", ("Sulfur", "Water"))), 
         "Encased Uranium Cell": (
             Recipe("Encased Uranium Cell", "Blender", ("Uranium", "Concrete", "Sulfuric Acid"), additional_outputs=("Sulfuric Acid", )), 
             Recipe("Infused Uranium Cell", "Manufacturer", ("Uranium", "Silica", "Sulfur", "Quickwire"), minimal_belt_speed=2)),
