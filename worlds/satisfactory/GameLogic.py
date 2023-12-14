@@ -322,7 +322,7 @@ class GameLogic:
         "Uranium": (
             Recipe("Uranium", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Sulfuric Acid": (
-            Recipe("Sulfuric Acid", "Refinery", ("Sulfur", "Water"))), 
+            Recipe("Sulfuric Acid", "Refinery", ("Sulfur", "Water")), ), 
         "Encased Uranium Cell": (
             Recipe("Encased Uranium Cell", "Blender", ("Uranium", "Concrete", "Sulfuric Acid"), additional_outputs=("Sulfuric Acid", )), 
             Recipe("Infused Uranium Cell", "Manufacturer", ("Uranium", "Silica", "Sulfur", "Quickwire"), minimal_belt_speed=2)),
@@ -458,7 +458,7 @@ class GameLogic:
         "Hard Drive": (
             Recipe("Hard Drive", handcraftable=True, implicitly_unlocked=True), ),
         "Object Scanner": (
-            Recipe("Object Scanner", "Equipment Workshop", ("Reinforced Iron Plate", "Wire", "Screw"), handcraftable=True, minimal_belt_speed=0), ),
+            Recipe("Object Scanner", "Equipment Workshop", ("Reinforced Iron Plate", "Wire", "Screw"), handcraftable=True), ),
 
         # TODO transport types arent currently in logic
         # TODO fix multiple handcraftable recipes per part
