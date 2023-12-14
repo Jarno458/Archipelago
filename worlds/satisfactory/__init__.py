@@ -94,8 +94,8 @@ class SatisfactoryWorld(World):
                 "HubLayout": hub_layout,
                 "SlotsPerMilestone": self.game_logic.slots_per_milestone,
                 "Options": {
-                    "ElevatorTier": self.options.final_elevator_tier.value,
-                    "ResourceSinkPoints": self.options.final_resource_sink_points.value,
+                    "FinalElevatorTier": self.options.final_elevator_tier.value,
+                    "FinalResourceSinkPoints": self.options.final_resource_sink_points.value,
                     "AllowDroppodProgression": bool(self.options.allow_droppod_progression),
                     "FreeSampleEquipment": self.options.free_sample_equipment.value,
                     "FreeSampleBuildings": self.options.free_sample_buildings.value,
