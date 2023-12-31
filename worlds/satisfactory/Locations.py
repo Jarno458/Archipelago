@@ -99,7 +99,12 @@ class HubSlot(LocationData):
 
 class MamSlot(LocationData):
     def __init__(self, tree: str, name: str, locationId: int):
-        super().__init__(f"{tree}: {name}", name, locationId)
+        super().__init__(f"{tree}: {name}", f"{tree}: {name}", locationId)
+
+
+class ShopSlot(LocationData):
+    def __init__(self, slot: int, locationId: int):
+        super().__init__("AWESOME Shop", f"AWESOME Shop purchase {slot}", locationId)
 
 
 class Droppod(LocationData):
@@ -221,7 +226,17 @@ class Locations():
             MamSlot("Sulfur", "Turbo Rifle Ammo", 1338568),
             MamSlot("Sulfur", "Turbo Fuel", 1338569),
             MamSlot("Sulfur", "Expanded Toolbelt", 1338570),
-            MamSlot("Sulfur", "Nuclear Deterrent Development", 1338571)
+            MamSlot("Sulfur", "Nuclear Deterrent Development", 1338571),
+            ShopSlot(1, 1338700),
+            ShopSlot(2, 1338701),
+            ShopSlot(3, 1338702),
+            ShopSlot(4, 1338703),
+            ShopSlot(5, 1338704),
+            ShopSlot(6, 1338705),
+            ShopSlot(7, 1338706),
+            ShopSlot(8, 1338707),
+            ShopSlot(9, 1338708),
+            ShopSlot(10, 1338709)
         ]
 
     def get_all_location_ids_by_name(cls) -> Dict[str, int]:

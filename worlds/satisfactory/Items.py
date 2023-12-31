@@ -343,8 +343,8 @@ class Items:
         #"Recipe: Wood": ItemData((G.Recipe, ), 1338363), 
         #"Recipe: Hatcher Remains": ItemData((G.Recipe, ), 1338364), 
         #"Recipe: Hog Remains": ItemData((G.Recipe, ), 1338365), 
-        #"Recipe: Plasma Spitter Remains": ItemData((G.Recipe", 1338366), , ),.*
-        #"Recipe: Stinger Remains": ItemData((G.Recipe, ), 1338367),
+        #"Recipe: Plasma Spitter Remains": ItemData((G.Recipe", 1338366),
+        "Recipe: Pulse Nobelisk":  ItemData((G.Recipe, ), 1338367, C.useful),
         "Recipe: Hatcher Protein": ItemData((G.Recipe, ), 1338368, C.progression),
         "Recipe: Hog Protein": ItemData((G.Recipe, ), 1338369, C.progression),
         "Recipe: Spitter Protein": ItemData((G.Recipe, ), 1338370, C.progression),
@@ -394,7 +394,6 @@ class Items:
         "Recipe: Object Scanner":  ItemData((G.Recipe, ), 1338414, C.progression),
         "Recipe: Parachute":  ItemData((G.Recipe, ), 1338415, C.useful),
         "Recipe: Protein Inhaler": ItemData((G.Recipe, ), 1338416, C.useful),
-        "Recipe: Pulse Nobelisk":  ItemData((G.Recipe, ), 1338403, C.useful),
         "Recipe: Rebar Gun":  ItemData((G.Recipe, ), 1338417, C.useful),
         "Recipe: Rifle": ItemData((G.Recipe, ), 1338418, C.useful),
         "Recipe: Rifle Ammo":  ItemData((G.Recipe, ), 1338419, C.progression),
