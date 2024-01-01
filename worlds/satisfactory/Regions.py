@@ -70,7 +70,8 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
     connect(player, regions, "Overworld", "Radioactive Area", lambda state:
                                 state_logic.can_produce_all(state, ("Hazmat Suit", "Iodine Infused Filter")))
     connect(player, regions, "Overworld", "Mam", lambda state: state_logic.can_build(state, "MAM"))
-    connect(player, regions, "Overworld", "AWESOME Shop", lambda state: state_logic.can_build(state, "AWESOME Shop"))
+    connect(player, regions, "Overworld", "AWESOME Shop", lambda state: 
+                                state_logic.can_build_all(state, ("AWESOME Shop", "AWESOME Sink")))
 
     def can_produce_all_allowing_handcrafting(parts: Tuple[str, ...]) -> Callable[[CollectionState], bool]:
         def logic_rule(state: CollectionState):

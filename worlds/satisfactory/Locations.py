@@ -103,8 +103,22 @@ class MamSlot(LocationData):
 
 
 class ShopSlot(LocationData):
-    def __init__(self, slot: int, locationId: int):
-        super().__init__("AWESOME Shop", f"AWESOME Shop purchase {slot}", locationId)
+    def __init__(self, state_logic: Optional[StateLogic], slot: int, cost: int, locationId: int):
+        super().__init__("AWESOME Shop", f"AWESOME Shop purchase {slot}", locationId,
+            rule = self.can_purchase_from_shop(state_logic, cost))
+        
+    def can_purchase_from_shop(self, state_logic: Optional[StateLogic], cost) -> Callable[[CollectionState], bool]:
+        def can_purchase(state: CollectionState) -> bool:
+            if not state_logic or cost < 20:
+                return True
+            elif (cost >= 20 and cost < 50):
+                return state_logic.is_game_phase(state, 1)
+            elif (cost >= 50 and cost < 100):
+                return state_logic.is_game_phase(state, 2)
+            else:
+                return state_logic.is_game_phase(state, 3)
+            
+        return can_purchase
 
 
 class Droppod(LocationData):
@@ -227,16 +241,16 @@ class Locations():
             MamSlot("Sulfur", "Turbo Fuel", 1338569),
             MamSlot("Sulfur", "Expanded Toolbelt", 1338570),
             MamSlot("Sulfur", "Nuclear Deterrent Development", 1338571),
-            ShopSlot(1, 1338700),
-            ShopSlot(2, 1338701),
-            ShopSlot(3, 1338702),
-            ShopSlot(4, 1338703),
-            ShopSlot(5, 1338704),
-            ShopSlot(6, 1338705),
-            ShopSlot(7, 1338706),
-            ShopSlot(8, 1338707),
-            ShopSlot(9, 1338708),
-            ShopSlot(10, 1338709)
+            ShopSlot(self.state_logic, 1, 3, 1338700),
+            ShopSlot(self.state_logic, 2, 3, 1338701),
+            ShopSlot(self.state_logic, 3, 5, 1338702),
+            ShopSlot(self.state_logic, 4, 5, 1338703),
+            ShopSlot(self.state_logic, 5, 10, 1338704),
+            ShopSlot(self.state_logic, 6, 10, 1338705),
+            ShopSlot(self.state_logic, 7, 20, 1338706),
+            ShopSlot(self.state_logic, 8, 20, 1338707),
+            ShopSlot(self.state_logic, 9, 50, 1338708),
+            ShopSlot(self.state_logic, 10, 50, 1338709)
         ]
 
     def get_all_location_ids_by_name(cls) -> Dict[str, int]:

@@ -84,6 +84,9 @@ class StateLogic:
             and self.can_build(state, recipe.building) \
             and self.can_produce_all(state, recipe.inputs)
     
+    def is_game_phase(self, state: CollectionState, phase: int) -> bool:
+        return state.has(f"Elevator Tier {phase}", self.player)
+    
     @staticmethod
     def to_part_event(part: str) -> str:
         return part_event_prefix + part
