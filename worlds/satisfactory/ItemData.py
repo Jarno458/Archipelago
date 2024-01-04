@@ -27,9 +27,10 @@ class ItemGroups(str, Enum):
     Pilars = 22
     Beams = 23
     Walls = 24
+    Upgrades = 25
 
 class ItemData(NamedTuple):
     category: Tuple[ItemGroups, ...]
     code: int
     type: ItemClassification = ItemClassification.filler
-    in_pool: bool = True
+    count: int = 1

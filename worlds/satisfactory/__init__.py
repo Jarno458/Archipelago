@@ -101,10 +101,10 @@ class SatisfactoryWorld(World):
                     "FreeSampleBuildings": self.options.free_sample_buildings.value,
                     "FreeSampleParts": self.options.free_sample_parts.value,
                     "FreeSampleRadioactive": bool(self.options.free_sample_radioactive),
-                    "DeathLink": bool(self.options.death_link),
                     "EnergyLink": bool(self.options.energy_link)
                 }
-            }
+            },
+            "DeathLink": bool(self.options.death_link)
         }
 
 

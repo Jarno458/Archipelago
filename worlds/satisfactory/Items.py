@@ -140,10 +140,10 @@ class Items:
         "Cluster Nobelisk": ItemData((G.Ammo, ), 1338155),
         #"Color Gun": ItemData((G.Equipment, ), 1338156), Removed in U8
         "Cup": ItemData((G.Equipment, ), 1338157),
-        "Cup (gold)": ItemData((G.Equipment, ), 1338158, in_pool=False),
+        "Cup (gold)": ItemData((G.Equipment, ), 1338158, count=0),
         "Explosive Rebar": ItemData((G.Ammo, ), 1338159),
         "Factory Cart": ItemData((G.Equipment, ), 1338160),
-        "Factory Cart (golden)": ItemData((G.Equipment, ), 1338161, in_pool=False),
+        "Factory Cart (golden)": ItemData((G.Equipment, ), 1338161, count=0),
         "Gas Mask": ItemData((G.Equipment, ), 1338162, C.progression),
         "Gas Nobelisk": ItemData((G.Ammo, ), 1338163),
         "Hazmat Suit": ItemData((G.Equipment, ), 1338164, C.progression),
@@ -170,9 +170,9 @@ class Items:
         "Zipline": ItemData((G.Equipment, ), 1338185),
         "Portable Miner": ItemData((G.Equipment, ), 1338186),
         "Gas Filter": ItemData((G.Ammo, ), 1338187, C.progression),
-        "Small inflated Pocket Dimension": ItemData((G.Ammo, ), 1338188, C.useful),
-        "Inflated Pocket Dimension": ItemData((G.Ammo, ), 1338189, C.useful),
-        "Expanded Toolbelt": ItemData((G.Ammo, ), 1338190, C.useful),
+        "Small inflated Pocket Dimension": ItemData((G.Upgrades, ), 1338188, C.useful, 11),
+        "Inflated Pocket Dimension": ItemData((G.Upgrades, ), 1338189, C.useful, 5),
+        "Expanded Toolbelt": ItemData((G.Upgrades, ), 1338190, C.useful, 5),
 
         #1338188 - 1338199 Reserved for future equipment/ammo
 
@@ -470,53 +470,53 @@ class Items:
         "Building: Conveyor Lift Mk.3": ItemData((G.Building, G.ConveyorMk3), 1338650, C.useful),
         "Building: Conveyor Lift Mk.4": ItemData((G.Building, G.ConveyorMk4), 1338651, C.useful),
         "Building: Conveyor Lift Mk.5": ItemData((G.Building, G.ConveyorMk5), 1338652, C.useful),
-        "Building: Metal Beams": ItemData((G.Beams, ), 1338653, C.filler),
+        "Building: Metal Beams": ItemData((G.Beams, ), 1338653, C.filler, 0),
         "Building: Stackable Conveyor Pole": ItemData((G.Building, G.ConveyorSupports), 1338654, C.useful),
-        "Building: Conveyor Wall Mount": ItemData((G.Building, G.ConveyorSupports), 1338655, C.useful),
-        "Building: Conveyor Lift Floor Hole": ItemData((G.Building, G.ConveyorSupports), 1338656, C.useful),
-        "Building: Conveyor Ceiling Mount": ItemData((G.Building, G.ConveyorSupports), 1338657, C.useful),
+        "Building: Conveyor Wall Mount": ItemData((G.Building, G.ConveyorSupports), 1338655, C.useful, 0),
+        "Building: Conveyor Lift Floor Hole": ItemData((G.Building, G.ConveyorSupports), 1338656, C.useful, 0),
+        "Building: Conveyor Ceiling Mount": ItemData((G.Building, G.ConveyorSupports), 1338657, C.useful, 0),
         "Building: Pipes Mk.1": ItemData((G.Building, G.PipesMk1), 1338658, C.progression),
         "Building: Pipes Mk.2": ItemData((G.Building, G.PipesMk2), 1338659, C.progression),
         "Building: Pipeline Pump Mk.1": ItemData((G.Building, G.PipesMk1), 1338660, C.progression),
         "Building: Pipeline Pump Mk.2": ItemData((G.Building, G.PipesMk2), 1338661, C.progression),
         "Building: Pipeline Junction Cross": ItemData((G.Building, G.PipesMk1, G.PipesMk2), 1338662, C.progression),
         "Building: Valve": ItemData((G.Building, G.PipesMk1, G.PipesMk2), 1338663, C.useful),
-        "Building: Stackable Pipeline Support": ItemData((G.Building, G.PipelineSupports), 1338664, C.useful),
-        "Building: Wall Pipeline Support": ItemData((G.Building, G.PipelineSupports), 1338665, C.useful),
-        "Building: Pipeline Wall Hole": ItemData((G.Building, G.PipelineSupports), 1338666, C.useful),
-        "Building: Pipeline Floor Hole": ItemData((G.Building, G.PipelineSupports), 1338667, C.useful),
-        "Building: Lights Control Panel": ItemData((G.Building, G.Lights), 1338668, C.filler),
-        "Building: Wall Mounted Flood Light": ItemData((G.Building, G.Lights), 1338669, C.filler),
-        "Building: Street Light": ItemData((G.Building, G.Lights), 1338670, C.filler),
-        "Building: Flood Light Tower": ItemData((G.Building, G.Lights), 1338671, C.filler),
-        "Building: Ceiling Light": ItemData((G.Building, G.Lights), 1338672, C.filler),
+        "Building: Stackable Pipeline Support": ItemData((G.Building, G.PipelineSupports), 1338664, C.useful, 0),
+        "Building: Wall Pipeline Support": ItemData((G.Building, G.PipelineSupports), 1338665, C.useful, 0),
+        "Building: Pipeline Wall Hole": ItemData((G.Building, G.PipelineSupports), 1338666, C.useful, 0),
+        "Building: Pipeline Floor Hole": ItemData((G.Building, G.PipelineSupports), 1338667, C.useful, 0),
+        "Building: Lights Control Panel": ItemData((G.Building, G.Lights), 1338668, C.filler, 0),
+        "Building: Wall Mounted Flood Light": ItemData((G.Building, G.Lights), 1338669, C.filler, 0),
+        "Building: Street Light": ItemData((G.Building, G.Lights), 1338670, C.filler, 0),
+        "Building: Flood Light Tower": ItemData((G.Building, G.Lights), 1338671, C.filler, 0),
+        "Building: Ceiling Light": ItemData((G.Building, G.Lights), 1338672, C.filler, 0),
         "Building: Power Tower": ItemData((G.Building, ), 1338673, C.useful),
         "Building: Walls Orange": ItemData((G.Building, G.Walls), 1338674, C.useful),
         "Building: Radar Tower": ItemData((G.Building, ), 1338675, C.useful),
         "Building: Smart Splitter": ItemData((G.Building, ), 1338676, C.useful),
         "Building: Programmable Splitter": ItemData((G.Building, ), 1338677, C.useful),
-        "Building: Label Sign Bundle": ItemData((G.Building, G.Signs), 1338678, C.filler, in_pool=False),
-        "Building: Display Sign Bundle": ItemData((G.Building, G.Signs), 1338679, C.filler, in_pool=False),
-        "Building: Billboard Set": ItemData((G.Building, G.Signs), 1338680, C.filler, in_pool=False),
-        "Building: Walls Metal": ItemData((G.Building, G.Walls), 1338681, C.filler, in_pool=False),
-        "Building: Metal Pillar": ItemData((G.Pilars, ), 1338682, C.filler, in_pool=False),
-        "Building: Concrete Pillar": ItemData((G.Pilars, ), 1338683, C.filler, in_pool=False),
-        "Building: Frame Pillar": ItemData((G.Pilars, ), 1338684, C.filler, in_pool=False),
-        "Building: Walls Concrete": ItemData((G.Building, G.Walls), 1338685, C.filler, in_pool=False),
-        #"Building: Big Metal Pillar": ItemData((G.Pilars, ), 1338686, C.filler, in_pool=False),
-        #"Building: Big Concrete Pillar": ItemData((G.Pilars, ), 1338687, C.filler, in_pool=False),
-        #"Building: Big Frame Pillar": ItemData((G.Pilars, ), 1338688, C.filler, in_pool=False),
-        #"Building: Beam Support": ItemData((G.Beams, ), 1338689, C.filler, in_pool=False),
-        #"Building: Beam Connector": ItemData((G.Beams, ), 1338690, C.filler, in_pool=False),
-        #"Building: Beam Connector Double": ItemData((G.Beams, ), 1338691, C.filler, in_pool=False),
+        "Building: Label Sign Bundle": ItemData((G.Building, G.Signs), 1338678, C.filler, 0),
+        "Building: Display Sign Bundle": ItemData((G.Building, G.Signs), 1338679, C.filler, 0),
+        "Building: Billboard Set": ItemData((G.Building, G.Signs), 1338680, C.filler, 0),
+        "Building: Walls Metal": ItemData((G.Building, G.Walls), 1338681, C.filler, 0),
+        "Building: Metal Pillar": ItemData((G.Pilars, ), 1338682, C.filler, 0),
+        "Building: Concrete Pillar": ItemData((G.Pilars, ), 1338683, C.filler, 0),
+        "Building: Frame Pillar": ItemData((G.Pilars, ), 1338684, C.filler, 0),
+        "Building: Walls Concrete": ItemData((G.Building, G.Walls), 1338685, C.filler, 0),
+        #"Building: Big Metal Pillar": ItemData((G.Pilars, ), 1338686, C.filler, 0),
+        #"Building: Big Concrete Pillar": ItemData((G.Pilars, ), 1338687, C.filler, 0),
+        #"Building: Big Frame Pillar": ItemData((G.Pilars, ), 1338688, C.filler, 0),
+        #"Building: Beam Support": ItemData((G.Beams, ), 1338689, C.filler, 0),
+        #"Building: Beam Connector": ItemData((G.Beams, ), 1338690, C.filler, 0),
+        #"Building: Beam Connector Double": ItemData((G.Beams, ), 1338691, C.filler, 0),
         "Building: Foundation": ItemData((G.Foundations, ), 1338692, C.filler),
-        "Building: Half Foundation": ItemData((G.Foundations, ), 1338693, C.filler, in_pool=False),
-        "Building: Corner Ramp Pack": ItemData((G.Foundations, ), 1338694, C.filler, in_pool=False),
-        "Building: Inverted Ramp Pack": ItemData((G.Foundations, ), 1338695, C.filler, in_pool=False),
-        "Building: Inverted Corner Ramp Pack": ItemData((G.Foundations, ), 1338696, C.filler, in_pool=False),
-        "Building: Quarter Pipes Pack": ItemData((G.Foundations, ), 1338697, C.filler, in_pool=False),
-        "Building: Quarter Pipe Extensions Pack": ItemData((G.Foundations, ), 1338698, C.filler, in_pool=False),
-        "Building: Frame foundation": ItemData((G.Foundations, ), 1338699, C.filler, in_pool=False),
+        "Building: Half Foundation": ItemData((G.Foundations, ), 1338693, C.filler, 0),
+        "Building: Corner Ramp Pack": ItemData((G.Foundations, ), 1338694, C.filler, 0),
+        "Building: Inverted Ramp Pack": ItemData((G.Foundations, ), 1338695, C.filler, 0),
+        "Building: Inverted Corner Ramp Pack": ItemData((G.Foundations, ), 1338696, C.filler, 0),
+        "Building: Quarter Pipes Pack": ItemData((G.Foundations, ), 1338697, C.filler, 0),
+        "Building: Quarter Pipe Extensions Pack": ItemData((G.Foundations, ), 1338698, C.filler, 0),
+        "Building: Frame foundation": ItemData((G.Foundations, ), 1338699, C.filler, 0),
 
         #1338700 - 1338799 Reserved for buildings
 
@@ -673,15 +673,11 @@ class Items:
         pool: List[Item] = []
 
         for name, data in self.item_data.items():
-            if name not in excluded_items and data.in_pool and any(
-                    cat for cat in data.category if cat in {G.Recipe, G.Building, G.Equipment, G.Transport}):
-                item = self.create_item(self, name, self.player)
-                pool.append(item)
-
-        # enquipment items that unlock logical progression
-        #for name in { "Gas Mask", "Hazmat Suit", "Jetpack", "Hover Pack", "Nobelisk Detonator" }:
-        #    item = self.create_item(self, name, self.player)
-        #    pool.append(item)
+            if name not in excluded_items and data.count > 0 and any(
+                    cat for cat in data.category if cat in {G.Recipe, G.Building, G.Equipment, G.Transport, G.Upgrades}):
+                for _ in range(data.count):
+                    item = self.create_item(self, name, self.player)
+                    pool.append(item)
 
         for _ in range(number_of_locations - len(pool)):
             item = self.create_item(self, self.get_filler_item_name(random, options), self.player)
