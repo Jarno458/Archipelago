@@ -96,7 +96,7 @@ class SatisfactoryWorld(World):
                 "Options": {
                     "FinalElevatorTier": self.options.final_elevator_tier.value,
                     "FinalResourceSinkPoints": self.options.final_resource_sink_points.value,
-                    "AllowDroppodProgression": bool(self.options.allow_droppod_progression),
+                    #"AllowDroppodProgression": bool(self.options.allow_droppod_progression),
                     "FreeSampleEquipment": self.options.free_sample_equipment.value,
                     "FreeSampleBuildings": self.options.free_sample_buildings.value,
                     "FreeSampleParts": self.options.free_sample_parts.value,

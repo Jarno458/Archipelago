@@ -172,8 +172,8 @@ class EnergyLink(Toggle):
 class SatisfactoryOptions(PerGameCommonOptions):
     final_elevator_tier: ElevatorTier
     final_resource_sink_points: ResourceSinkPoints
-    # "tech_tree_information: TechTreeInformation, # TODO: NYI
-    allow_droppod_progression: AllowDroppodProgression
+    # tech_tree_information: TechTreeInformation # TODO: NYI
+    # allow_droppod_progression: AllowDroppodProgression #TODO: NYI
     free_sample_equipment: FreeSampleEquipment
     free_sample_buildings: FreeSampleBuildings
     free_sample_parts: FreeSampleParts
