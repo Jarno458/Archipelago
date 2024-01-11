@@ -103,6 +103,8 @@ You can hover over the fields in the menu for more information example values.
 - **Username**: The name you entered as your Player Name when you created your config file. It's also listed in the Name column of your room page.
 - **Password**: The password for your slot, blank if you did not assign one.
 - **Archipelago Enabled**: Make sure this is checked, otherwise no server connection will be attempted.
+- **Debug Mode**: Dont!.
+- **Force override settings in save**: When loading a save, will use the `URI`, `Username` and `Password` provided here rather than the values stored in the save (usefull when the server changed ports)
 
 Note that the Satisfactory Client does _not_ need a copy of your config file.
 The mod communicates with the Archipelago Server, which already has your config file,
