@@ -264,7 +264,7 @@ class Locations():
                     location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, hub_location_id))
                     hub_location_id += 1
 
-        location_table.append(LocationData("Overworld", "UpperBound", 1339999))
+        location_table.append(LocationData("Overworld", "UpperBound", 1338999))
 
         return {location.name: location.code for location in location_table}
 
