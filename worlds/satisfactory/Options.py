@@ -72,10 +72,6 @@ class AllowDroppodProgression(Toggle):
 #     option_player_and_advancement = 3
 #     option_full = 4
 #     default = 4
-    
-class FreeSampleEnabled(DefaultOnToggle):
-    """Enable the Free Samples settings."""
-    display_name = "Free Samples: Enabled"
 
 class FreeSampleEquipment(Range):
     """How many free sample items of Equipment items should be given when they are unlocked.
@@ -178,7 +174,6 @@ class SatisfactoryOptions(PerGameCommonOptions):
     final_resource_sink_points: ResourceSinkPoints
     # tech_tree_information: TechTreeInformation # TODO: NYI
     # allow_droppod_progression: AllowDroppodProgression #TODO: NYI
-    free_sample_enabled: FreeSampleEnabled
     free_sample_equipment: FreeSampleEquipment
     free_sample_buildings: FreeSampleBuildings
     free_sample_parts: FreeSampleParts

@@ -517,27 +517,52 @@ class Items:
         "Building: Quarter Pipes Pack": ItemData((G.Foundations, ), 1338697, C.filler, 0),
         "Building: Quarter Pipe Extensions Pack": ItemData((G.Foundations, ), 1338698, C.filler, 0),
         "Building: Frame foundation": ItemData((G.Foundations, ), 1338699, C.filler, 0),
+        "Building: Wall Outlet Mk.1": ItemData((G.Building, ), 1338700, C.useful),
+        "Building: Wall Outlet Mk.2": ItemData((G.Building, ), 1338701, C.useful),
+        "Building: Wall Outlet Mk.3": ItemData((G.Building, ), 1338702, C.useful),
+        "Building: Modern Catwalks": ItemData((G.Building, ), 1338703, C.useful),
+        "Building: Industrial Walkways": ItemData((G.Building, ), 1338704, C.useful),
+        "Building: Stairs": ItemData((G.Building, ), 1338705, C.filler, 0),
+        "Building: Clean Pipeline Mk.1": ItemData((G.Building, ), 1338706, C.filler, 0),
+        "Building: Clean Pipeline Mk.2": ItemData((G.Building, ), 1338707, C.filler, 0),
+        "Building: Road Barrier": ItemData((G.Building, ), 1338708, C.filler, 0),
+        "Building: Modern Railing": ItemData((G.Building, ), 1338709, C.filler, 0),
+        "Building: Industrial Railing": ItemData((G.Building, ), 1338710, C.filler, 0),
+        "Building: Double Ramp Pack": ItemData((G.Foundations, ), 1338711, C.filler, 0),
 
-        #1338700 - 1338799 Reserved for buildings
 
-        # Large Packages (single item, multiple unlocks)
+        "Building: Conveyor Walls": ItemData((G.Walls, ), 1338712, C.filler, 0),
+        "Building: Inverted Ramp Wall Bundle": ItemData((G.Walls, ), 1338713, C.filler, 0),
+        "Building: Ramp Wall Bundle": ItemData((G.Walls, ), 1338714, C.filler, 0),
+        "Building: Door Walls": ItemData((G.Walls, ), 1338715, C.filler, 0),
+        "Building: Tilted Walls": ItemData((G.Walls, ), 1338716, C.filler, 0),
+        "Building: Windowed Walls": ItemData((G.Walls, ), 1338717, C.filler, 0),
+
+        "Building: Steel-framed Windows": ItemData((G.Walls, ), 1338718, C.filler, 0),
+        "Building: Gates": ItemData((G.Walls, ), 1338719, C.filler, 0),
+        "Building: Roofs": ItemData((G.Walls, ), 1338720, C.filler, 0),
+        "Building: Roof Corners": ItemData((G.Walls, ), 1338721, C.filler, 0),
+
+        #1338722 - 1338799 Reserved for buildings
+
+        # Transports 1338800 - 1338899
         # Drones (including Drone)
-        "Transport: Drones": ItemData((G.Transport, ), 1338800, C.filler),
+        "Transport: Drones": ItemData((G.Transport, ), 1338800, C.useful),
 
         # Trains (including Empty Platform, rails, station, locomotive)
-        "Transport: Trains": ItemData((G.Transport, G.Trains), 1338801, C.filler),
-        "Transport: Fluid Trains": ItemData((G.Transport, G.Trains), 1338802, C.filler),
+        "Transport: Trains": ItemData((G.Transport, G.Trains), 1338801, C.useful),
+        "Transport: Fluid Trains": ItemData((G.Transport, G.Trains), 1338802, C.useful),
 
         # Tracker / Truck (including truck station)
-        "Transport: Tractor": ItemData((G.Transport, G.Trains), 1338803, C.filler),
-        "Transport: Truck": ItemData((G.Transport, G.Trains), 1338804, C.filler),
-        "Transport: Explorer": ItemData((G.Transport, G.Trains), 1338805, C.filler),
-        "Transport: Factory Cart": ItemData((G.Transport, G.Trains), 1338806, C.filler),
-        "Transport: Factory Cart (golden)": ItemData((G.Transport, G.Trains), 1338807, C.filler),
-        "Transport: Cyber Wagon": ItemData((G.Transport, G.Trains), 1338808, C.filler),
+        "Transport: Tractor": ItemData((G.Transport, G.Vehicles), 1338803, C.useful),
+        "Transport: Truck": ItemData((G.Transport, G.Vehicles), 1338804, C.useful),
+        "Transport: Explorer": ItemData((G.Transport, G.Vehicles), 1338805, C.useful),
+        "Transport: Factory Cart": ItemData((G.Transport, G.Vehicles), 1338806, C.useful),
+        "Transport: Factory Cart (golden)": ItemData((G.Transport, G.Vehicles), 1338807, C.filler),
+        "Transport: Cyber Wagon": ItemData((G.Transport, G.Vehicles), 1338808, C.filler),
 
         # Hypertubes (including supports / pipes / entrance / holes)
-        "Transport: Hypertube": ItemData((G.Transport, G.HyperTubes), 1338809, C.filler),
+        "Transport: Hypertube": ItemData((G.Transport, G.HyperTubes), 1338809, C.useful),
         "Transport: Hypertube Floor Hole": ItemData((G.Transport, G.HyperTubes), 1338810, C.filler),
         "Transport: Hypertube Wall Support": ItemData((G.Transport, G.HyperTubes), 1338811, C.filler),
         "Transport: Hypertube Wall Hole": ItemData((G.Transport, G.HyperTubes), 1338812, C.filler),
@@ -564,6 +589,7 @@ class Items:
         "Nuclear Waste (ground)": ItemData((G.Trap, ), 1338917, C.trap),
         "Plutonium Waste (ground)": ItemData((G.Trap, ), 1338918, C.trap),
 
+        #Item id range upper bound
         "Building: Space Elevator": ItemData((G.Building, ), 1338999, C.progression)
     }
 
@@ -646,6 +672,7 @@ class Items:
 
         return selected_recipes
 
+
     @classmethod
     def create_item(cls, instance: Optional["Items"], name: str, player: int) -> Item:
         data: ItemData = cls.item_data[name]
@@ -667,13 +694,11 @@ class Items:
             return random.choice(self.filler_items) 
 
 
-    def build_item_pool(self, random: Random, options: SatisfactoryOptions, excluded_items: Set[str],
-                        number_of_locations: int) -> List[Item]:
-        
+    def build_item_pool(self, random: Random, options: SatisfactoryOptions, number_of_locations: int) -> List[Item]:
         pool: List[Item] = []
 
         for name, data in self.item_data.items():
-            if name not in excluded_items and data.count > 0 and any(
+            if data.count > 0 and any(
                     cat for cat in data.category if cat in {G.Recipe, G.Building, G.Equipment, G.Transport, G.Upgrades}):
                 for _ in range(data.count):
                     item = self.create_item(self, name, self.player)

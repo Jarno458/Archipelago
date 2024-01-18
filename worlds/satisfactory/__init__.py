@@ -52,15 +52,11 @@ class SatisfactoryWorld(World):
 
 
     def create_items(self) -> None:
-        #self.create_initial_unlocked_items()
         self.setup_events()
-
-        excluded_items = set() #self.get_excluded_items()
 
         number_of_locations: int = len(self.multiworld.get_unfilled_locations(self.player))
 
-        self.multiworld.itempool += self.items.build_item_pool(self.random, self.options, excluded_items,
-                                                                number_of_locations)
+        self.multiworld.itempool += self.items.build_item_pool(self.random, self.options, number_of_locations)
 
 
     def set_rules(self) -> None:
@@ -97,7 +93,6 @@ class SatisfactoryWorld(World):
                     "FinalElevatorTier": self.options.final_elevator_tier.value,
                     "FinalResourceSinkPoints": self.options.final_resource_sink_points.value,
                     #"AllowDroppodProgression": bool(self.options.allow_droppod_progression),
-                    "FreeSampleEnabled": bool(self.options.free_sample_enabled),
                     "FreeSampleEquipment": self.options.free_sample_equipment.value,
                     "FreeSampleBuildings": self.options.free_sample_buildings.value,
                     "FreeSampleParts": self.options.free_sample_parts.value,
