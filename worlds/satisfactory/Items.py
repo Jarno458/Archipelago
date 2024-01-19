@@ -509,7 +509,7 @@ class Items:
         #"Building: Beam Support": ItemData((G.Beams, ), 1338689, C.filler, 0),
         #"Building: Beam Connector": ItemData((G.Beams, ), 1338690, C.filler, 0),
         #"Building: Beam Connector Double": ItemData((G.Beams, ), 1338691, C.filler, 0),
-        "Building: Foundation": ItemData((G.Foundations, ), 1338692, C.filler),
+        "Building: Foundation": ItemData((G.Foundations, ), 1338692, C.useful),
         "Building: Half Foundation": ItemData((G.Foundations, ), 1338693, C.filler, 0),
         "Building: Corner Ramp Pack": ItemData((G.Foundations, ), 1338694, C.filler, 0),
         "Building: Inverted Ramp Pack": ItemData((G.Foundations, ), 1338695, C.filler, 0),
@@ -520,8 +520,8 @@ class Items:
         "Building: Wall Outlet Mk.1": ItemData((G.Building, ), 1338700, C.useful),
         "Building: Wall Outlet Mk.2": ItemData((G.Building, ), 1338701, C.useful),
         "Building: Wall Outlet Mk.3": ItemData((G.Building, ), 1338702, C.useful),
-        "Building: Modern Catwalks": ItemData((G.Building, ), 1338703, C.useful),
-        "Building: Industrial Walkways": ItemData((G.Building, ), 1338704, C.useful),
+        "Building: Modern Catwalks": ItemData((G.Building, ), 1338703, C.useful, 0),
+        "Building: Industrial Walkways": ItemData((G.Building, ), 1338704, C.useful, 0),
         "Building: Stairs": ItemData((G.Building, ), 1338705, C.filler, 0),
         "Building: Clean Pipeline Mk.1": ItemData((G.Building, ), 1338706, C.filler, 0),
         "Building: Clean Pipeline Mk.2": ItemData((G.Building, ), 1338707, C.filler, 0),
@@ -529,21 +529,38 @@ class Items:
         "Building: Modern Railing": ItemData((G.Building, ), 1338709, C.filler, 0),
         "Building: Industrial Railing": ItemData((G.Building, ), 1338710, C.filler, 0),
         "Building: Double Ramp Pack": ItemData((G.Foundations, ), 1338711, C.filler, 0),
-
-
         "Building: Conveyor Walls": ItemData((G.Walls, ), 1338712, C.filler, 0),
         "Building: Inverted Ramp Wall Bundle": ItemData((G.Walls, ), 1338713, C.filler, 0),
         "Building: Ramp Wall Bundle": ItemData((G.Walls, ), 1338714, C.filler, 0),
         "Building: Door Walls": ItemData((G.Walls, ), 1338715, C.filler, 0),
         "Building: Tilted Walls": ItemData((G.Walls, ), 1338716, C.filler, 0),
         "Building: Windowed Walls": ItemData((G.Walls, ), 1338717, C.filler, 0),
-
         "Building: Steel-framed Windows": ItemData((G.Walls, ), 1338718, C.filler, 0),
         "Building: Gates": ItemData((G.Walls, ), 1338719, C.filler, 0),
         "Building: Roofs": ItemData((G.Walls, ), 1338720, C.filler, 0),
         "Building: Roof Corners": ItemData((G.Walls, ), 1338721, C.filler, 0),
 
-        #1338722 - 1338799 Reserved for buildings
+        #1338722 - 1338749 Reserved for buildings
+
+        "Customizer: Asphalt Foundation Material": ItemData((G.Customizer, G.Foundations), 1338750, C.filler, 0),
+        "Customizer: Concrete Foundation Material": ItemData((G.Customizer, G.Foundations), 1338751, C.filler, 0),
+        "Customizer: Concrete Wall Material": ItemData((G.Customizer, G.Walls), 1338752, C.filler, 0),
+        "Customizer: Glass Roof Material": ItemData((G.Customizer, G.Walls), 1338753, C.filler, 0),
+        "Customizer: Grip Metal Foundation Material": ItemData((G.Customizer, G.Foundations), 1338754, C.filler, 0),
+        "Customizer: Coated Concrete Foundation Material": ItemData((G.Customizer, G.Foundations), 1338755, C.filler, 0),
+        "Customizer: Metal Roof Material": ItemData((G.Customizer, G.Walls), 1338756, C.filler, 0),
+        "Customizer: Steel Wall Material": ItemData((G.Customizer, G.Walls), 1338757, C.filler, 0),
+        "Customizer: Tar Roof Material": ItemData((G.Customizer, G.Walls), 1338758, C.filler, 0),
+        "Customizer: Arrow Patterns": ItemData((G.Customizer, G.Foundations), 1338759, C.filler, 0),
+        "Customizer: Dotted Line Patterns": ItemData((G.Customizer, G.Foundations), 1338760, C.filler, 0),
+        "Customizer: Solid Line Patterns": ItemData((G.Customizer, G.Foundations), 1338761, C.filler, 0),
+        "Customizer: Factory Icon Patterns": ItemData((G.Customizer, G.Foundations), 1338762, C.filler, 0),
+        "Customizer: Transportation Icon Patterns": ItemData((G.Customizer, G.Foundations), 1338763, C.filler, 0),
+        "Customizer: Number Patterns": ItemData((G.Customizer, G.Foundations), 1338764, C.filler, 0),
+        "Customizer: Pathway Patterns": ItemData((G.Customizer, G.Foundations), 1338765, C.filler, 0),
+        "Customizer: Factory Zone Patterns": ItemData((G.Customizer, G.Foundations), 1338766, C.filler, 0),
+
+        #1338767 - 1338799 Reserved for buildings
 
         # Transports 1338800 - 1338899
         # Drones (including Drone)
