@@ -104,6 +104,69 @@ class MamTree():
 
 class GameLogic:
     recipes: Dict[str, Tuple[Recipe, ...]] = {
+        # Exploration Items
+        "Leaves": (
+            Recipe("Leaves", handcraftable=True, implicitly_unlocked=True), ),
+        "Wood": (
+            Recipe("Wood", handcraftable=True, implicitly_unlocked=True), ),
+        "Hatcher Remains": (
+            Recipe("Hatcher Remains", handcraftable=True, implicitly_unlocked=True), ),
+        "Hog Remains": (
+            Recipe("Hog Remains", handcraftable=True, implicitly_unlocked=True), ),
+        "Plasma Spitter Remains": (
+            Recipe("Plasma Spitter Remains", handcraftable=True, implicitly_unlocked=True), ),
+        "Stinger Remains": (
+            Recipe("Stinger Remains", handcraftable=True, implicitly_unlocked=True), ),
+        "Mycelia": (
+            Recipe("Mycelia", handcraftable=True, implicitly_unlocked=True), ),
+        "Beryl Nut": (
+            Recipe("Beryl Nut", handcraftable=True, implicitly_unlocked=True), ),
+        "Paleberry": (
+            Recipe("Paleberry", handcraftable=True, implicitly_unlocked=True), ),
+        "Bacon Agaric": (
+            Recipe("Bacon Agaric", handcraftable=True, implicitly_unlocked=True), ),
+        "Blue Power Slug": (
+            Recipe("Blue Power Slug", handcraftable=True, implicitly_unlocked=True), ),
+        "Yellow Power Slug": (
+            Recipe("Yellow Power Slug", handcraftable=True, implicitly_unlocked=True), ),
+        "Purple Power Slug": (
+            Recipe("Purple Power Slug", handcraftable=True, implicitly_unlocked=True), ),
+        "Hard Drive": (
+            Recipe("Hard Drive", handcraftable=True, implicitly_unlocked=True), ),
+
+        # Raw Resources
+        "Water": (
+            Recipe("Water", "Water Extractor", implicitly_unlocked=True), ),
+        "Limestone": (
+            Recipe("Limestone", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
+        "Raw Quartz": (
+            Recipe("Raw Quartz", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
+        "Iron Ore": (
+            Recipe("Iron Ore", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
+        "Copper Ore": (
+            Recipe("Copper Ore", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
+        "Coal": (
+            Recipe("Coal", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
+        "Sulfur": (
+            Recipe("Sulfur", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
+        "Caterium Ore": (
+            Recipe("Caterium Ore", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
+        "Crude Oil": (
+            Recipe("Crude Oil", "Oil Extractor", implicitly_unlocked=True), ),
+        "Bauxite": (
+            Recipe("Bauxite", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
+        "Nitrogen Gas": (
+            Recipe("Nitrogen Gas", "Resource Well Pressurizer", implicitly_unlocked=True), ),
+        "Uranium": (
+            Recipe("Uranium", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
+        
+        # Special Items
+        "Uranium Waste": (
+            Recipe("Uranium Waste", "Nuclear Power Plant", ("Uranium Fuel Rod", "Water"), implicitly_unlocked=True), ),
+        "Plutonium Waste": (
+            Recipe("Plutonium Waste", "Nuclear Power Plant", ("Plutonium Fuel Rod", "Water"), implicitly_unlocked=True), ),
+
+        # Recipes
         "Reinforced Iron Plate": (
             Recipe("Reinforced Iron Plate", "Assembler", ("Iron Plate", "Screw"), handcraftable=True),
             Recipe("Adhered Iron Plate", "Assembler", ("Iron Plate", "Rubber")),
@@ -155,8 +218,6 @@ class GameLogic:
             Recipe("Steel Pipe", "Constructor", ("Steel Ingot", ), handcraftable=True), ),
         "Steel Beam": (
             Recipe("Steel Beam", "Constructor", ("Steel Ingot", ), handcraftable=True), ),
-        "Crude Oil": (
-            Recipe("Crude Oil", "Oil Extractor", implicitly_unlocked=True), ),
         "Heavy Oil Residue": (
             Recipe("Heavy Oil Residue", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin", )),
             Recipe("Plastic", "Refinery", ("Crude Oil", ), additional_outputs=("Plastic", )),
@@ -170,8 +231,6 @@ class GameLogic:
             Recipe("Fuel", "Refinery", ("Crude Oil", ), additional_outputs=("Polymer Resin")),
             Recipe("Diluted Fuel", "Blender", ("Heavy Oil Residue", "Water")),
             Recipe("Residual Fuel", "Refinery", ("Heavy Oil Residue", ))),
-        "Water": (
-            Recipe("Water", "Water Extractor", implicitly_unlocked=True), ),
         "Concrete": (
             Recipe("Concrete", "Constructor", ("Limestone", ), handcraftable=True),
             Recipe("Fine Concrete", "Assembler", ("Limestone", "Silica")),
@@ -200,20 +259,6 @@ class GameLogic:
         "Caterium Ingot": (
             Recipe("Caterium Ingot", "Smelter", ("Caterium Ore", ), handcraftable=True),
             Recipe("Pure Caterium Ingot", "Refinery", ("Caterium Ore", "Water"))),
-        "Limestone": (
-            Recipe("Limestone", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
-        "Raw Quartz": (
-            Recipe("Raw Quartz", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
-        "Iron Ore": (
-            Recipe("Iron Ore", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
-        "Copper Ore": (
-            Recipe("Copper Ore", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
-        "Coal": (
-            Recipe("Coal", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
-        "Sulfur": (
-            Recipe("Sulfur", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
-        "Caterium Ore": (
-            Recipe("Caterium Ore", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Petroleum Coke": (
             Recipe("Petroleum Coke", "Refinery", ("Heavy Oil Residue", ), minimal_belt_speed=2), ),
         "Compacted Coal": (
@@ -269,8 +314,6 @@ class GameLogic:
         "Portable Miner": (
             Recipe("Portable Miner", "Equipment Workshop", ("Iron Rod", "Iron Plate"), handcraftable=True, minimal_belt_speed=0, implicitly_unlocked=True),
             Recipe("Automated Miner", "Manufacturer", ("Motor", "Steel Pipe", "Iron Rod", "Iron Plate")), ),
-        "Bauxite": (
-            Recipe("Bauxite", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Alumina Solution": (
             Recipe("Alumina Solution", "Refinery", ("Bauxite", "Water"), additional_outputs=("Silica", ), minimal_belt_speed=2), 
             Recipe("Sloppy Alumina", "Refinery", ("Bauxite", "Water"), minimal_belt_speed=3)),
@@ -289,8 +332,6 @@ class GameLogic:
         "Heat Sink": (
             Recipe("Heat Sink", "Assembler", ("Alclad Aluminum Sheet", "Silica"), minimal_belt_speed=2, handcraftable=True), 
             Recipe("Heat Exchanger", "Assembler", ("Aluminum Casing", "Rubber"), minimal_belt_speed=3)),
-        "Nitrogen Gas": (
-            Recipe("Nitrogen Gas", "Resource Well Pressurizer", implicitly_unlocked=True), ),
         "Nitric Acid": (
             Recipe("Nitric Acid", "Blender", ("Nitrogen Gas", "Water", "Iron Plate")), ),
         "Fused Modular Frame": (
@@ -316,8 +357,6 @@ class GameLogic:
             Recipe("Supercomputer", "Manufacturer", ("Computer", "AI Limiter", "High-Speed Connector", "Plastic"), handcraftable=True),
             Recipe("OC Supercomputer", "Assembler", ("Radio Control Unit", "Cooling System")),
             Recipe("Super-State Computer", "Manufacturer", ("Computer", "Electromagnetic Control Rod", "Battery", "Wire"))),
-        "Uranium": (
-            Recipe("Uranium", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Sulfuric Acid": (
             Recipe("Sulfuric Acid", "Refinery", ("Sulfur", "Water")), ),
         "Encased Uranium Cell": (
@@ -330,8 +369,6 @@ class GameLogic:
             Recipe("Beacon", "Equipment Workshop", ("Iron Plate", "Iron Rod", "Wire", "Cable"), handcraftable=True, minimal_belt_speed=0), 
             Recipe("Beacon", "Manufacturer", ("Iron Plate", "Iron Rod", "Wire", "Cable")),
             Recipe("Crystal Beacon", "Manufacturer", ("Steel Beam", "Steel Pipe", "Crystal Oscillator"))),
-        "Uranium Waste": (
-            Recipe("Uranium Waste", "Nuclear Power Plant", ("Uranium Fuel Rod", "Water"), implicitly_unlocked=True), ),
         "Non-fissile Uranium": (
             Recipe("Non-fissile Uranium", "Blender", ("Uranium Waste", "Silica", "Nitric Acid", "Sulfuric Acid"), additional_outputs=("Water", )), 
             Recipe("Fertile Uranium", "Blender", ("Uranium", "Uranium Waste", "Nitric Acid", "Sulfuric Acid"), additional_outputs=("Water", ), minimal_belt_speed=2)),
@@ -359,18 +396,6 @@ class GameLogic:
             Recipe("Nuclear Pasta", "Particle Accelerator", ("Copper Powder", "Pressure Conversion Cube")), ),
         "Thermal Propulsion Rocket": (
             Recipe("Thermal Propulsion Rocket", "Manufacturer", ("Modular Engine", "Turbo Motor", "Cooling System", "Fused Modular Frame")), ),
-        "Leaves": (
-            Recipe("Leaves", handcraftable=True, implicitly_unlocked=True), ),
-        "Wood": (
-            Recipe("Wood", handcraftable=True, implicitly_unlocked=True), ),
-        "Hatcher Remains": (
-            Recipe("Hatcher Remains", handcraftable=True, implicitly_unlocked=True), ),
-        "Hog Remains": (
-            Recipe("Hog Remains", handcraftable=True, implicitly_unlocked=True), ),
-        "Plasma Spitter Remains": (
-            Recipe("Plasma Spitter Remains", handcraftable=True, implicitly_unlocked=True), ),
-        "Stinger Remains": (
-            Recipe("Stinger Remains", handcraftable=True, implicitly_unlocked=True), ),
         "Alien Protein": (
             Recipe("Hatcher Protein", "Constructor", ("Hatcher Remains", ), handcraftable=True),
             Recipe("Hog Protein", "Constructor", ("Hog Remains", ), handcraftable=True),
@@ -381,8 +406,6 @@ class GameLogic:
             Recipe("Biomass (Wood)", "Constructor", ("Wood", ), minimal_belt_speed=4, handcraftable=True),
             Recipe("Biomass (Mycelia)", "Constructor", ("Mycelia", ), minimal_belt_speed=3, handcraftable=True),
             Recipe("Biomass (Alien Protein)", "Constructor", ("Alien Protein", ), minimal_belt_speed=5, handcraftable=True)),
-        "Mycelia": (
-            Recipe("Mycelia", handcraftable=True), ),
         "Fabric": (
             Recipe("Fabric", "Assembler", ("Biomass", "Mycelia"), handcraftable=True, minimal_belt_speed=2), 
             Recipe("Polyester Fabric", "Refinery", ("Polymer Resin", "Water"))),
@@ -436,24 +459,10 @@ class GameLogic:
             Recipe("Iron Rebar", "Constructor", ("Iron Rod", ), handcraftable=True), ),
         "Nobelisk": (
             Recipe("Nobelisk", "Assembler", ("Black Powder", "Steel Pipe"), handcraftable=True), ),
-        "Beryl Nut": (
-            Recipe("Beryl Nut", handcraftable=True, implicitly_unlocked=True), ),
-        "Paleberry": (
-            Recipe("Paleberry", handcraftable=True, implicitly_unlocked=True), ),
-        "Bacon Agaric": (
-            Recipe("Bacon Agaric", handcraftable=True, implicitly_unlocked=True), ),
-        "Blue Power Slug": (
-            Recipe("Blue Power Slug", handcraftable=True, implicitly_unlocked=True), ),
-        "Yellow Power Slug": (
-            Recipe("Yellow Power Slug", handcraftable=True, implicitly_unlocked=True), ),
-        "Purple Power Slug": (
-            Recipe("Purple Power Slug", handcraftable=True, implicitly_unlocked=True), ),
         "Power Shard": (
             Recipe("Power Shard (1)", "Constructor", ("Blue Power Slug", ), handcraftable=True),
             Recipe("Power Shard (2)", "Constructor", ("Yellow Power Slug", ), handcraftable=True),
             Recipe("Power Shard (5)", "Constructor", ("Purple Power Slug", ), handcraftable=True)),
-        "Hard Drive": (
-            Recipe("Hard Drive", handcraftable=True, implicitly_unlocked=True), ),
         "Object Scanner": (
             Recipe("Object Scanner", "Equipment Workshop", ("Reinforced Iron Plate", "Wire", "Screw"), handcraftable=True), ),
 
