@@ -76,18 +76,20 @@ class SatisfactoryWorld(World):
 
 
     def fill_slot_data(self) -> Dict[str, object]:
-        hub_layout: List[List[Dict[str, int]]] = []
+        slot_hub_layout: List[List[Dict[str, int]]] = []
 
         for tier, milestones in enumerate(self.game_logic.hub_layout, 1):
-            hub_layout.append([])
+            slot_hub_layout.append([])
             for milestone, parts in enumerate(milestones, 1):
-                 hub_layout[tier - 1].append({})
+                 slot_hub_layout[tier - 1].append({})
                  for part, amount in parts.items():
-                    hub_layout[tier - 1][milestone - 1][f"{self.item_name_to_id[part]}"] = amount
+                    # ItemIDs of bundles are shared with their component item
+                    bundled_name = f"Bundle: {part}"
+                    slot_hub_layout[tier - 1][milestone - 1][self.item_name_to_id[bundled_name]] = amount
 
         return {
             "Data": {
-                "HubLayout": hub_layout,
+                "HubLayout": slot_hub_layout,
                 "SlotsPerMilestone": self.game_logic.slots_per_milestone,
                 "Options": {
                     "FinalElevatorTier": self.options.final_elevator_tier.value,
