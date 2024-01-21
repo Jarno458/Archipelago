@@ -140,35 +140,51 @@ class SatisfactoryWorld(World):
 
     def get_initial_unlocked_items(self) -> Set[str]:
         return {
-            #Tier 0 rewards
-            "Building: Constructor",
-            "Building: Miner Mk.1",
-            "Building: Smelter",
-            "Building: Equipment Workshop",
-            "Building: Conveyor Mk.1",
-            "Building: Conveyor Pole",
-            "Building: Power Line",
-            "Building: Power Pole Mk.1",
-            "Building: Storage Container",
-            "Building: Craft Bench",
-            "Building: The HUB"
-            
-            "Recipe: Hatcher Remains", 
-            "Recipe: Hog Remains", 
-            "Recipe: Plasma Spitter Remains", 
-            "Recipe: Stinger Remains",
-            "Recipe: Mycelia",
-
+            # Unlocked as part of core starting recipes
+            # /Game/FactoryGame/Schematics/Schematic_StartingRecipes.Schematic_StartingRecipes
             "Recipe: Iron Ingot",
-            "Recipe: Copper Ingot",
-
-            "Recipe: Concrete",
             "Recipe: Iron Plate",
             "Recipe: Iron Rod",
+            "Building: The HUB",
+            "Recipe: Xeno-Zapper",
+            "Building: Craft Bench",
+            # (Iron Ore scanning)
 
+            # Tier 0 rewards
+            # HUB 0-1
+            "Building: Equipment Workshop",
             "Recipe: Portable Miner",
-            "Recipe: Reinforced Iron Plate",
-            "Recipe: Screw",
+            # (3 Inventory slots)
+
+            # HUB 0-2
+            "Building: Smelter",
+            "Building: Power Line",
+            "Recipe: Copper Ingot",
             "Recipe: Wire",
-            "Recipe: Cable"
+            "Recipe: Cable",
+            # (Copper Ore scanning)
+
+            # HUB 0-3
+            "Building: Constructor",
+            "Building: Power Pole Mk.1",
+            "Recipe: Concrete",
+            "Recipe: Screw",
+            "Recipe: Reinforced Iron Plate",
+            # (Limestone scanner)
+
+            # HUB 0-4
+            "Building: Conveyor Pole",
+            "Building: Conveyor Mk.1",
+            # (3 Inventory slots)
+
+            # HUB 0-5
+            "Building: Miner Mk.1",
+            "Building: Storage Container",
+            # (3 Inventory slots)
+
+            # HUB 0-6
+            "Building: Space Elevator", # TODO do we want to leave this here or remove it?
+            "Building: Biomass Burner",
+            "Recipe: Biomass (Leaves)", # TODO do we want to leave this here or remove it?
+            "Recipe: Biomass (Wood)", # TODO do we want to leave this here or remove it?
         }
