@@ -33,12 +33,17 @@ radio_actives: Set[str] = {
 }
 
 class Recipe():
+    """
+    Relationship between components and what is required to produce them (input ingredients, production building, etc.)
+    Not all recipes are Satisfactory FGRecipes - for example, Water has a Recipe, but it's not an FGRecipe
+    """
     name: str
     building: str
     inputs: Tuple[str, ...]
     minimal_belt_speed: int
     handcraftable: bool
     implicitly_unlocked: bool
+    """No explicit location/item is needed to unlock this recipe, you have access as soon as dependencies are met (ex. Water, Leaves, tutorial starting items)"""
     additional_outputs: Tuple[str, ...]
 
     needs_pipes: bool
@@ -75,15 +80,11 @@ class Building(Recipe):
 
 
 class MamNode():
-    """
-    Attributes:
-        name
-        unlock_cost: All game items must be submitted to purchase this MamNode
-        depends_on: At least one of these prerequisite MamNodes must be unlocked to purchase this MamNode
-    """
     name: str
     unlock_cost: Dict[str, int]
+    """All game items must be submitted to purchase this MamNode"""
     depends_on: Tuple[str, ...]
+    """At least one of these prerequisite MamNodes must be unlocked to purchase this MamNode"""
 
     def __init__(self, name: str, unlock_cost: Dict[str, int], depends_on: Tuple[str, ...]):
         self.name = name
@@ -92,12 +93,8 @@ class MamNode():
 
 
 class MamTree():
-    """
-    Attributes:
-        access_items: At least one of these game items must enter the player inventory for this MamTree to be available
-        nodes
-    """
     access_items: Tuple[str, ...]
+    """At least one of these game items must enter the player inventory for this MamTree to be available"""
     nodes: Tuple[MamNode, ...]
 
     def __init__(self, access_items: Tuple[str, ...], nodes: Tuple[MamNode, ...]):
@@ -322,7 +319,7 @@ class GameLogic:
         "Uranium": (
             Recipe("Uranium", "Miner Mk.1", handcraftable=True, implicitly_unlocked=True), ),
         "Sulfuric Acid": (
-            Recipe("Sulfuric Acid", "Refinery", ("Sulfur", "Water")), ), 
+            Recipe("Sulfuric Acid", "Refinery", ("Sulfur", "Water")), ),
         "Encased Uranium Cell": (
             Recipe("Encased Uranium Cell", "Blender", ("Uranium", "Concrete", "Sulfuric Acid"), additional_outputs=("Sulfuric Acid", )), 
             Recipe("Infused Uranium Cell", "Manufacturer", ("Uranium", "Silica", "Sulfur", "Quickwire"), minimal_belt_speed=2)),
@@ -460,7 +457,7 @@ class GameLogic:
         "Object Scanner": (
             Recipe("Object Scanner", "Equipment Workshop", ("Reinforced Iron Plate", "Wire", "Screw"), handcraftable=True), ),
 
-        # TODO transport types arent currently in logic
+        # TODO transport types aren't currently in logic
         # TODO fix multiple handcraftable recipes per part
     }
 
@@ -587,6 +584,7 @@ class GameLogic:
         ),
     )
 
+    # Values from /Game/FactoryGame/Schematics/Progression/BP_GamePhaseManager.BP_GamePhaseManager
     space_elevator_tiers: Tuple[Dict[str, int], ...] = (
         { "Smart Plating": 50 },
         { "Smart Plating": 500, "Versatile Framework": 500, "Automated Wiring": 100 },

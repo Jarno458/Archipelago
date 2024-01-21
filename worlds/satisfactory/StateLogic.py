@@ -78,6 +78,7 @@ class StateLogic:
             return False
 
         if recipe.name == "Recipe: Object Scanner":
+            # TODO leftover Jarno debug code?
             debugger = "attach"
 
         return self.has_recipe(state, recipe) \

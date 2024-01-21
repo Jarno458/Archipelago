@@ -638,8 +638,8 @@ class Items:
         self.logic = logic
         self.random = random
 
-        if False: # major performance boost if we can get it stable
-            self.precalculated_progression_recipes = self.select_progression_recipes() 
+        if False: # TODO major performance boost if we can get it stable
+            self.precalculated_progression_recipes = self.select_progression_recipes()
         else:
             self.precalculated_progression_recipes = None
 

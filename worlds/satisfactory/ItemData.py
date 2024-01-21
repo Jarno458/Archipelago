@@ -32,7 +32,9 @@ class ItemGroups(str, Enum):
     Customizer = 27
 
 class ItemData(NamedTuple):
+    """Represents an item in the pool, it could be a resource bundle, production recipe, trap, etc."""
     category: Tuple[ItemGroups, ...]
     code: int
     type: ItemClassification = ItemClassification.filler
     count: int = 1
+    """How many of this item exists in the pool. 0 means none, but still defines the item so it can be added in the starting inventory for example"""
