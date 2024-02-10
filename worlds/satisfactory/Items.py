@@ -1,4 +1,5 @@
 from random import Random
+from enum import Enum
 from typing import ClassVar, Dict, Set, List, TextIO, Tuple, Optional
 from BaseClasses import Item, ItemClassification as C, MultiWorld
 from .GameLogic import GameLogic, Recipe
@@ -715,8 +716,17 @@ class Items:
         pool: List[Item] = []
 
         for name, data in self.item_data.items():
+            if any(cat for cat in data.category if cat == G.Recipe):
+                recipe_name = name.split(": ", 1)[1]
+
+                if recipe_name in self.logic.implicitly_unlocked_recipes:
+                    continue
+
+                item = self.create_item(self, name, self.player)
+                pool.append(item)
+
             if data.count > 0 and any(
-                    cat for cat in data.category if cat in {G.Recipe, G.Building, G.Equipment, G.Transport, G.Upgrades}):
+                    cat for cat in data.category if cat in {G.Building, G.Equipment, G.Transport, G.Upgrades}):
                 for _ in range(data.count):
                     item = self.create_item(self, name, self.player)
                     pool.append(item)
