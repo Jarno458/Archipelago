@@ -1,7 +1,7 @@
 from typing import List, Set, Dict, Tuple, Optional, Callable
 from BaseClasses import MultiWorld, Region, Entrance, Location, CollectionState
 from .Locations import LocationData
-from .GameLogic import GameLogic
+from .GameLogic import GameLogic, PowerInfrastructureLevel
 from .StateLogic import StateLogic
 
 class SatisfactoryLocation(Location):
@@ -58,8 +58,9 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
 
     connect(player, regions, "Menu", "Overworld")
     connect(player, regions, "Overworld", "Hub Tier 1")
-    connect(player, regions, "Hub Tier 1", "Hub Tier 2")
-    connect(player, regions, "Hub Tier 2", "Hub Tier 3", lambda state: state.has("Elevator Tier 1", player))
+    connect(player, regions, "Hub Tier 1", "Hub Tier 2", lambda state: state_logic.can_build(state,"Foundation"))
+    connect(player, regions, "Hub Tier 2", "Hub Tier 3", 
+            lambda state: state.has("Elevator Tier 1", player) and state_logic.can_build(state, str(PowerInfrastructureLevel.Automated)))
     connect(player, regions, "Hub Tier 3", "Hub Tier 4")
     connect(player, regions, "Hub Tier 4", "Hub Tier 5", lambda state: state.has("Elevator Tier 2", player))
     connect(player, regions, "Hub Tier 5", "Hub Tier 6")

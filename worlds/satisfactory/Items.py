@@ -509,7 +509,7 @@ class Items:
         #"Building: Beam Support": ItemData((G.Beams, ), 1338689, C.filler, 0),
         #"Building: Beam Connector": ItemData((G.Beams, ), 1338690, C.filler, 0),
         #"Building: Beam Connector Double": ItemData((G.Beams, ), 1338691, C.filler, 0),
-        "Building: Foundation": ItemData((G.Foundations, ), 1338692, C.useful),
+        "Building: Foundation": ItemData((G.Building, G.Foundations), 1338692, C.progression),
         "Building: Half Foundation": ItemData((G.Foundations, ), 1338693, C.filler, 0),
         "Building: Corner Ramp Pack": ItemData((G.Foundations, ), 1338694, C.filler, 0),
         "Building: Inverted Ramp Pack": ItemData((G.Foundations, ), 1338695, C.filler, 0),

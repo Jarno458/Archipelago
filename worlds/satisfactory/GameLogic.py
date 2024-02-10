@@ -509,6 +509,7 @@ class GameLogic:
         # higher level power poles arent in logic
         #"Power Pole Mk.2": Building("Power Pole Mk.2", ("Quickwire", "Iron Rod", "Concrete")),
         #"Power Pole Mk.3": Building("Power Pole Mk.3", ("High-Speed Connector", "Steel Pipe", "Rubber")),
+        "Foundation": Building("Foundation", ("Iron Plate", "Concrete")),
     }
 
     requirement_per_powerlevel: Dict[PowerInfrastructureLevel, Tuple[Recipe, ...]] = {
