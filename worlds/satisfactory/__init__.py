@@ -76,18 +76,20 @@ class SatisfactoryWorld(World):
 
 
     def fill_slot_data(self) -> Dict[str, object]:
-        hub_layout: List[List[Dict[str, int]]] = []
+        slot_hub_layout: List[List[Dict[str, int]]] = []
 
         for tier, milestones in enumerate(self.game_logic.hub_layout, 1):
-            hub_layout.append([])
+            slot_hub_layout.append([])
             for milestone, parts in enumerate(milestones, 1):
-                 hub_layout[tier - 1].append({})
+                 slot_hub_layout[tier - 1].append({})
                  for part, amount in parts.items():
-                    hub_layout[tier - 1][milestone - 1][f"{self.item_name_to_id[part]}"] = amount
+                    # ItemIDs of bundles are shared with their component item
+                    bundled_name = f"Bundle: {part}"
+                    slot_hub_layout[tier - 1][milestone - 1][self.item_name_to_id[bundled_name]] = amount
 
         return {
             "Data": {
-                "HubLayout": hub_layout,
+                "HubLayout": slot_hub_layout,
                 "SlotsPerMilestone": self.game_logic.slots_per_milestone,
                 "Options": {
                     "FinalElevatorTier": self.options.final_elevator_tier.value,
@@ -140,35 +142,51 @@ class SatisfactoryWorld(World):
 
     def get_initial_unlocked_items(self) -> Set[str]:
         return {
-            #Tier 0 rewards
-            "Building: Constructor",
-            "Building: Miner Mk.1",
-            "Building: Smelter",
-            "Building: Equipment Workshop",
-            "Building: Conveyor Mk.1",
-            "Building: Conveyor Pole",
-            "Building: Power Line",
-            "Building: Power Pole Mk.1",
-            "Building: Storage Container",
-            "Building: Craft Bench",
-            "Building: The HUB"
-            
-            "Recipe: Hatcher Remains", 
-            "Recipe: Hog Remains", 
-            "Recipe: Plasma Spitter Remains", 
-            "Recipe: Stinger Remains",
-            "Recipe: Mycelia",
-
+            # Unlocked as part of core starting recipes
+            # /Game/FactoryGame/Schematics/Schematic_StartingRecipes.Schematic_StartingRecipes
             "Recipe: Iron Ingot",
-            "Recipe: Copper Ingot",
-
-            "Recipe: Concrete",
             "Recipe: Iron Plate",
             "Recipe: Iron Rod",
+            "Building: The HUB",
+            "Recipe: Xeno-Zapper",
+            "Building: Craft Bench",
+            # (Iron Ore scanning)
 
+            # Tier 0 rewards
+            # HUB 0-1
+            "Building: Equipment Workshop",
             "Recipe: Portable Miner",
-            "Recipe: Reinforced Iron Plate",
-            "Recipe: Screw",
+            # (3 Inventory slots)
+
+            # HUB 0-2
+            "Building: Smelter",
+            "Building: Power Line",
+            "Recipe: Copper Ingot",
             "Recipe: Wire",
-            "Recipe: Cable"
+            "Recipe: Cable",
+            # (Copper Ore scanning)
+
+            # HUB 0-3
+            "Building: Constructor",
+            "Building: Power Pole Mk.1",
+            "Recipe: Concrete",
+            "Recipe: Screw",
+            "Recipe: Reinforced Iron Plate",
+            # (Limestone scanner)
+
+            # HUB 0-4
+            "Building: Conveyor Pole",
+            "Building: Conveyor Mk.1",
+            # (3 Inventory slots)
+
+            # HUB 0-5
+            "Building: Miner Mk.1",
+            "Building: Storage Container",
+            # (3 Inventory slots)
+
+            # HUB 0-6
+            "Building: Space Elevator", # TODO do we want to leave this here or remove it?
+            "Building: Biomass Burner",
+            "Recipe: Biomass (Leaves)", # TODO do we want to leave this here or remove it?
+            "Recipe: Biomass (Wood)", # TODO do we want to leave this here or remove it?
         }

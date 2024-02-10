@@ -93,13 +93,13 @@ class ElevatorTier(LocationData):
 
 
 class HubSlot(LocationData):
-    def __init__(self, name: str, slot: int, locationId: int):
-        super().__init__(name, f"{name}, item {slot}", locationId)
+    def __init__(self, milestoneName: str, slot: int, locationId: int):
+        super().__init__(milestoneName, f"{milestoneName}, item {slot}", locationId)
 
 
 class MamSlot(LocationData):
-    def __init__(self, tree: str, name: str, locationId: int):
-        super().__init__(f"{tree}: {name}", f"{tree}: {name}", locationId)
+    def __init__(self, tree: str, nodeName: str, locationId: int):
+        super().__init__(f"{tree}: {nodeName}", f"{tree}: {nodeName}", locationId)
 
 
 class ShopSlot(LocationData):

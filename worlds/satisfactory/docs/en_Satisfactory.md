@@ -106,17 +106,19 @@ However, no guarantee is made that any mods, except those listed below, will wor
 especially if they affect game progression, recipes, or add unlocks to base-game technologies.
 Use other mods at your own risk, support will not be offered.
 
-The following mods are required dependencies of the Archipelago mod and will automatically be installed when you install it:
+The following mods are **required dependencies** of the Archipelago mod and **will automatically be installed for you**
+when you install it using the Satisfactory Mod Manager:
 
 - [ContentLib](https://ficsit.app/mod/ContentLib) - Runtime content generation
 - [Free Samples](https://ficsit.app/mod/FreeSamples) - Used to implement the Free Samples options
+- [MAM Enhancer](https://ficsit.app/mod/MAMTips) - Allows viewing MAM research nodes in detail. Enables you to hover over the items/unlocks of a node to see more info, especially important when their names get long
 
 The following mods are known to work with Archipelago:
 
-- [MAM Enhancer](https://ficsit.app/mod/MAMTips) - Make it easier to view information about MAM researches and add their unlock cost to your player To-Do list.
-- [Nog's Chat](https://ficsit.app/mod/NogsChat) - Easily repeat past chat messages, improving the user experience of running Archipelago commands in the game's chat window.
+<!-- Nog's Chat currently broken -->
+<!-- - [Nog's Chat](https://ficsit.app/mod/NogsChat) - Easily repeat past chat messages, improving the user experience of running Archipelago commands in the game's chat window. -->
 - [The FICSIT Information Tool](https://ficsit.app/mod/TFIT) - View how many Sink Points items are worth and how points-profitable recipes are. Helpful for the AWESOME Points goal.
-- [Faster Manual Crafting Redux](https://ficsit.app/mod/FasterManualCraftingRedux) - Reduce the early game manual crafting grind.
+- [Faster Manual Crafting Redux](https://ficsit.app/mod/FasterManualCraftingRedux) - Reduce the early game manual crafting grind with a manual crafting speed that ramps up as you craft larger batches at once.
 
 <!-- TODO Test these  -->
 <!-- - [Infinite Zoop](https://ficsit.app/mod/InfiniteZoop) - Adds a research tree in the MAM where you can improve your Zoop capacity. Also enables multi-row & column Wall and Foundation construction.  -->
