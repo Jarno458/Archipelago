@@ -171,9 +171,10 @@ class Items:
         "Bundle: Zipline": ItemData((G.Equipment, ), 1338185),
         "Bundle: Portable Miner": ItemData((G.Equipment, ), 1338186),
         "Bundle: Gas Filter": ItemData((G.Ammo, ), 1338187, C.progression),
-        "Bundle: Small Inflated Pocket Dimension": ItemData((G.Upgrades, ), 1338188, C.useful, 11),
-        "Bundle: Inflated Pocket Dimension": ItemData((G.Upgrades, ), 1338189, C.useful, 5),
-        "Bundle: Expanded Toolbelt": ItemData((G.Upgrades, ), 1338190, C.useful, 5),
+
+        "Small Inflated Pocket Dimension": ItemData((G.Upgrades, ), 1338188, C.useful, 11),
+        "Inflated Pocket Dimension": ItemData((G.Upgrades, ), 1338189, C.useful, 5),
+        "Expanded Toolbelt": ItemData((G.Upgrades, ), 1338190, C.useful, 5),
 
         #1338188 - 1338199 Reserved for future equipment/ammo
 
