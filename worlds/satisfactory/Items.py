@@ -49,7 +49,7 @@ class Items:
         "Bundle: Encased Plutonium Cell": ItemData((G.Parts, ), 1338037, C.trap),
         "Bundle: Encased Uranium Cell": ItemData((G.Parts, ), 1338038, C.trap),
         "Bundle: Fabric": ItemData((G.Parts, ), 1338039),
-        "Bundle: FICST Coupon": ItemData((G.Parts, ), 1338040),
+        "Bundle: FICSIT Coupon": ItemData((G.Parts, ), 1338040),
         "Bundle: Flower Petals": ItemData((G.Parts, ), 1338041),
         "Bundle: Fused Modular Frame": ItemData((G.Parts, ), 1338042),
         "Bundle: Hard Drive": ItemData((G.Parts, ), 1338043),
