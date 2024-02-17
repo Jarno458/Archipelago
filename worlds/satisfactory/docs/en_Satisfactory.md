@@ -84,22 +84,25 @@ The Archipelago Portal is a building that allows players to transfer items betwe
 You can optionally enable that some Traps be mixed into the item pool.
 Traps are items will instantly trigger some sort of surprise on the player when received.
 Their severity varies from annoyance to killing the player.
+A few traps are included in the default options.
 
 ## Where do I run Archipelago commands?
 
 You can use the game's build-in chat menu.
 Check the game's keybinding options to see how to open it.
+Run the `/help` command to list all available commands.
+Note that Archipelago commands are not prefixed with `!` for Satisfactory.
+
+Note that multiple base-game bugs affect the chat menu's functionality
+and Archipelago can put a lot of info into the chat.
+You may wish to launch the Archipelago Text Client and use it to run commands instead of the game's chat.
 
 ## Multiplayer and Dedicated Servers
 
-You cannot play an Archipelago Slot in multiplayer at the moment.
-The team hopes to add this feature in the future,
-but research must still be performed to assess its viability.
+You cannot play a Satisfactory Archipelago Slot in multiplayer nor on a dedicated server at the moment.
+The team hopes to add this feature in the future.
 
-The Satisfactory modding toolkit does not yet support dedicated servers,
-so neither does the Archipelago mod.
-
-## Mods
+## Additional Mods
 
 It is possible to load other Satisfactory mods in tandem with the Archipelago Satisfactory mod.
 However, no guarantee is made that any mods, except those listed below, will work correctly,
@@ -109,9 +112,9 @@ Use other mods at your own risk, support will not be offered.
 The following mods are **required dependencies** of the Archipelago mod and **will automatically be installed for you**
 when you install it using the Satisfactory Mod Manager:
 
-- [ContentLib](https://ficsit.app/mod/ContentLib) - Runtime content generation
-- [Free Samples](https://ficsit.app/mod/FreeSamples) - Used to implement the Free Samples options
-- [MAM Enhancer](https://ficsit.app/mod/MAMTips) - Allows viewing MAM research nodes in detail. Enables you to hover over the items/unlocks of a node to see more info, especially important when their names get long
+- [ContentLib](https://ficsit.app/mod/ContentLib) - Runtime content generation.
+- [Free Samples](https://ficsit.app/mod/FreeSamples) - Used to implement the Free Samples options. Even if you don't have this game option enabled, the mod will still be present, but its functionality will be disabled.
+- [MAM Enhancer](https://ficsit.app/mod/MAMTips) - Allows viewing MAM research nodes in detail. Enables you to hover over the items/unlocks of a node to see more info, especially important when their names get long.
 
 The following mods are known to work with Archipelago:
 

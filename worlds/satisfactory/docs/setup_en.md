@@ -6,13 +6,13 @@
 
 - [Satisfactory (Steam)](https://store.steampowered.com/app/526870/Satisfactory/)
   or [Satisfactory (Epic)](https://www.epicgames.com/store/en-US/product/satisfactory/home)
-- Satisfactory Mod Manager: [Satisfactory Mod Manager GitHub Releases](https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/)
+- Latest version of **Satisfactory Mod Manager**: [Satisfactory Mod Manager GitHub Releases](https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/)
 
 ## Overview
 
-After installing the Satisfactory Archipelago mod via the Mod Manager
-and entering Archipelago server connection details in the mod configuration options,
-the server will send the required data to the game client and create the content required by the seed at runtime.
+This guide will walk you through installing the Satisfactory Archipelago mod via the Mod Manager
+and entering Archipelago server connection details in the mod configuration options.
+The server will send the required data to the game client and create the content required by the seed at runtime.
 
 ## Create a Config (.yaml) File
 
@@ -41,8 +41,6 @@ TODO link to Advanced Settings page and Plando
 
 ## Prepare to Host Your Own Satisfactory Game
 
-### Defining Some Terms
-
 In Archipelago, multiple Satisfactory worlds may be played simultaneously.
 Each of these worlds must be hosted by a Satisfactory game client, each of which is connected to the Archipelago Server.
 
@@ -58,38 +56,38 @@ Purchase and install Satisfactory via one the sources linked [above](#required-s
 Launch the game at least once to ensure that the Mod Manager can detect the game's install location.
 
 Make sure that you are running the correct branch of the game (Early Access or Experimental) that Archipelago supports.
-Learn how to switch branches here: [Satisfactory Modding Documentation FAQ: Switching Branches](https://docs.ficsit.app/satisfactory-modding/latest/faq.html#_how_do_i_get_the_experimental_or_early_access_branch_of_the_game)
-
-TODO: Currently this is the Experimental branch, do we want to tell people to use that or Experimental?
+Learn how to switch branches here:
+[Satisfactory Modding Documentation FAQ: Switching Branches](https://docs.ficsit.app/satisfactory-modding/latest/faq.html#_how_do_i_get_the_experimental_or_early_access_branch_of_the_game)
 
 ## Installing Satisfactory Mod Manager
 
 The Mod Manager is used to install and manage mods for Satisfactory.
 It automatically detects your game install location and automatically handles mod dependencies for you.
 
-As soon as you have the relevant mods installed, you do not need to launch the game through the Mod Manager - desktop shortcuts, Steam, Epic. etc. will all launch the game with mods loaded.
-
-Download the Mod Manager here: [Satisfactory Mod Manager GitHub Releases](https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/)
+Download the Mod Manager here:
+[Satisfactory Mod Manager GitHub Releases](https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/)
 
 Directions for setting up the Mod Manager can be found here:
-[Satisfactory Modding Documentation FAQ: Installing the Mod Manager](https://docs.ficsit.app/satisfactory-modding/latest/faq.html#_how_do_i_install_mods)
+[Satisfactory Modding Documentation FAQ: Installing the Mod Manager](https://docs.ficsit.app/satisfactory-modding/latest/ForUsers/SatisfactoryModManager.html)
 
 ## Installing the Archipelago Mod
 
 Once the Mod Manager is installed you can install mods directly in the manager or via the Satisfactory Mod Repository website.
 
-Inside the mod manager, search for and install the "Archipelago Multi-World Randomizer".
+Inside the Mod Manager, search for and install the "Archipelago Multi-World Randomizer".
 Alternatively, visit the mod page: [Archipelago Multi-World Randomizer on Ficsit.app](https://ficsit.app/mod/Archipelago).
-Once on the mod page, click the Versions button in the top right, then click the "Install" button next to the latest version.
+Once on the mod page, click the "Install" link in the Latest Versions card.
 
-TODO screenshot of the download button in the Mod Manager, SMMv3 might release first
+The Mod Manager will install all required dependency mods for you with no additional action required.
+
+As soon as you have the relevant mods installed, you do not need to launch the game through the Mod Manager - desktop shortcuts, Steam, Epic. etc. will all launch the game with mods still loaded.
 
 TODO for development time only: Here is a link to the manual install directions in case the Archipelago mod developers send you a custom version for testing: <https://docs.ficsit.app/satisfactory-modding/latest/ManualInstallDirections.html>
 
 ## Installing Additional Mods
 
 You may also wish to install some of the suggested mods mentioned on the
-[Archipelago Info page for Satisfactory](/games/Satisfactory/info/en#mods).
+[Archipelago Info page for Satisfactory](/games/Satisfactory/info/en#additional-mods).
 
 ## Entering Connection Details
 
@@ -97,13 +95,13 @@ After you have installed the mods, launch the game via the Mod Manager or via yo
 Once the game has launched, click on the 'Mods' button on the main menu and open the Archipelago entry.
 
 Next, enter the connection details in the relevant fields.
-You can hover over the fields in the menu for more information example values.
+You can hover over the fields in the menu for more information and example values.
 
 - **URI**: Archipelago Server URI and port, for example, `archipelago.gg:49236`
 - **Username**: The name you entered as your Player Name when you created your config file. It's also listed in the Name column of your room page.
 - **Password**: The password for your slot, blank if you did not assign one.
 - **Archipelago Enabled**: Make sure this is checked, otherwise no server connection will be attempted.
-- **Debug Mode**: Dont!.
+- **Debug Mode**: Don't enable it unless the developers ask you to when reporting problems.
 - **Force override settings in save**: When loading a save, will use the `URI`, `Username` and `Password` provided here rather than the values stored in the save (usefull when the server changed ports)
 
 Note that the Satisfactory Client does _not_ need a copy of your config file.
@@ -113,17 +111,18 @@ to generate the required content at runtime.
 ## Creating a New World
 
 Once you have entered connection details, create a new world using the game's New Game menu.
+Make sure to check 'Skip Intro' if you don't want to deal with the game's tutorial sequence.
 Consider enabling Advanced Game Settings to allow dealing with bugs that may arise.
-You may also wish to switch the "Keep Inventory" setting to "Keep Everything".
-
-TODO Make sure that you have "Skip Intro" checked, eventually the mod will enforce this?
+You may also wish to switch the "Keep Inventory" setting to "Keep Everything" to avoid dropping items when you die,
+although this will never lock you out of progression.
 
 ## Verifying Connection Success
 
 Once connected to the AP server,
-you can issue the `!help` command in the game's chat to learn about additional commands like `!hint`.
+you can issue the `/help` command in the game's chat to list available commands like `!hint`.
 For more information about the commands you can use, see the [Commands Guide](/tutorial/Archipelago/commands/en) and
 [Other Settings](#other-settings).
+Note that Archipelago commands are not prefixed with `!` for Satisfactory.
 
 ## Other Settings
 
