@@ -12,9 +12,10 @@ contains all the options you need to configure and export a config file.
 In Satisfactory, the HUB Milestones and MAM Research Nodes are shuffled,
 causing technologies to be obtained in a non-standard order.
 The costs of unlocking these technologies are also shuffled.
+There are also a few new purchases in the AWESOME Shop.
 
-TODO Hard Drive scanning results are also optionally shuffled,
-meaning that scanning a Hard Drive will result in a selection between 3 random items.
+<!-- TODO Hard Drive scanning results are also optionally shuffled,
+meaning that scanning a Hard Drive will result in a selection between 3 random items. -->
 
 ## What is the goal of Satisfactory?
 
@@ -29,11 +30,12 @@ Satisfactory's technologies are removed from the HUB and MAM and placed into oth
 When those technologies are found, they are sent back to Satisfactory
 along with, optionally, free samples of those technologies.
 
-<!-- TODO Other players' worlds may have Resource Packs of building materials, ammunition, or FICSIT Coupons. -->
+Other players' worlds may have Resource Packs of building materials, equipment, ammunition, or FICSIT Coupons.
 
 ## What is a free sample?
 
-A free sample is a package of items in Satisfactory granted by a technology received from another world.
+A free sample is a package of items in Satisfactory granted in addition to a technology received from another world.
+<!-- In multiplayer, each player gets a copy of these items. -->
 For equipment and component crafting recipes, this is the output product.
 For buildings, this is the ingredients for the building.
 For example, receiving the [Nobelisk Detonator MAM Node](https://satisfactory.wiki.gg/wiki/Nobelisk_Detonator#Unlocking)
@@ -41,8 +43,14 @@ would give you one Nobelisk Detonator and 50 Nobelisk,
 receiving the [Jump Pads Milestone](https://satisfactory.wiki.gg/wiki/Milestones#Tier_2)
 would give you the ingredients to construct 5 Jump Pads and 5 U-Jelly Landing Pads, etc.
 
-TODO FreeSamples implements this but AP needs config for it:
-You can separately configure how many samples to receive for buildings, equipment, and crafting components.
+You can separately configure how many samples to receive for buildings, equipment, and crafting components
+in your player settings.
+
+## What is a resource bundle?
+
+A resource bundle is a package of items received as a check from another world.
+They must be collected by constructing an Archipelago Portal.
+For example, `Bundle: Jetpack` would contain a single jetpack.
 
 ## What does another world's item look like in Satisfactory?
 
@@ -55,7 +63,7 @@ Their icons are color coded to indicate what Archipelago progression type they a
 
 Upon successful unlock of the technology, the item will be sent to its home world.
 
-## When the player receives an item, what happens?
+## When the pioneer receives an item, what happens?
 
 When the player receives a technology, it is instantly unlocked and able to be crafted or constructed.
 A message will appear in the chat to notify the player,
@@ -63,26 +71,33 @@ and if free samples are enabled the player may also receive some items delivered
 
 ## What is EnergyLink?
 
-TODO not fully implemented
-
 EnergyLink is an energy storage supported by certain games that is shared across all worlds in a multiworld.
-In Satisfactory, if enabled in the player settings, Archipelago Portal buildings can be crafted and placed, which allow
-depositing excess energy and supplementing energy deficits, much like [Power Storage](https://satisfactory.wiki.gg/wiki/Power_Storage) buildings.
+In Satisfactory, if enabled in the player settings, all base-game Power Storage buildings will act as Energy Link interfaces.
+They will deposit surplus produced energy and draw energy from the shared storage when needed.
 
-Each placed EnergyLink Bridge provides TODO MW of throughput. The shared storage has unlimited capacity, but TODO% of energy
-is lost during depositing, and a conversion ratio of TODO is applied when sending energy across different games (ex. Satisfactory to Factorio). The amount of energy currently in the shared storage is displayed in the Archipelago client.
-It can also be queried by typing `/TODO` in-game.
+Just like the base game, there is no limit to the discharge/draw rate of one building,
+and each Power Storage provides TODO MW of charging throughput.
+The shared storage has unlimited capacity, but TODO% of energy is lost during depositing.
+The amount of energy currently in the shared storage is displayed in the Archipelago client
+and appears in the Power Storage building UI.
 
 ## What is the Archipelago Portal?
 
-TODO not implemented
+The Archipelago Portal is a building that serves multiple purposes:
 
-The Archipelago Portal is a building that allows players to transfer items between multiple Satisfactory worlds.
+- Collecting received "Resource Bundle"-type items.
+- Transfering items within your Satisfactory world
+- Transfering items between multiple Satisfactory worlds
+- Gifting items to other games that support the Archipelago Gifting system.
+
+The building requires power to operate.
+You can build multiple portals or use faster belts to increase their bandwith.
+However, they have no filtering capabilities, so you must deal with this problem
 
 ## What is a Trap?
 
 You can optionally enable that some Traps be mixed into the item pool.
-Traps are items will instantly trigger some sort of surprise on the player when received.
+Traps are items that will instantly trigger some sort of surprise on the player when received.
 Their severity varies from annoyance to killing the player.
 A few traps are included in the default options.
 
