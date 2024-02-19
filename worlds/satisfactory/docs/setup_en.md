@@ -37,7 +37,7 @@ Validator page: [Yaml Validation Page](/mysterycheck)
 
 ### Advanced Configuration
 
-TODO link to Advanced Settings page and Plando
+Advanced users can utilize the [Weighted Options Page](/weighted-options) and [Plando](/tutorial/Archipelago/plando) to futher customize their experience.
 
 ## Prepare to Host Your Own Satisfactory Game
 
