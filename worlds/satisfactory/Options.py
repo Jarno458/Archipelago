@@ -1,5 +1,14 @@
 from dataclasses import dataclass
-from Options import PerGameCommonOptions, DeathLink, Range, Toggle, OptionList, StartInventoryPool, NamedRange, DefaultOnToggle
+from Options import PerGameCommonOptions, DeathLink, Range, Toggle, OptionList, StartInventoryPool, NamedRange, Choice
+
+class PlacementLogic(Choice):
+    option_unlocked_from_start = 0
+    option_early_game = 1
+    option_somewhere = 2
+
+class ChoiceMap(Choice):
+    pass
+    #TODO make it automagicly generate members based on keys
 
 class ElevatorTier(NamedRange):
     """Ship these Space Elevator packages to finish"""
@@ -81,7 +90,6 @@ class FreeSampleEquipment(Range):
     range_start = 0
     range_end = 10
 
-
 class FreeSampleBuildings(Range):
     """How many copies of a Building's construction cost to give as a free sample when they are unlocked.
     Space Elevator is always excluded.
@@ -91,7 +99,6 @@ class FreeSampleBuildings(Range):
     range_start = 0
     range_end = 10
 
-
 class FreeSampleParts(NamedRange):
     """How free sample items of general crafting components should be given when a recipe for them is unlocked.
     Space Elevator Project Parts are always excluded.
@@ -100,7 +107,7 @@ class FreeSampleParts(NamedRange):
     If you want samples of radioactive parts, you must manually enable that in the Free Samples mod configuration in-game.
     (ex. Iron Plate, Packaged Turbofuel, Reinforced Modular Frame)"""
     display_name = "Free Samples: Parts"
-    default = -1
+    default = -2
     range_start = -5
     range_end = 500
     special_range_names = {
@@ -126,9 +133,19 @@ class TrapChance(Range):
     range_end = 100
     default = 10
 
-class Traps(OptionList):
-    """List of traps that may be in the item pool to find"""
+class Traps(ChoiceMap):
+    """Types of traps to enable"""
     display_name = "Traps Types"
+    choices = {
+        "forgiving": ("Doggo Pulse Nobelisk", "Hog Basic"),
+        "normal": ("Doggo Pulse Nobelisk", "Hog Basic"),
+        "hellish": (),
+        "all": ()
+    }
+
+class TrapsOverrides(OptionList):
+    """List of traps that may be in the item pool to find, if this list contains any traps it will override the traps setting"""
+    display_name = "Traps Types Override"
     valid_keys = { 
         "Doggo Pulse Nobelisk", 
         "Doggo Nuke Nobelisk", 
@@ -168,6 +185,25 @@ class EnergyLink(Toggle):
     """Allow sending energy to other worlds. 25% of the energy is lost in the transfer."""
     display_name = "EnergyLink"
 
+class MamLogic(PlacementLogic):
+    """Where to place the Mam building"""
+    display_name = "Mam Placement"
+    default: 1
+
+class AwesomeLogic(PlacementLogic):
+    """Where to place the AWESOME shop and sink buildings"""
+    display_name = "AWESOME Placement"
+    default: 1
+
+class StartingItems(ChoiceMap):
+    """Types of traps to enable"""
+    display_name = "Traps Types"
+    choices = {
+        "what": ("", ""),
+        "to": (""),
+        "put": (),
+    }
+
 @dataclass
 class SatisfactoryOptions(PerGameCommonOptions):
     final_elevator_tier: ElevatorTier
@@ -178,8 +214,12 @@ class SatisfactoryOptions(PerGameCommonOptions):
     free_sample_buildings: FreeSampleBuildings
     free_sample_parts: FreeSampleParts
     free_sample_radioactive: FreeSampleRadioactive
+    starting_buildings: StartingItems
+    mam_placement: MamLogic
+    awesome_logic: AwesomeLogic
     trap_chance: TrapChance
     traps: Traps
+    traps_overrides: TrapsOverrides
     death_link: DeathLink
     energy_link: EnergyLink
     start_inventory_from_pool: StartInventoryPool

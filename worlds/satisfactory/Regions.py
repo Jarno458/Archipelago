@@ -58,7 +58,8 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
 
     connect(player, regions, "Menu", "Overworld")
     connect(player, regions, "Overworld", "Hub Tier 1")
-    connect(player, regions, "Hub Tier 1", "Hub Tier 2", lambda state: state_logic.can_build(state,"Foundation"))
+    connect(player, regions, "Hub Tier 1", "Hub Tier 2", 
+            lambda state: state_logic.can_build_all(state, ("Foundation", "Conveyor Merger", "Conveyor Splitter")))
     connect(player, regions, "Hub Tier 2", "Hub Tier 3", 
             lambda state: state.has("Elevator Tier 1", player) and state_logic.can_build(state, str(PowerInfrastructureLevel.Automated)))
     connect(player, regions, "Hub Tier 3", "Hub Tier 4")
