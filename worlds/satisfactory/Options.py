@@ -7,7 +7,7 @@ class PlacementLogic(Choice):
     option_somewhere = 2
 
 class ChoiceMap(Choice):
-    pass
+    option_todo = 0
     #TODO make it automagicly generate members based on keys
 
 class ElevatorTier(NamedRange):
