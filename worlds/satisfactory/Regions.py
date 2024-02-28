@@ -3,6 +3,7 @@ from BaseClasses import MultiWorld, Region, Entrance, Location, CollectionState
 from .Locations import LocationData
 from .GameLogic import GameLogic, PowerInfrastructureLevel
 from .StateLogic import StateLogic
+from .Options import SatisfactoryOptions, Placement
 
 class SatisfactoryLocation(Location):
     game: str = "Satisfactory"
@@ -21,7 +22,7 @@ class SatisfactoryLocation(Location):
             self.access_rule = data.rule
 
 
-def create_regions_and_return_locations(world: MultiWorld, player: int, 
+def create_regions_and_return_locations(world: MultiWorld, options: SatisfactoryOptions, player: int, 
             game_logic: GameLogic, state_logic: StateLogic, locations: Tuple[LocationData, ...]):
     
     region_names: List[str] = [
@@ -39,8 +40,9 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
         for minestone, _ in enumerate(milestones_per_hub_tier, 1):
             region_names.append(f"Hub {hub_tier}-{minestone}")
 
-    for building_name in game_logic.buildings.keys():
-        region_names.append(building_name)
+    for building_name, building in game_logic.buildings.items():
+        if building.can_produce:
+            region_names.append(building_name)
 
     for tree_name, tree in game_logic.man_trees.items():
         region_names.append(tree_name)
@@ -56,23 +58,33 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
         
     world.regions += regions.values()
 
-    connect(player, regions, "Menu", "Overworld")
-    connect(player, regions, "Overworld", "Hub Tier 1")
-    connect(player, regions, "Hub Tier 1", "Hub Tier 2", 
+    early_game_buildings: List[str] = [
+        str(PowerInfrastructureLevel.Automated)
+    ]
+
+    if options.mam_placement.value == Placement.early:
+        early_game_buildings.append("MAM")
+    if options.awesome_logic.value == Placement.early:
+        early_game_buildings.append("AWESOME Sink")
+        early_game_buildings.append("AWESOME Shop")
+
+    connect(regions, "Menu", "Overworld")
+    connect(regions, "Overworld", "Hub Tier 1")
+    connect(regions, "Hub Tier 1", "Hub Tier 2", 
             lambda state: state_logic.can_build_all(state, ("Foundation", "Conveyor Merger", "Conveyor Splitter")))
-    connect(player, regions, "Hub Tier 2", "Hub Tier 3", 
-            lambda state: state.has("Elevator Tier 1", player) and state_logic.can_build(state, str(PowerInfrastructureLevel.Automated)))
-    connect(player, regions, "Hub Tier 3", "Hub Tier 4")
-    connect(player, regions, "Hub Tier 4", "Hub Tier 5", lambda state: state.has("Elevator Tier 2", player))
-    connect(player, regions, "Hub Tier 5", "Hub Tier 6")
-    connect(player, regions, "Hub Tier 6", "Hub Tier 7", lambda state: state.has("Elevator Tier 3", player))
-    connect(player, regions, "Hub Tier 7", "Hub Tier 8")
-    connect(player, regions, "Overworld", "Gas Area", lambda state: 
+    connect(regions, "Hub Tier 2", "Hub Tier 3", lambda state: state.has("Elevator Tier 1", player) 
+                                                             and state_logic.can_build_all(state, early_game_buildings))
+    connect(regions, "Hub Tier 3", "Hub Tier 4")
+    connect(regions, "Hub Tier 4", "Hub Tier 5", lambda state: state.has("Elevator Tier 2", player))
+    connect(regions, "Hub Tier 5", "Hub Tier 6")
+    connect(regions, "Hub Tier 6", "Hub Tier 7", lambda state: state.has("Elevator Tier 3", player))
+    connect(regions, "Hub Tier 7", "Hub Tier 8")
+    connect(regions, "Overworld", "Gas Area", lambda state: 
                                 state_logic.can_produce_all(state, ("Gas Mask", "Gas Filter")))
-    connect(player, regions, "Overworld", "Radioactive Area", lambda state:
+    connect(regions, "Overworld", "Radioactive Area", lambda state:
                                 state_logic.can_produce_all(state, ("Hazmat Suit", "Iodine Infused Filter")))
-    connect(player, regions, "Overworld", "Mam", lambda state: state_logic.can_build(state, "MAM"))
-    connect(player, regions, "Overworld", "AWESOME Shop", lambda state: 
+    connect(regions, "Overworld", "Mam", lambda state: state_logic.can_build(state, "MAM"))
+    connect(regions, "Overworld", "AWESOME Shop", lambda state: 
                                 state_logic.can_build_all(state, ("AWESOME Shop", "AWESOME Sink")))
 
     def can_produce_all_allowing_handcrafting(parts: Tuple[str, ...]) -> Callable[[CollectionState], bool]:
@@ -83,23 +95,24 @@ def create_regions_and_return_locations(world: MultiWorld, player: int,
 
     for hub_tier, milestones_per_hub_tier in enumerate(game_logic.hub_layout, 1):
         for minestone, parts_per_milestone in enumerate(milestones_per_hub_tier, 1):
-            connect(player, regions, f"Hub Tier {hub_tier}", f"Hub {hub_tier}-{minestone}", 
+            connect(regions, f"Hub Tier {hub_tier}", f"Hub {hub_tier}-{minestone}", 
                 can_produce_all_allowing_handcrafting(parts_per_milestone.keys()))
             
-    for building_name in game_logic.buildings.keys():
-        connect(player, regions, "Overworld", building_name, 
-            lambda state, building_name=building_name: state_logic.can_build(state, building_name))
+    for building_name, building in game_logic.buildings.items():
+        if building.can_produce:
+            connect(regions, "Overworld", building_name, 
+                lambda state, building_name=building_name: state_logic.can_build(state, building_name))
         
     for tree_name, tree in game_logic.man_trees.items():
-        connect(player, regions, "Mam", tree_name, can_produce_all_allowing_handcrafting(tree.access_items))
+        connect(regions, "Mam", tree_name, can_produce_all_allowing_handcrafting(tree.access_items))
 
         for node in tree.nodes:
             if not node.depends_on:
-                connect(player, regions, tree_name, f"{tree_name}: {node.name}", 
+                connect(regions, tree_name, f"{tree_name}: {node.name}", 
                     lambda state, parts=node.unlock_cost.keys(): state_logic.can_produce_all(state, parts))
             else:
                 for parent in node.depends_on:
-                    connect(player, regions, f"{tree_name}: {parent}", f"{tree_name}: {node.name}", 
+                    connect(regions, f"{tree_name}: {parent}", f"{tree_name}: {node.name}", 
                         lambda state, parts=node.unlock_cost.keys(): state_logic.can_produce_all(state, parts))
 
 
@@ -137,19 +150,13 @@ def create_regions(world: MultiWorld, player: int, locations_per_region: Dict[st
     return regions
 
 
-def connect(player: int, regions: Dict[str, Region], source: str, target: str, 
+def connect(regions: Dict[str, Region], source: str, target: str, 
         rule: Optional[Callable[[CollectionState], bool]] = None):
 
     sourceRegion = regions[source]
     targetRegion = regions[target]
 
-    connection = Entrance(player, target, sourceRegion)
-
-    if rule:
-        connection.access_rule = rule
-
-    sourceRegion.exits.append(connection)
-    connection.connect(targetRegion)
+    sourceRegion.connect(targetRegion, rule)
 
 
 def get_locations_per_region(locations: Tuple[LocationData, ...]) -> Dict[str, List[LocationData]]:

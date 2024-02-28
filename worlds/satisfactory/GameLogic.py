@@ -71,12 +71,14 @@ class Recipe():
 
 class Building(Recipe):
     power_requirement: Optional[PowerInfrastructureLevel]
+    can_produce: bool
 
     def __init__(self, name: str, inputs: Optional[Tuple[str, ...]] = None,
-            power_requirement: Optional[PowerInfrastructureLevel] = None):
+            power_requirement: Optional[PowerInfrastructureLevel] = None, can_produce: bool = True):
         super().__init__(name, None, inputs, handcraftable=True)
         self.name = "Building: " + name
         self.power_requirement = power_requirement
+        self.can_produce = can_produce
 
 
 class MamNode():
@@ -502,25 +504,25 @@ class GameLogic:
         "Foundry": Building("Foundry", ("Modular Frame", "Rotor", "Concrete"), PowerInfrastructureLevel.Basic),
         "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor", "Steel Beam", "Plastic"), PowerInfrastructureLevel.Advanced),
         "Equipment Workshop": Building("Equipment Workshop", ("Iron Plate", "Iron Rod")),
-        "AWESOME Sink": Building("AWESOME Sink", ("Reinforced Iron Plate", "Cable", "Concrete")),
-        "AWESOME Shop": Building("AWESOME Shop", ("Screw", "Iron Plate", "Cable")),
-        "MAM": Building("MAM", ("Reinforced Iron Plate", "Wire", "Cable")),
-        "Pipes Mk.1": Building("Pipes Mk.1", ("Copper Sheet", "Iron Plate", "Concrete")),
-        "Pipes Mk.2": Building("Pipes Mk.2", ("Copper Sheet", "Plastic", "Iron Plate", "Concrete")),
-        "Pipeline Pump Mk.1": Building("Pipeline Pump Mk.1", ("Copper Sheet", "Rotor")),
-        "Pipeline Pump Mk.2": Building("Pipeline Pump Mk.2", ("Motor", "Encased Industrial Beam", "Plastic")),
-        "Conveyor Merger": Building("Conveyor Merger", ("Iron Plate", "Iron Rod")),
-        "Conveyor Splitter": Building("Conveyor Splitter", ("Iron Plate", "Cable")),
-        "Conveyor Mk.1": Building("Conveyor Mk.1", ("Iron Plate", "Iron Rod", "Concrete")),
-        "Conveyor Mk.2": Building("Conveyor Mk.2", ("Reinforced Iron Plate", "Iron Plate", "Iron Rod", "Concrete")),
-        "Conveyor Mk.3": Building("Conveyor Mk.3", ("Steel Beam", "Iron Plate", "Iron Rod", "Concrete")),
-        "Conveyor Mk.4": Building("Conveyor Mk.4", ("Encased Industrial Beam", "Iron Plate", "Iron Rod", "Concrete")),
-        "Conveyor Mk.5": Building("Conveyor Mk.5", ("Alclad Aluminum Sheet", "Iron Plate", "Iron Rod", "Concrete")),
-        "Power Pole Mk.1": Building("Power Pole Mk.1", ("Iron Plate", "Iron Rod", "Concrete")),
+        "AWESOME Sink": Building("AWESOME Sink", ("Reinforced Iron Plate", "Cable", "Concrete"), can_produce=False),
+        "AWESOME Shop": Building("AWESOME Shop", ("Screw", "Iron Plate", "Cable"), can_produce=False),
+        "MAM": Building("MAM", ("Reinforced Iron Plate", "Wire", "Cable"), can_produce=False),
+        "Pipes Mk.1": Building("Pipes Mk.1", ("Copper Sheet", "Iron Plate", "Concrete"), can_produce=False),
+        "Pipes Mk.2": Building("Pipes Mk.2", ("Copper Sheet", "Plastic", "Iron Plate", "Concrete"), can_produce=False),
+        "Pipeline Pump Mk.1": Building("Pipeline Pump Mk.1", ("Copper Sheet", "Rotor"), can_produce=False),
+        "Pipeline Pump Mk.2": Building("Pipeline Pump Mk.2", ("Motor", "Encased Industrial Beam", "Plastic"), can_produce=False),
+        "Conveyor Merger": Building("Conveyor Merger", ("Iron Plate", "Iron Rod"), can_produce=False),
+        "Conveyor Splitter": Building("Conveyor Splitter", ("Iron Plate", "Cable"), can_produce=False),
+        "Conveyor Mk.1": Building("Conveyor Mk.1", ("Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
+        "Conveyor Mk.2": Building("Conveyor Mk.2", ("Reinforced Iron Plate", "Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
+        "Conveyor Mk.3": Building("Conveyor Mk.3", ("Steel Beam", "Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
+        "Conveyor Mk.4": Building("Conveyor Mk.4", ("Encased Industrial Beam", "Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
+        "Conveyor Mk.5": Building("Conveyor Mk.5", ("Alclad Aluminum Sheet", "Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
+        "Power Pole Mk.1": Building("Power Pole Mk.1", ("Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
         # higher level power poles arent in logic
-        #"Power Pole Mk.2": Building("Power Pole Mk.2", ("Quickwire", "Iron Rod", "Concrete")),
-        #"Power Pole Mk.3": Building("Power Pole Mk.3", ("High-Speed Connector", "Steel Pipe", "Rubber")),
-        "Foundation": Building("Foundation", ("Iron Plate", "Concrete")),
+        #"Power Pole Mk.2": Building("Power Pole Mk.2", ("Quickwire", "Iron Rod", "Concrete"), False),
+        #"Power Pole Mk.3": Building("Power Pole Mk.3", ("High-Speed Connector", "Steel Pipe", "Rubber"), False),
+        "Foundation": Building("Foundation", ("Iron Plate", "Concrete"), can_produce=False),
     }
 
     requirement_per_powerlevel: Dict[PowerInfrastructureLevel, Tuple[Recipe, ...]] = {

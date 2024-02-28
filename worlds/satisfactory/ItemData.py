@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import NamedTuple, Tuple
+from typing import NamedTuple, Set
 from BaseClasses import ItemClassification
 
 class ItemGroups(str, Enum):
@@ -33,7 +33,7 @@ class ItemGroups(str, Enum):
 
 class ItemData(NamedTuple):
     """Represents an item in the pool, it could be a resource bundle, production recipe, trap, etc."""
-    category: Tuple[ItemGroups, ...]
+    category: Set[ItemGroups]
     code: int
     type: ItemClassification = ItemClassification.filler
     count: int = 1

@@ -1,10 +1,16 @@
 from dataclasses import dataclass
+from enum import IntEnum
 from Options import PerGameCommonOptions, DeathLink, Range, Toggle, OptionList, StartInventoryPool, NamedRange, Choice
 
+class Placement(IntEnum):
+    starting_inventory = 0
+    early = 1
+    some_where = 2
+
 class PlacementLogic(Choice):
-    option_unlocked_from_start = 0
-    option_early_game = 1
-    option_somewhere = 2
+    option_unlocked_from_start = Placement.starting_inventory
+    option_early_game = Placement.early
+    option_somewhere = Placement.some_where
 
 class ChoiceMap(Choice):
     option_todo = 0

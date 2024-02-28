@@ -4,7 +4,7 @@ from .GameLogic import GameLogic
 from .Items import Items
 from .Locations import Locations, LocationData
 from .StateLogic import EventId, StateLogic
-from .Options import SatisfactoryOptions
+from .Options import SatisfactoryOptions, Placement
 from .Regions import SatisfactoryLocation, create_regions_and_return_locations
 from .Web import SatisfactoryWebWorld
 from ..AutoWorld import World
@@ -35,6 +35,7 @@ class SatisfactoryWorld(World):
         super().__init__(multiworld, player)
         self.items = None
 
+
     def generate_early(self) -> None:
         initial_unlocked_items = self.get_initial_unlocked_items()
         self.state_logic = StateLogic(self.player, self.options, initial_unlocked_items)
@@ -44,19 +45,26 @@ class SatisfactoryWorld(World):
                 raise Exception("""Satisfactory: player {} needs to choose a goal,
                     both FinalElevatorTier and FinalResourceSinkPoints are set to off"""
                     .format(self.multiworld.player_name[self.player]))
+        
+        if self.options.mam_placement.value == Placement.starting_inventory:
+            self.push_precollected("Building: MAM")
+        if self.options.awesome_logic.value == Placement.starting_inventory:
+            self.push_precollected("Building: AWESOME Sink")
+            self.push_precollected("Building: AWESOME Shop")
 
 
     def create_regions(self) -> None:
         locations: List[LocationData] = Locations(self.game_logic, self.state_logic, self.items).get_locations()
-        create_regions_and_return_locations(self.multiworld, self.player, self.game_logic, self.state_logic, locations)
+        create_regions_and_return_locations(
+            self.multiworld, self.options, self.player, self.game_logic, self.state_logic, locations)
 
 
     def create_items(self) -> None:
         self.setup_events()
 
         number_of_locations: int = len(self.multiworld.get_unfilled_locations(self.player))
-
-        self.multiworld.itempool += self.items.build_item_pool(self.random, self.options, number_of_locations)
+        self.multiworld.itempool += \
+            self.items.build_item_pool(self.random, self.multiworld, self.options, number_of_locations)
 
 
     def set_rules(self) -> None:
@@ -130,14 +138,9 @@ class SatisfactoryWorld(World):
         return Items.create_item(self.items, name, self.player)
 
 
-    def get_excluded_items(self) -> Set[str]:
-        excluded_items: Set[str] = set()
-
-        for item in self.multiworld.precollected_items[self.player]:
-            if item.name not in self.item_name_groups['Parts']:
-                excluded_items.add(item.name)
-
-        return excluded_items
+    def push_precollected(self, item_name: str) -> None:
+        item = self.create_item(item_name)
+        self.multiworld.push_precollected(item)
 
 
     def get_initial_unlocked_items(self) -> Set[str]:
