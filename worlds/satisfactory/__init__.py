@@ -37,8 +37,7 @@ class SatisfactoryWorld(World):
 
 
     def generate_early(self) -> None:
-        initial_unlocked_items = self.get_initial_unlocked_items()
-        self.state_logic = StateLogic(self.player, self.options, initial_unlocked_items)
+        self.state_logic = StateLogic(self.player, self.options)
         self.items = Items(self.player, self.game_logic, self.random)
 
         if self.options.final_elevator_tier.value <= 0 and self.options.final_resource_sink_points.value <= 0:
@@ -141,55 +140,3 @@ class SatisfactoryWorld(World):
     def push_precollected(self, item_name: str) -> None:
         item = self.create_item(item_name)
         self.multiworld.push_precollected(item)
-
-
-    def get_initial_unlocked_items(self) -> Set[str]:
-        return {
-            # Unlocked as part of core starting recipes
-            # /Game/FactoryGame/Schematics/Schematic_StartingRecipes.Schematic_StartingRecipes
-            "Recipe: Iron Ingot",
-            "Recipe: Iron Plate",
-            "Recipe: Iron Rod",
-            "Building: The HUB",
-            "Recipe: Xeno-Zapper",
-            "Building: Craft Bench",
-            # (Iron Ore scanning)
-
-            # Tier 0 rewards
-            # HUB 0-1
-            "Building: Equipment Workshop",
-            "Recipe: Portable Miner",
-            # (3 Inventory slots)
-
-            # HUB 0-2
-            "Building: Smelter",
-            "Building: Power Line",
-            "Recipe: Copper Ingot",
-            "Recipe: Wire",
-            "Recipe: Cable",
-            # (Copper Ore scanning)
-
-            # HUB 0-3
-            "Building: Constructor",
-            "Building: Power Pole Mk.1",
-            "Recipe: Concrete",
-            "Recipe: Screw",
-            "Recipe: Reinforced Iron Plate",
-            # (Limestone scanner)
-
-            # HUB 0-4
-            "Building: Conveyor Pole",
-            "Building: Conveyor Mk.1",
-            # (3 Inventory slots)
-
-            # HUB 0-5
-            "Building: Miner Mk.1",
-            "Building: Storage Container",
-            # (3 Inventory slots)
-
-            # HUB 0-6
-            "Building: Space Elevator", # TODO do we want to leave this here or remove it?
-            "Building: Biomass Burner",
-            "Recipe: Biomass (Leaves)", # TODO do we want to leave this here or remove it?
-            "Recipe: Biomass (Wood)", # TODO do we want to leave this here or remove it?
-        }

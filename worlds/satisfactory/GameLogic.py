@@ -74,11 +74,13 @@ class Building(Recipe):
     can_produce: bool
 
     def __init__(self, name: str, inputs: Optional[Tuple[str, ...]] = None,
-            power_requirement: Optional[PowerInfrastructureLevel] = None, can_produce: bool = True):
-        super().__init__(name, None, inputs, handcraftable=True)
+            power_requirement: Optional[PowerInfrastructureLevel] = None, can_produce: bool = True,
+            implicitly_unlocked: bool = False):
+        super().__init__(name, None, inputs, handcraftable=True, implicitly_unlocked=implicitly_unlocked)
         self.name = "Building: " + name
         self.power_requirement = power_requirement
         self.can_produce = can_produce
+        self.implicitly_unlocked = implicitly_unlocked
 
 
 class MamNode():
@@ -170,7 +172,7 @@ class GameLogic:
 
         # Recipes
         "Reinforced Iron Plate": (
-            Recipe("Reinforced Iron Plate", "Assembler", ("Iron Plate", "Screw"), handcraftable=True),
+            Recipe("Reinforced Iron Plate", "Assembler", ("Iron Plate", "Screw"), handcraftable=True, implicitly_unlocked=True),
             Recipe("Adhered Iron Plate", "Assembler", ("Iron Plate", "Rubber")),
             Recipe("Bolted Iron Plate", "Assembler", ("Iron Plate", "Screw"), minimal_belt_speed=3),
             Recipe("Stitched Iron Plate", "Assembler", ("Iron Plate", "Wire"))),
@@ -190,23 +192,23 @@ class GameLogic:
             Recipe("Residual Rubber", "Refinery", ("Polymer Resin", "Water")),
             Recipe("Recycled Rubber", "Refinery", ("Plastic", "Fuel"))),
         "Iron Plate": (
-            Recipe("Iron Plate", "Constructor", ("Iron Ingot", ), handcraftable=True),
+            Recipe("Iron Plate", "Constructor", ("Iron Ingot", ), handcraftable=True, implicitly_unlocked=True),
             Recipe("Coated Iron Plate", "Assembler", ("Iron Ingot", "Plastic"), minimal_belt_speed=2),
             Recipe("Steel Coated Plate", "Assembler", ("Steel Ingot", "Plastic"))),
         "Iron Rod": (
-            Recipe("Iron Rod", "Constructor", ("Iron Ingot", ), handcraftable=True),
+            Recipe("Iron Rod", "Constructor", ("Iron Ingot", ), handcraftable=True, implicitly_unlocked=True),
             Recipe("Steel Rod", "Constructor", ("Steel Ingot", ))),
         "Screw": (
-            Recipe("Screw", "Constructor", ("Iron Rod", ), handcraftable=True),
+            Recipe("Screw", "Constructor", ("Iron Rod", ), handcraftable=True, implicitly_unlocked=True),
             Recipe("Cast Screw", "Constructor", ("Iron Ingot", )),
             Recipe("Steel Screw", "Constructor", ("Steel Beam", ), minimal_belt_speed=3)),
         "Wire": (
-            Recipe("Wire", "Constructor", ("Copper Ingot", ), handcraftable=True),
+            Recipe("Wire", "Constructor", ("Copper Ingot", ), handcraftable=True, implicitly_unlocked=True),
             Recipe("Fused Wire", "Assembler", ("Copper Ingot", "Caterium Ingot"), minimal_belt_speed=2),
             Recipe("Iron Wire", "Constructor", ("Iron Ingot", )),
             Recipe("Caterium Wire", "Constructor", ("Caterium Ingot", ), minimal_belt_speed=2)),
         "Cable": (
-            Recipe("Cable", "Constructor", ("Wire", ), handcraftable=True),
+            Recipe("Cable", "Constructor", ("Wire", ), handcraftable=True, implicitly_unlocked=True),
             Recipe("Coated Cable", "Refinery", ("Wire", "Heavy Oil Residue"), minimal_belt_speed=2),
             Recipe("Insulated Cable", "Assembler", ("Wire", "Rubber"), minimal_belt_speed=2),
             Recipe("Quickwire Cable", "Assembler", ("Quickwire", "Rubber"))),
@@ -234,7 +236,7 @@ class GameLogic:
             Recipe("Diluted Fuel", "Blender", ("Heavy Oil Residue", "Water")),
             Recipe("Residual Fuel", "Refinery", ("Heavy Oil Residue", ))),
         "Concrete": (
-            Recipe("Concrete", "Constructor", ("Limestone", ), handcraftable=True),
+            Recipe("Concrete", "Constructor", ("Limestone", ), handcraftable=True, implicitly_unlocked=True),
             Recipe("Fine Concrete", "Assembler", ("Limestone", "Silica")),
             Recipe("Rubber Concrete", "Assembler", ("Limestone", "Rubber")),
             Recipe("Wet Concrete", "Refinery", ("Limestone", "Water"), minimal_belt_speed=2)),
@@ -246,7 +248,7 @@ class GameLogic:
             Recipe("Quartz Crystal", "Constructor", ("Raw Quartz", ), handcraftable=True),
             Recipe("Pure Quartz Crystal", "Refinery", ("Raw Quartz", "Water"), minimal_belt_speed=2)),
         "Iron Ingot": (
-            Recipe("Iron Ingot", "Smelter", ("Iron Ore", ), handcraftable=True),
+            Recipe("Iron Ingot", "Smelter", ("Iron Ore", ), handcraftable=True, implicitly_unlocked=True),
             Recipe("Pure Iron Ingot", "Refinery", ("Iron Ore", "Water"), minimal_belt_speed=2),
             Recipe("Iron Alloy Ingot", "Foundry", ("Iron Ore", "Copper Ore"))),
         "Steel Ingot": (
@@ -255,7 +257,7 @@ class GameLogic:
             Recipe("Compacted Steel Ingot", "Foundry", ("Iron Ore", "Compacted Coal")),
             Recipe("Solid Steel Ingot", "Foundry", ("Iron Ingot", "Coal"))),
         "Copper Ingot": (
-            Recipe("Copper Ingot", "Smelter", ("Copper Ore", ), handcraftable=True),
+            Recipe("Copper Ingot", "Smelter", ("Copper Ore", ), handcraftable=True, implicitly_unlocked=True),
             Recipe("Copper Alloy Ingot", "Foundry", ("Copper Ore", "Iron Ore"), minimal_belt_speed=2),
             Recipe("Pure Copper Ingot", "Refinery", ("Copper Ore", "Water"))),
         "Caterium Ingot": (
@@ -483,27 +485,27 @@ class GameLogic:
     }
 
     buildings: Dict[str, Building] = {
-        "Constructor": Building("Constructor", ("Reinforced Iron Plate", "Cable"), PowerInfrastructureLevel.Basic),
+        "Constructor": Building("Constructor", ("Reinforced Iron Plate", "Cable"), PowerInfrastructureLevel.Basic, implicitly_unlocked=True),
         "Assembler": Building("Assembler", ("Reinforced Iron Plate", "Rotor", "Cable"), PowerInfrastructureLevel.Basic),
         "Manufacturer": Building("Manufacturer", ("Motor", "Heavy Modular Frame", "Cable", "Plastic"), PowerInfrastructureLevel.Advanced),
         "Packager": Building("Packager", ("Steel Beam", "Rubber", "Plastic"), PowerInfrastructureLevel.Basic),
         "Refinery": Building("Refinery", ("Motor", "Encased Industrial Beam", "Steel Pipe", "Copper Sheet"), PowerInfrastructureLevel.Automated),
         "Blender": Building("Blender", ("Motor", "Heavy Modular Frame", "Aluminum Casing", "Radio Control Unit"), PowerInfrastructureLevel.Complex),
         "Particle Accelerator": Building("Particle Accelerator", ("Radio Control Unit", "Electromagnetic Control Rod", "Supercomputer", "Cooling System", "Fused Modular Frame", "Turbo Motor"), PowerInfrastructureLevel.Complex),
-        "Biomass Burner": Building("Biomass Burner", ("Iron Plate", "Iron Rod", "Wire")),
+        "Biomass Burner": Building("Biomass Burner", ("Iron Plate", "Iron Rod", "Wire"), implicitly_unlocked=True),
         "Coal Generator": Building("Coal Generator", ("Reinforced Iron Plate", "Rotor", "Cable")),
         "Fuel Generator": Building("Fuel Generator", ("Computer", "Heavy Modular Frame", "Motor", "Rubber", "Quickwire")),
         "Geothermal Generator": Building("Geothermal Generator", ("Supercomputer", "Heavy Modular Frame", "High-Speed Connector", "Copper Sheet", "Rubber")),
         "Nuclear Power Plant": Building("Nuclear Power Plant", ("Concrete", "Heavy Modular Frame", "Supercomputer", "Cable", "Alclad Aluminum Sheet")),
-        "Miner Mk.1": Building("Miner Mk.1", ("Iron Plate", "Concrete"), PowerInfrastructureLevel.Basic),
+        "Miner Mk.1": Building("Miner Mk.1", ("Iron Plate", "Concrete"), PowerInfrastructureLevel.Basic, implicitly_unlocked=True),
         "Miner Mk.2": Building("Miner Mk.2", ("Encased Industrial Beam", "Steel Pipe", "Modular Frame"), PowerInfrastructureLevel.Automated),
         "Miner Mk.3": Building("Miner Mk.3", ("Steel Pipe", "Supercomputer", "Fused Modular Frame", "Turbo Motor"), PowerInfrastructureLevel.Advanced),
         "Oil Extractor": Building("Oil Extractor", ("Motor", "Encased Industrial Beam", "Cable")),
         "Water Extractor": Building("Water Extractor", ("Copper Sheet", "Reinforced Iron Plate", "Rotor")),
-        "Smelter": Building("Smelter", ("Iron Rod", "Wire"), PowerInfrastructureLevel.Basic),
+        "Smelter": Building("Smelter", ("Iron Rod", "Wire"), PowerInfrastructureLevel.Basic, implicitly_unlocked=True),
         "Foundry": Building("Foundry", ("Modular Frame", "Rotor", "Concrete"), PowerInfrastructureLevel.Basic),
         "Resource Well Pressurizer": Building("Resource Well Pressurizer", ("Wire", "Rubber", "Encased Industrial Beam", "Motor", "Steel Beam", "Plastic"), PowerInfrastructureLevel.Advanced),
-        "Equipment Workshop": Building("Equipment Workshop", ("Iron Plate", "Iron Rod")),
+        "Equipment Workshop": Building("Equipment Workshop", ("Iron Plate", "Iron Rod"), implicitly_unlocked=True),
         "AWESOME Sink": Building("AWESOME Sink", ("Reinforced Iron Plate", "Cable", "Concrete"), can_produce=False),
         "AWESOME Shop": Building("AWESOME Shop", ("Screw", "Iron Plate", "Cable"), can_produce=False),
         "MAM": Building("MAM", ("Reinforced Iron Plate", "Wire", "Cable"), can_produce=False),
@@ -513,12 +515,12 @@ class GameLogic:
         "Pipeline Pump Mk.2": Building("Pipeline Pump Mk.2", ("Motor", "Encased Industrial Beam", "Plastic"), can_produce=False),
         "Conveyor Merger": Building("Conveyor Merger", ("Iron Plate", "Iron Rod"), can_produce=False),
         "Conveyor Splitter": Building("Conveyor Splitter", ("Iron Plate", "Cable"), can_produce=False),
-        "Conveyor Mk.1": Building("Conveyor Mk.1", ("Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
+        "Conveyor Mk.1": Building("Conveyor Mk.1", ("Iron Plate", "Iron Rod", "Concrete"), can_produce=False, implicitly_unlocked=True),
         "Conveyor Mk.2": Building("Conveyor Mk.2", ("Reinforced Iron Plate", "Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
         "Conveyor Mk.3": Building("Conveyor Mk.3", ("Steel Beam", "Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
         "Conveyor Mk.4": Building("Conveyor Mk.4", ("Encased Industrial Beam", "Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
         "Conveyor Mk.5": Building("Conveyor Mk.5", ("Alclad Aluminum Sheet", "Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
-        "Power Pole Mk.1": Building("Power Pole Mk.1", ("Iron Plate", "Iron Rod", "Concrete"), can_produce=False),
+        "Power Pole Mk.1": Building("Power Pole Mk.1", ("Iron Plate", "Iron Rod", "Concrete"), can_produce=False, implicitly_unlocked=True),
         # higher level power poles arent in logic
         #"Power Pole Mk.2": Building("Power Pole Mk.2", ("Quickwire", "Iron Rod", "Concrete"), False),
         #"Power Pole Mk.3": Building("Power Pole Mk.3", ("High-Speed Connector", "Steel Pipe", "Rubber"), False),

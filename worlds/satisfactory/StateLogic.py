@@ -13,15 +13,12 @@ class StateLogic:
     options: SatisfactoryOptions
     initial_unlocked_items: Set[str]
 
-    def __init__(self, player: int, options: SatisfactoryOptions, initial_unlocked_items: Set[str]):
+    def __init__(self, player: int, options: SatisfactoryOptions):
         self.player = player
         self.options = options
-        self.initial_unlocked_items = initial_unlocked_items
 
     def has_recipe(self, state: CollectionState, recipe: Recipe):
-        return recipe.implicitly_unlocked \
-            or recipe.name in self.initial_unlocked_items \
-            or state.has(recipe.name, self.player)
+        return recipe.implicitly_unlocked or state.has(recipe.name, self.player)
     
     def can_build(self, state: CollectionState, building_name: Optional[str]) -> bool:
         return building_name is None or state.has(building_event_prefix + building_name, self.player)
