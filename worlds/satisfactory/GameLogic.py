@@ -474,16 +474,6 @@ class GameLogic:
         # TODO fix multiple handcraftable recipes per part
     }
 
-    handcraftable_recipes: Dict[str, Recipe] = { part: recipe 
-        for part, recipes_per_part in recipes.items()
-        for recipe in recipes_per_part if recipe.handcraftable 
-    }
-
-    implicitly_unlocked_recipes: Dict[str, Recipe] = { part: recipe 
-        for part, recipes_per_part in recipes.items()
-        for recipe in recipes_per_part if recipe.implicitly_unlocked 
-    }
-
     buildings: Dict[str, Building] = {
         "Constructor": Building("Constructor", ("Reinforced Iron Plate", "Cable"), PowerInfrastructureLevel.Basic, implicitly_unlocked=True),
         "Assembler": Building("Assembler", ("Reinforced Iron Plate", "Rotor", "Cable"), PowerInfrastructureLevel.Basic),
@@ -526,6 +516,21 @@ class GameLogic:
         #"Power Pole Mk.3": Building("Power Pole Mk.3", ("High-Speed Connector", "Steel Pipe", "Rubber"), False),
         "Foundation": Building("Foundation", ("Iron Plate", "Concrete"), can_produce=False),
     }
+
+    handcraftable_recipes: Dict[str, Recipe] = { part: recipe 
+        for part, recipes_per_part in recipes.items()
+        for recipe in recipes_per_part if recipe.handcraftable 
+    }
+
+    implicitly_unlocked_recipes: Dict[str, Recipe] = { 
+        recipe.name: recipe 
+        for recipes_per_part in recipes.values()
+        for recipe in recipes_per_part if recipe.implicitly_unlocked 
+    }
+    implicitly_unlocked_recipes.update({ 
+        building.name: building
+        for building in buildings.values() if building.implicitly_unlocked 
+    })
 
     requirement_per_powerlevel: Dict[PowerInfrastructureLevel, Tuple[Recipe, ...]] = {
         PowerInfrastructureLevel.Basic: (

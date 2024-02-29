@@ -612,6 +612,7 @@ class Items:
     }
 
     non_unique_item_categories: ClassVar[Set[G]] = frozenset({ G.Parts, G.Equipment, G.Ammo, G.Trap, G.Upgrades })
+    pool_item_categories: ClassVar[Set[G]] = frozenset({G.Recipe, G.Building, G.Equipment, G.Transport, G.Upgrades})
     item_names_and_ids: ClassVar[Dict[str, int]] = {name: item_data.code for name, item_data in item_data.items()}
     filler_items: ClassVar[Tuple[str, ...]] = tuple(item for item, details in item_data.items() 
                                                     if not details.category.isdisjoint(frozenset({ G.Parts, G.Ammo })))
@@ -726,23 +727,15 @@ class Items:
 
     def build_item_pool(self, random: Random, multiworld: MultiWorld, 
                         options: SatisfactoryOptions, number_of_locations: int) -> List[Item]:
+        excluded_from_pool: Set[str] = self.get_excluded_items(multiworld) \
+                                           .union(self.logic.implicitly_unlocked_recipes.keys())
         pool: List[Item] = []
-        excluded_items: Set[str] = self.get_excluded_items(multiworld)
 
         for name, data in self.item_data.items():
-            if name in excluded_items:
-                continue
-
-            if G.Recipe in data.category:
-                recipe_name = name.split(": ", 1)[1]
-
-                if recipe_name in self.logic.implicitly_unlocked_recipes:
-                    continue
-
-                item = self.create_item(self, name, self.player)
-                pool.append(item)
-
-            if data.count > 0 and (not data.category.isdisjoint(frozenset({G.Building, G.Equipment, G.Transport, G.Upgrades}))):
+            if data.count > 0 \
+                and not data.category.isdisjoint(self.pool_item_categories) \
+                and name not in excluded_from_pool:
+                
                 for _ in range(data.count):
                     item = self.create_item(self, name, self.player)
                     pool.append(item)
