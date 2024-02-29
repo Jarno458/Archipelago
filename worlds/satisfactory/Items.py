@@ -735,7 +735,7 @@ class Items:
             if data.count > 0 \
                 and not data.category.isdisjoint(self.pool_item_categories) \
                 and name not in excluded_from_pool:
-                
+
                 for _ in range(data.count):
                     item = self.create_item(self, name, self.player)
                     pool.append(item)

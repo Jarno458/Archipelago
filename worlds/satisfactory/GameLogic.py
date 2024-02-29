@@ -469,6 +469,8 @@ class GameLogic:
             Recipe("Power Shard (5)", "Constructor", ("Purple Power Slug", ), handcraftable=True)),
         "Object Scanner": (
             Recipe("Object Scanner", "Equipment Workshop", ("Reinforced Iron Plate", "Wire", "Screw"), handcraftable=True), ),
+        "Xeno-Zapper": (
+            Recipe("Xeno-Zapper", "Equipment Workshop", ("Iron Rod", "Reinforced Iron Plate", "Cable", "Wire"), handcraftable=True, implicitly_unlocked=True), ),
 
         # TODO transport types aren't currently in logic
         # TODO fix multiple handcraftable recipes per part
