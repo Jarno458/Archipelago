@@ -93,8 +93,8 @@ class ElevatorTier(LocationData):
 
 
 class HubSlot(LocationData):
-    def __init__(self, milestoneName: str, slot: int, locationId: int):
-        super().__init__(milestoneName, f"{milestoneName}, item {slot}", locationId)
+    def __init__(self, tier: int, milestone: int, slot: int, locationId: int):
+        super().__init__(f"Hub {tier}-{milestone}", f"Hub {tier}-{milestone}, item {slot}", locationId)
 
 
 class MamSlot(LocationData):
@@ -261,7 +261,7 @@ class Locations():
         for tier in range(1, cls.max_tiers + 1):
             for milestone in range(1, cls.max_milestones + 1):
                 for slot in range(1, cls.max_slots + 1):
-                    location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, hub_location_id))
+                    location_table.append(HubSlot(tier, milestone, slot, hub_location_id))
                     hub_location_id += 1
 
         location_table.append(LocationData("Overworld", "UpperBound", 1338999))
@@ -282,7 +282,7 @@ class Locations():
                     if tier <= len(self.game_logic.hub_layout) \
                             and milestone <= len(self.game_logic.hub_layout[tier - 1]) \
                             and slot <= self.game_logic.slots_per_milestone:
-                        location_table.append(HubSlot(f"Hub {tier}-{milestone}", slot, hub_location_id))
+                        location_table.append(HubSlot(tier, milestone, slot, hub_location_id))
 
                     hub_location_id += 1
 

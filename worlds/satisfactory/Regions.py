@@ -156,7 +156,7 @@ def connect(regions: Dict[str, Region], source: str, target: str,
     sourceRegion = regions[source]
     targetRegion = regions[target]
 
-    sourceRegion.connect(targetRegion, rule)
+    sourceRegion.connect(targetRegion, rule=rule)
 
 
 def get_locations_per_region(locations: Tuple[LocationData, ...]) -> Dict[str, List[LocationData]]:
