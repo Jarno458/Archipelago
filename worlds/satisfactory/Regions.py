@@ -72,7 +72,7 @@ def create_regions_and_return_locations(world: MultiWorld, options: Satisfactory
 
     connect(regions, "Menu", "Overworld")
     connect(regions, "Overworld", "Hub Tier 1")
-    connect(regions, "Hub Tier 1", "Hub Tier 2", 
+    connect(regions, "Hub Tier 1", "Hub Tier 2",
             lambda state: state_logic.can_build_all(state, ("Foundation", "Conveyor Merger", "Conveyor Splitter")))
     connect(regions, "Hub Tier 2", "Hub Tier 3", lambda state: state.has("Elevator Tier 1", player) 
                                                              and state_logic.can_build_all(state, early_game_buildings))
@@ -81,12 +81,12 @@ def create_regions_and_return_locations(world: MultiWorld, options: Satisfactory
     connect(regions, "Hub Tier 5", "Hub Tier 6")
     connect(regions, "Hub Tier 6", "Hub Tier 7", lambda state: state.has("Elevator Tier 3", player))
     connect(regions, "Hub Tier 7", "Hub Tier 8")
-    connect(regions, "Overworld", "Gas Area", lambda state: 
+    connect(regions, "Overworld", "Gas Area", lambda state:
                                 state_logic.can_produce_all(state, ("Gas Mask", "Gas Filter")))
     connect(regions, "Overworld", "Radioactive Area", lambda state:
                                 state_logic.can_produce_all(state, ("Hazmat Suit", "Iodine Infused Filter")))
     connect(regions, "Overworld", "Mam", lambda state: state_logic.can_build(state, "MAM"))
-    connect(regions, "Overworld", "AWESOME Shop", lambda state: 
+    connect(regions, "Overworld", "AWESOME Shop", lambda state:
                                 state_logic.can_build_all(state, ("AWESOME Shop", "AWESOME Sink")))
 
     def can_produce_all_allowing_handcrafting(parts: Tuple[str, ...]) -> Callable[[CollectionState], bool]:
@@ -97,12 +97,12 @@ def create_regions_and_return_locations(world: MultiWorld, options: Satisfactory
 
     for hub_tier, milestones_per_hub_tier in enumerate(game_logic.hub_layout, 1):
         for minestone, parts_per_milestone in enumerate(milestones_per_hub_tier, 1):
-            connect(regions, f"Hub Tier {hub_tier}", f"Hub {hub_tier}-{minestone}", 
+            connect(regions, f"Hub Tier {hub_tier}", f"Hub {hub_tier}-{minestone}",
                 can_produce_all_allowing_handcrafting(parts_per_milestone.keys()))
             
     for building_name, building in game_logic.buildings.items():
         if building.can_produce:
-            connect(regions, "Overworld", building_name, 
+            connect(regions, "Overworld", building_name,
                 lambda state, building_name=building_name: state_logic.can_build(state, building_name))
         
     for tree_name, tree in game_logic.man_trees.items():
@@ -110,7 +110,7 @@ def create_regions_and_return_locations(world: MultiWorld, options: Satisfactory
 
         for node in tree.nodes:
             if not node.depends_on:
-                connect(regions, tree_name, f"{tree_name}: {node.name}", 
+                connect(regions, tree_name, f"{tree_name}: {node.name}",
                     lambda state, parts=node.unlock_cost.keys(): state_logic.can_produce_all(state, parts))
             else:
                 for parent in node.depends_on:
