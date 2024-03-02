@@ -45,9 +45,9 @@ class SatisfactoryWorld(World):
                     both FinalElevatorTier and FinalResourceSinkPoints are set to off"""
                     .format(self.multiworld.player_name[self.player]))
         
-        if self.options.mam_placement.value == Placement.starting_inventory:
+        if self.options.mam_logic_placement.value == Placement.starting_inventory:
             self.push_precollected("Building: MAM")
-        if self.options.awesome_logic.value == Placement.starting_inventory:
+        if self.options.awesome_logic_placement.value == Placement.starting_inventory:
             self.push_precollected("Building: AWESOME Sink")
             self.push_precollected("Building: AWESOME Shop")
 

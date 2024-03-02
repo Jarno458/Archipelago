@@ -5,12 +5,12 @@ from Options import PerGameCommonOptions, DeathLink, Range, Toggle, OptionList, 
 class Placement(IntEnum):
     starting_inventory = 0
     early = 1
-    some_where = 2
+    somewhere = 2
 
 class PlacementLogic(Choice):
     option_unlocked_from_start = Placement.starting_inventory
     option_early_game = Placement.early
-    option_somewhere = Placement.some_where
+    option_somewhere = Placement.somewhere
 
 class ChoiceMap(Choice):
     option_todo = 0
@@ -67,7 +67,7 @@ class ResourceSinkPoints(NamedRange):
     }
 
 class AllowDroppodProgression(Toggle):
-    """Allow hard drive Gacha to contain progression items."""
+    """TODO. Allow the hard drive Gacha to contain progression items."""
     display_name = "Allow Hard-drive Progression"
 
 # class TechTreeInformation(Choice):
@@ -109,8 +109,6 @@ class FreeSampleParts(NamedRange):
     """How free sample items of general crafting components should be given when a recipe for them is unlocked.
     Space Elevator Project Parts are always excluded.
     Negative numbers mean that fraction of a full stack.
-
-    If you want samples of radioactive parts, you must manually enable that in the Free Samples mod configuration in-game.
     (ex. Iron Plate, Packaged Turbofuel, Reinforced Modular Frame)"""
     display_name = "Free Samples: Parts"
     default = -2
@@ -133,26 +131,35 @@ class FreeSampleRadioactive(Toggle):
 
 class TrapChance(Range):
     """Chance of traps in the item pool.
-    Traps will only replace filler items such as parts and resources"""
+    Traps will only replace filler items such as parts and resources.
+    0 means no traps will be present, 100 means every filler will be a trap."""
     display_name = "Trap Chance"
     range_start = 0
     range_end = 100
     default = 10
 
-class Traps(ChoiceMap):
-    """Types of traps to enable"""
-    display_name = "Traps Types"
-    choices = {
-        "forgiving": ("Doggo Pulse Nobelisk", "Hog Basic"),
-        "normal": ("Doggo Pulse Nobelisk", "Hog Basic"),
-        "hellish": (),
-        "all": ()
-    }
+class TrapSelectionPreset(ChoiceMap):
+    """Themed presets of trap types to enable.
 
-class TrapsOverrides(OptionList):
-    """List of traps that may be in the item pool to find, if this list contains any traps it will override the traps setting"""
-    display_name = "Traps Types Override"
-    valid_keys = { 
+    If you want more control, visit the Weighted Options page or edit the YAML directly."""
+    display_name = "Trap Presets"
+    choices = {
+        "Gentle": ("Doggo Pulse Nobelisk", "Hog Basic", "Spitter Forest",),
+        "Normal": ("Doggo Pulse Nobelisk", "Doggo Gas Nobelisk", "Hog Basic", "Hog Alpha", "Hatcher", "Stinger Small", "Stinger Elite", "Spitter Forest", "Spitter Forest Alpha", "Not The Bees", "Nuclear Waste (ground)", "Uranium", "Non-fissile Uranium",),
+        "Harder": ("Doggo Pulse Nobelisk", "Doggo Nuke Nobelisk", "Doggo Gas Nobelisk", "Hog Alpha", "Hatcher", "Stinger Elite", "Spitter Forest Alpha", "Not The Bees", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Uranium", "Uranium Fuel Rod", "Uranium Waste (item)", "Plutonium Fuel Rod", "Plutonium Pellet", "Plutonium Waste (item)", "Non-fissile Uranium",),
+        "All": ("Doggo Pulse Nobelisk", "Doggo Nuke Nobelisk", "Doggo Gas Nobelisk", "Hog Basic", "Hog Alpha", "Hog Cliff", "Hog Cliff Nuclear", "Hog Johnny", "Hatcher", "Stinger Small", "Stinger Elite", "Stinger Gas", "Spore Flower", "Spitter Forest", "Spitter Forest Alpha", "Not The Bees", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Uranium", "Uranium Fuel Rod", "Uranium Waste (item)", "Plutonium Fuel Rod", "Plutonium Pellet", "Plutonium Waste (item)", "Non-fissile Uranium",),
+        "Ruthless": ("Doggo Nuke Nobelisk", "Hog Cliff Nuclear", "Hog Cliff", "Spore Flower", "Stinger Gas", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Uranium", "Uranium Fuel Rod", "Uranium Waste (item)", "Plutonium Fuel Rod", "Plutonium Pellet", "Plutonium Waste (item)", "Non-fissile Uranium",),
+        "All Arachnids All the Time": ("Stinger Small", "Stinger Elite", "Stinger Gas",),
+        "Whole Hog": ("Hog Basic", "Hog Alpha", "Hog Cliff", "Hog Cliff Nuclear", "Hog Johnny",),
+        "Nicholas Cage": ("Hatcher", "Not The Bees",),
+        "Fallout": ("Doggo Nuke Nobelisk", "Hog Cliff Nuclear", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Uranium",),
+    }
+    default="Normal"
+
+class TrapSelectionOverride(OptionList):
+    """TODO implement. Precise list of traps that may be in the item pool to find. If you select anything with this option it will be used instead of the 'Trap Presets' setting."""
+    display_name = "Trap Override"
+    valid_keys = {
         "Doggo Pulse Nobelisk", 
         "Doggo Nuke Nobelisk", 
         "Doggo Gas Nobelisk", 
@@ -172,7 +179,7 @@ class TrapsOverrides(OptionList):
         "Nuclear Waste (ground)",
         "Plutonium Waste (ground)",
 
-        # Radioactive parts
+        # Radioactive parts delivered via portal
         "Uranium",
         "Uranium Fuel Rod",
         "Uranium Waste (item)",
@@ -181,34 +188,64 @@ class TrapsOverrides(OptionList):
         "Plutonium Waste (item)",
         "Non-fissile Uranium",
     }
-    default = [ 
-        "Doggo Pulse Nobelisk", 
-        "Hog Basic",
-        "Spitter Forest"
-    ]
+    default = []
 
 class EnergyLink(Toggle):
-    """Allow sending energy to other worlds. 25% of the energy is lost in the transfer."""
+    """Allow sending energy to other worlds. TODO% of the energy is lost in the transfer."""
     display_name = "EnergyLink"
 
 class MamLogic(PlacementLogic):
-    """Where to place the Mam building"""
-    display_name = "Mam Placement"
-    default: 1
+    """Where to place the MAM building in logic. Earlier means it will be more likely you need to interact with it for progression purposes."""
+    display_name = "MAM Placement"
+    default = Placement.early
 
 class AwesomeLogic(PlacementLogic):
-    """Where to place the AWESOME shop and sink buildings"""
-    display_name = "AWESOME Placement"
-    default: 1
+    """Where to place the AWESOME Shop and Sink buildings in logic. Earlier means it will be more likely you need to interact with it for progression purposes."""
+    display_name = "AWESOME Stuff Placement"
+    default = Placement.early
 
-class StartingItems(ChoiceMap):
-    """Types of traps to enable"""
-    display_name = "Traps Types"
+_skip_tutorial_starting_items = (
+    # https://satisfactory.wiki.gg/wiki/Onboarding
+    "Bundle: Portable Miner", "Bundle: Portable Miner", "Bundle: Portable Miner", "Bundle: Portable Miner",
+    "Bundle: Iron Plate",
+    "Bundle: Concrete",
+    "Bundle: Iron Rod",
+    "Bundle: Wire",
+    "Bundle: Reinforced Iron Plate",
+    "Bundle: Cable",
+)
+
+_default_starting_items = _skip_tutorial_starting_items + (
+    "Bundle: Portable Miner",
+    "Bundle: Iron Ingot",
+    "Bundle: Copper Ingot",
+    "Bundle: Concrete",
+)
+
+_default_plus_foundations_starting_items = _default_starting_items + (
+    "Building: Foundation",
+    "Building: Half Foundation",
+)
+
+class StartingInventoryPreset(ChoiceMap):
+    """What resources (and buildings) the player should start with in their inventory.
+    If you want more control, visit the Weighted Options page or edit the YAML directly.
+
+    Barebones: Nothing but the default xeno zapper and buildings.
+    Skip Tutorial Inspired: Inspired by the items you would have if you skipped the base game's tutorial.
+    Archipelago: The starting items we think will lead to a fun experience.
+    Foundations: 'Archipelago' option, but also guaranteeing that you have foundations unlocked at the start.
+    Foundation Lover: You really like foundations.
+    """
+    display_name = "Starting Goodies Presets"
     choices = {
-        "what": ("", ""),
-        "to": (""),
-        "put": (),
+        "Barebones": (), # Nothing but the default xeno zapper
+        "Skip Tutorial Inspired": _skip_tutorial_starting_items,
+        "Archipelago": _default_starting_items,
+        "Foundations": _default_plus_foundations_starting_items,
+        "Foundation Lover": _default_plus_foundations_starting_items + ("Bundle: Iron Plate", "Bundle: Iron Plate", "Bundle: Iron Plate", "Bundle: Concrete", "Bundle: Concrete", "Bundle: Concrete",),
     }
+    default = "Default"
 
 @dataclass
 class SatisfactoryOptions(PerGameCommonOptions):
@@ -220,12 +257,12 @@ class SatisfactoryOptions(PerGameCommonOptions):
     free_sample_buildings: FreeSampleBuildings
     free_sample_parts: FreeSampleParts
     free_sample_radioactive: FreeSampleRadioactive
-    starting_buildings: StartingItems
-    mam_placement: MamLogic
-    awesome_logic: AwesomeLogic
+    starting_inventory_preset: StartingInventoryPreset
+    mam_logic_placement: MamLogic
+    awesome_logic_placement: AwesomeLogic
     trap_chance: TrapChance
-    traps: Traps
-    traps_overrides: TrapsOverrides
+    trap_selection_preset: TrapSelectionPreset
+    trap_selection_override: TrapSelectionOverride
     death_link: DeathLink
     energy_link: EnergyLink
     start_inventory_from_pool: StartInventoryPool

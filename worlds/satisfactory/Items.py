@@ -705,12 +705,13 @@ class Items:
 
     def get_filler_item_name(self, random: Random, options: SatisfactoryOptions) -> str:
         trap_chance: int = options.trap_chance.value
-        enabled_traps: List[str] = options.traps.value
+        enabled_traps: List[str] = options.trap_selection_preset.value
+        # TODO implement trap_selection_override
 
         if enabled_traps and random.random() < (trap_chance / 100):
             return random.choice(enabled_traps)
         else:
-            return random.choice(self.filler_items) 
+            return random.choice(self.filler_items)
 
 
     def get_excluded_items(self, multiworld: MultiWorld) -> Set[str]:

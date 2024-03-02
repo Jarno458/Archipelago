@@ -62,9 +62,9 @@ def create_regions_and_return_locations(world: MultiWorld, options: Satisfactory
         str(PowerInfrastructureLevel.Automated)
     ]
 
-    if options.mam_placement.value == Placement.early:
+    if options.mam_logic_placement.value == Placement.early:
         early_game_buildings.append("MAM")
-    if options.awesome_logic.value == Placement.early:
+    if options.awesome_logic_placement.value == Placement.early:
         early_game_buildings.append("AWESOME Sink")
         early_game_buildings.append("AWESOME Shop")
 
