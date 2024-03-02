@@ -13,6 +13,7 @@ In Satisfactory, the HUB Milestones and MAM Research Nodes are shuffled,
 causing technologies to be obtained in a non-standard order.
 The costs of unlocking these technologies are also shuffled.
 There are also a few new purchases in the AWESOME Shop.
+An alternate recipe you've never used before may end up required to progress, for example.
 
 <!-- TODO Hard Drive scanning results are also optionally shuffled,
 meaning that scanning a Hard Drive will result in a selection between 3 random items. -->
