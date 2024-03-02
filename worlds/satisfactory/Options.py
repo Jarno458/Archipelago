@@ -152,7 +152,7 @@ class FreeSampleParts(NamedRange):
     }
 
 class FreeSampleRadioactive(Toggle):
-    """Allow free samples to be Radioactive."""
+    """Allow free samples to include radioactive parts. Remember, they are delivered directly to your player inventory."""
     display_name = "Free Samples: Radioactive"
 
 class TrapChance(Range):
@@ -250,7 +250,11 @@ _default_starting_items = _skip_tutorial_starting_items + [
     "Bundle: Portable Miner",
     "Bundle: Iron Ingot",
     "Bundle: Copper Ingot",
-    "Bundle: Concrete"
+    "Bundle: Concrete",
+    # "Building: Blueprint Designer",
+    # "Expanded Toolbelt",
+    # "Inflated Pocket Dimension",
+    # "Building: Personal Storage Box"
 ]
 
 _default_plus_foundations_starting_items = _default_starting_items + [
