@@ -121,7 +121,7 @@ class Items:
         "Bundle: Hog Remains": ItemData(frozenset({G.Parts}), 1338110),
         "Bundle: Uranium": ItemData(frozenset({G.Trap}), 1338111, C.trap),
         "Bundle: Uranium Fuel Rod": ItemData(frozenset({G.Trap}), 1338112, C.trap),
-        "Bundle: Uranium Waste (item)": ItemData(frozenset({G.Trap}), 1338113, C.trap),
+        "Bundle: Uranium Waste": ItemData(frozenset({G.Trap}), 1338113, C.trap),
         "Bundle: Versatile Framework": ItemData(frozenset({G.Parts}), 1338114),
         "Bundle: Wire": ItemData(frozenset({G.Parts}), 1338115),
         "Bundle: Wood": ItemData(frozenset({G.Parts}), 1338116),
@@ -435,7 +435,6 @@ class Items:
         "Building: Smelter": ItemData(frozenset({G.Building}), 1338616, C.progression),
         "Building: Foundry": ItemData(frozenset({G.Building}), 1338617, C.progression),
 
-        ### New
         "Building: Fuel Generator": ItemData(frozenset({G.Building}), 1338618, C.progression),
         "Building: Resource Well Pressurizer": ItemData(frozenset({G.Building}), 1338619, C.progression),
         "Building: Equipment Workshop": ItemData(frozenset({G.Building}), 1338620, C.progression),
