@@ -231,8 +231,8 @@ class AwesomeLogic(PlacementLogic):
     default = Placement.early
 
 class EnergyLinkLogic(PlacementLogic):
-    """Where to place the EnergyLink building (power storage) in logic. Earlier means it will be more likely to have access to it early into your game."""
-    display_name = "AWESOME Stuff Placement"
+    """Where to place the EnergyLink building (or Power Storage if EnergyLink is disabled) in logic. Earlier means it will be more likely to get access to it early into your game."""
+    display_name = "EnergyLink Placement"
     default = Placement.early
 
 _skip_tutorial_starting_items = [
