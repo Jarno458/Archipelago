@@ -67,6 +67,8 @@ def create_regions_and_return_locations(world: MultiWorld, options: Satisfactory
     if options.awesome_logic_placement.value == Placement.early:
         early_game_buildings.append("AWESOME Sink")
         early_game_buildings.append("AWESOME Shop")
+    if options.energy_link_logic_placement.value == Placement.early:
+        early_game_buildings.append("Building: Power Storage")
 
     connect(regions, "Menu", "Overworld")
     connect(regions, "Overworld", "Hub Tier 1")

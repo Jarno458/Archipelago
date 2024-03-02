@@ -705,8 +705,7 @@ class Items:
 
     def get_filler_item_name(self, random: Random, options: SatisfactoryOptions) -> str:
         trap_chance: int = options.trap_chance.value
-        enabled_traps: List[str] = options.trap_selection_preset.value
-        # TODO implement trap_selection_override
+        enabled_traps: List[str] = options.trap_selection_override.value
 
         if enabled_traps and random.random() < (trap_chance / 100):
             return random.choice(enabled_traps)

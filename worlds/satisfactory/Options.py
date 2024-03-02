@@ -1,20 +1,46 @@
 from dataclasses import dataclass
+from typing import Dict, List, Any, Tuple, ClassVar, cast
 from enum import IntEnum
-from Options import PerGameCommonOptions, DeathLink, Range, Toggle, OptionList, StartInventoryPool, NamedRange, Choice
+from Options import PerGameCommonOptions, DeathLink, AssembleOptions
+from Options import Range, Toggle, OptionList, StartInventoryPool, NamedRange, Choice
 
 class Placement(IntEnum):
     starting_inventory = 0
     early = 1
     somewhere = 2
 
-class PlacementLogic(Choice):
+class PlacementLogicMeta(AssembleOptions):
+    def __new__(mcs, name: str, bases: Tuple[type], attrs: Dict[Any, Any]) -> "PlacementLogicMeta":
+        if "default" in attrs and isinstance(attrs["default"], Placement):
+            attrs["default"] = int(attrs["default"])
+
+        cls = super(PlacementLogicMeta, mcs).__new__(mcs, name, bases, attrs)
+        return cast(PlacementLogicMeta, cls)
+
+#class PlacementLogic(Choice):
+class PlacementLogic(Choice, metaclass=PlacementLogicMeta):
     option_unlocked_from_start = Placement.starting_inventory
     option_early_game = Placement.early
     option_somewhere = Placement.somewhere
 
-class ChoiceMap(Choice):
-    option_todo = 0
-    #TODO make it automagicly generate members based on keys
+class ChoiceMapMeta(AssembleOptions):
+    def __new__(mcs, name: str, bases: Tuple[type], attrs: Dict[Any, Any]) -> "ChoiceMapMeta":
+        if "choices" in attrs:
+            for index, choice in enumerate(attrs["choices"].keys()):
+                option_name = "option_" + choice.replace(' ', '_')
+                attrs[option_name] = index
+
+        cls = super(ChoiceMapMeta, mcs).__new__(mcs, name, bases, attrs)
+        return cast(ChoiceMapMeta, cls)
+
+class ChoiceMap(Choice, metaclass=ChoiceMapMeta):
+    choices: ClassVar[Dict[str, List[str]]]
+
+    def get_selected_list(self) -> List[str]:
+        for index, choice in enumerate(self.choices.keys()):
+            if index == self.value:
+                return self.choices[choice]
+
 
 class ElevatorTier(NamedRange):
     """Ship these Space Elevator packages to finish"""
@@ -144,20 +170,20 @@ class TrapSelectionPreset(ChoiceMap):
     If you want more control, visit the Weighted Options page or edit the YAML directly."""
     display_name = "Trap Presets"
     choices = {
-        "Gentle": ("Doggo Pulse Nobelisk", "Hog Basic", "Spitter Forest",),
-        "Normal": ("Doggo Pulse Nobelisk", "Doggo Gas Nobelisk", "Hog Basic", "Hog Alpha", "Hatcher", "Stinger Small", "Stinger Elite", "Spitter Forest", "Spitter Forest Alpha", "Not The Bees", "Nuclear Waste (ground)", "Uranium", "Non-fissile Uranium",),
-        "Harder": ("Doggo Pulse Nobelisk", "Doggo Nuke Nobelisk", "Doggo Gas Nobelisk", "Hog Alpha", "Hatcher", "Stinger Elite", "Spitter Forest Alpha", "Not The Bees", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Uranium", "Uranium Fuel Rod", "Uranium Waste (item)", "Plutonium Fuel Rod", "Plutonium Pellet", "Plutonium Waste (item)", "Non-fissile Uranium",),
-        "All": ("Doggo Pulse Nobelisk", "Doggo Nuke Nobelisk", "Doggo Gas Nobelisk", "Hog Basic", "Hog Alpha", "Hog Cliff", "Hog Cliff Nuclear", "Hog Johnny", "Hatcher", "Stinger Small", "Stinger Elite", "Stinger Gas", "Spore Flower", "Spitter Forest", "Spitter Forest Alpha", "Not The Bees", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Uranium", "Uranium Fuel Rod", "Uranium Waste (item)", "Plutonium Fuel Rod", "Plutonium Pellet", "Plutonium Waste (item)", "Non-fissile Uranium",),
-        "Ruthless": ("Doggo Nuke Nobelisk", "Hog Cliff Nuclear", "Hog Cliff", "Spore Flower", "Stinger Gas", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Uranium", "Uranium Fuel Rod", "Uranium Waste (item)", "Plutonium Fuel Rod", "Plutonium Pellet", "Plutonium Waste (item)", "Non-fissile Uranium",),
-        "All Arachnids All the Time": ("Stinger Small", "Stinger Elite", "Stinger Gas",),
-        "Whole Hog": ("Hog Basic", "Hog Alpha", "Hog Cliff", "Hog Cliff Nuclear", "Hog Johnny",),
-        "Nicholas Cage": ("Hatcher", "Not The Bees",),
-        "Fallout": ("Doggo Nuke Nobelisk", "Hog Cliff Nuclear", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Uranium",),
+        "Gentle": ["Doggo Pulse Nobelisk", "Hog Basic", "Spitter Forest"],
+        "Normal": ["Doggo Pulse Nobelisk", "Doggo Gas Nobelisk", "Hog Basic", "Hog Alpha", "Hatcher", "Stinger Small", "Stinger Elite", "Spitter Forest", "Spitter Forest Alpha", "Not The Bees", "Nuclear Waste (ground)", "Bundle: Uranium", "Bundle: Non-fissile Uranium"],
+        "Harder": ["Doggo Pulse Nobelisk", "Doggo Nuke Nobelisk", "Doggo Gas Nobelisk", "Hog Alpha", "Hatcher", "Stinger Elite", "Spitter Forest Alpha", "Not The Bees", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Bundle: Uranium", "Bundle: Uranium Fuel Rod", "Bundle: Uranium Waste", "Bundle: Plutonium Fuel Rod", "Bundle: Plutonium Pellet", "Bundle: Plutonium Waste", "Bundle: Non-fissile Uranium"],
+        "All": ["Doggo Pulse Nobelisk", "Doggo Nuke Nobelisk", "Doggo Gas Nobelisk", "Hog Basic", "Hog Alpha", "Hog Cliff", "Hog Cliff Nuclear", "Hog Johnny", "Hatcher", "Stinger Small", "Stinger Elite", "Stinger Gas", "Spore Flower", "Spitter Forest", "Spitter Forest Alpha", "Not The Bees", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Bundle: Uranium", "Bundle: Uranium Fuel Rod", "Bundle: Uranium Waste", "Bundle: Plutonium Fuel Rod", "Bundle: Plutonium Pellet", "Bundle: Plutonium Waste", "Bundle: Non-fissile Uranium"],
+        "Ruthless": ["Doggo Nuke Nobelisk", "Hog Cliff Nuclear", "Hog Cliff", "Spore Flower", "Stinger Gas", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Bundle: Uranium", "Bundle: Uranium Fuel Rod", "Bundle: Uranium Waste", "Bundle: Plutonium Fuel Rod", "Bundle: Plutonium Pellet", "Bundle: Plutonium Waste", "Bundle: Non-fissile Uranium"],
+        "All Arachnids All the Time": ["Stinger Small", "Stinger Elite", "Stinger Gas"],
+        "Whole Hog": ["Hog Basic", "Hog Alpha", "Hog Cliff", "Hog Cliff Nuclear", "Hog Johnny"],
+        "Nicholas Cage": ["Hatcher", "Not The Bees"],
+        "Fallout": ["Doggo Nuke Nobelisk", "Hog Cliff Nuclear", "Nuclear Waste (ground)", "Plutonium Waste (ground)", "Bundle: Uranium"],
     }
     default="Normal"
 
 class TrapSelectionOverride(OptionList):
-    """TODO implement. Precise list of traps that may be in the item pool to find. If you select anything with this option it will be used instead of the 'Trap Presets' setting."""
+    """Precise list of traps that may be in the item pool to find. If you select anything with this option it will be used instead of the 'Trap Presets' setting."""
     display_name = "Trap Override"
     valid_keys = {
         "Doggo Pulse Nobelisk", 
@@ -180,13 +206,13 @@ class TrapSelectionOverride(OptionList):
         "Plutonium Waste (ground)",
 
         # Radioactive parts delivered via portal
-        "Uranium",
-        "Uranium Fuel Rod",
-        "Uranium Waste (item)",
-        "Plutonium Fuel Rod",
-        "Plutonium Pellet",
-        "Plutonium Waste (item)",
-        "Non-fissile Uranium",
+        "Bundle: Uranium",
+        "Bundle: Uranium Fuel Rod",
+        "Bundle: Uranium Waste",
+        "Bundle: Plutonium Fuel Rod",
+        "Bundle: Plutonium Pellet",
+        "Bundle: Plutonium Waste",
+        "Bundle: Non-fissile Uranium",
     }
     default = []
 
@@ -204,7 +230,12 @@ class AwesomeLogic(PlacementLogic):
     display_name = "AWESOME Stuff Placement"
     default = Placement.early
 
-_skip_tutorial_starting_items = (
+class EnergyLinkLogic(PlacementLogic):
+    """Where to place the EnergyLink building (power storage) in logic. Earlier means it will be more likely to have access to it early into your game."""
+    display_name = "AWESOME Stuff Placement"
+    default = Placement.early
+
+_skip_tutorial_starting_items = [
     # https://satisfactory.wiki.gg/wiki/Onboarding
     "Bundle: Portable Miner", "Bundle: Portable Miner", "Bundle: Portable Miner", "Bundle: Portable Miner",
     "Bundle: Iron Plate",
@@ -212,20 +243,20 @@ _skip_tutorial_starting_items = (
     "Bundle: Iron Rod",
     "Bundle: Wire",
     "Bundle: Reinforced Iron Plate",
-    "Bundle: Cable",
-)
+    "Bundle: Cable"
+]
 
-_default_starting_items = _skip_tutorial_starting_items + (
+_default_starting_items = _skip_tutorial_starting_items + [
     "Bundle: Portable Miner",
     "Bundle: Iron Ingot",
     "Bundle: Copper Ingot",
-    "Bundle: Concrete",
-)
+    "Bundle: Concrete"
+]
 
-_default_plus_foundations_starting_items = _default_starting_items + (
+_default_plus_foundations_starting_items = _default_starting_items + [
     "Building: Foundation",
-    "Building: Half Foundation",
-)
+    "Building: Half Foundation"
+]
 
 class StartingInventoryPreset(ChoiceMap):
     """What resources (and buildings) the player should start with in their inventory.
@@ -239,13 +270,13 @@ class StartingInventoryPreset(ChoiceMap):
     """
     display_name = "Starting Goodies Presets"
     choices = {
-        "Barebones": (), # Nothing but the default xeno zapper
+        "Barebones": [], # Nothing but the default xeno zapper
         "Skip Tutorial Inspired": _skip_tutorial_starting_items,
         "Archipelago": _default_starting_items,
         "Foundations": _default_plus_foundations_starting_items,
-        "Foundation Lover": _default_plus_foundations_starting_items + ("Bundle: Iron Plate", "Bundle: Iron Plate", "Bundle: Iron Plate", "Bundle: Concrete", "Bundle: Concrete", "Bundle: Concrete",),
+        "Foundation Lover": _default_plus_foundations_starting_items + ["Bundle: Iron Plate", "Bundle: Iron Plate", "Bundle: Iron Plate", "Bundle: Concrete", "Bundle: Concrete", "Bundle: Concrete"],
     }
-    default = "Default"
+    default = "Archipelago"
 
 @dataclass
 class SatisfactoryOptions(PerGameCommonOptions):
@@ -260,6 +291,7 @@ class SatisfactoryOptions(PerGameCommonOptions):
     starting_inventory_preset: StartingInventoryPreset
     mam_logic_placement: MamLogic
     awesome_logic_placement: AwesomeLogic
+    energy_link_logic_placement: EnergyLinkLogic
     trap_chance: TrapChance
     trap_selection_preset: TrapSelectionPreset
     trap_selection_override: TrapSelectionOverride
