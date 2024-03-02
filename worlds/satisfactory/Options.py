@@ -251,10 +251,10 @@ _default_starting_items = _skip_tutorial_starting_items + [
     "Bundle: Iron Ingot",
     "Bundle: Copper Ingot",
     "Bundle: Concrete",
-    # "Building: Blueprint Designer",
-    # "Expanded Toolbelt",
-    # "Inflated Pocket Dimension",
-    # "Building: Personal Storage Box"
+    "Building: Blueprint Designer",
+    "Expanded Toolbelt",
+    "Inflated Pocket Dimension",
+    "Building: Personal Storage Box"
 ]
 
 _default_plus_foundations_starting_items = _default_starting_items + [
