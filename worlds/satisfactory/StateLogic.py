@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, Set, Iterable
+from typing import Tuple, List, Optional, Set, Iterable
 from BaseClasses import CollectionState
 from .GameLogic import GameLogic, Recipe, PowerInfrastructureLevel
 from .Options import SatisfactoryOptions
@@ -50,11 +50,12 @@ class StateLogic:
             elif part not in logic.handcraftable_recipes:
                 return False
 
-            recipe: Recipe = logic.handcraftable_recipes[part]
+            recipes: List[Recipe] = logic.handcraftable_recipes[part]
 
-            return self.has_recipe(state, recipe) \
-                and (not recipe.inputs or 
-                    self.can_produce_all_allowing_handcrafting(state, logic, recipe.inputs))
+            return any(
+                self.has_recipe(state, recipe) 
+                    and (not recipe.inputs or self.can_produce_all_allowing_handcrafting(state, logic, recipe.inputs))
+                for recipe in recipes)
 
         return not parts or all(can_handcraft_part(part) for part in parts)
 

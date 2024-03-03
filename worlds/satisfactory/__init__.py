@@ -52,6 +52,9 @@ class SatisfactoryWorld(World):
             self.push_precollected("Building: AWESOME Shop")
         if self.options.energy_link_logic_placement.value == Placement.starting_inventory:
             self.push_precollected("Building: Power Storage")
+        if self.options.splitter_placement == Placement.starting_inventory:
+            self.push_precollected("Building: Conveyor Splitter")
+            self.push_precollected("Building: Conveyor Merger")
 
         if not self.options.trap_selection_override.value:
             self.options.trap_selection_override.value = self.options.trap_selection_preset.get_selected_list()

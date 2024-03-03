@@ -58,8 +58,14 @@ def create_regions_and_return_locations(world: MultiWorld, options: Satisfactory
         
     world.regions += regions.values()
 
+    super_early_game_buildings: List[str] = [
+        "Foundation", 
+        "Walls Orange"
+    ]
+
     early_game_buildings: List[str] = [
-        str(PowerInfrastructureLevel.Automated)
+        str(PowerInfrastructureLevel.Automated),
+        "Power Storage"
     ]
 
     if options.mam_logic_placement.value == Placement.early:
@@ -68,12 +74,15 @@ def create_regions_and_return_locations(world: MultiWorld, options: Satisfactory
         early_game_buildings.append("AWESOME Sink")
         early_game_buildings.append("AWESOME Shop")
     if options.energy_link_logic_placement.value == Placement.early:
-        early_game_buildings.append("Building: Power Storage")
+        early_game_buildings.append("Power Storage")
+    if options.splitter_placement == Placement.early:
+        super_early_game_buildings.append("Building: Conveyor Splitter")
+        super_early_game_buildings.append("Building: Conveyor Merger")
 
     connect(regions, "Menu", "Overworld")
     connect(regions, "Overworld", "Hub Tier 1")
     connect(regions, "Hub Tier 1", "Hub Tier 2",
-            lambda state: state_logic.can_build_all(state, ("Foundation", "Conveyor Merger", "Conveyor Splitter")))
+            lambda state: state_logic.can_build_all(state, super_early_game_buildings))
     connect(regions, "Hub Tier 2", "Hub Tier 3", lambda state: state.has("Elevator Tier 1", player) 
                                                              and state_logic.can_build_all(state, early_game_buildings))
     connect(regions, "Hub Tier 3", "Hub Tier 4")

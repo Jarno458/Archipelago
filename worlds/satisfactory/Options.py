@@ -17,7 +17,6 @@ class PlacementLogicMeta(AssembleOptions):
         cls = super(PlacementLogicMeta, mcs).__new__(mcs, name, bases, attrs)
         return cast(PlacementLogicMeta, cls)
 
-#class PlacementLogic(Choice):
 class PlacementLogic(Choice, metaclass=PlacementLogicMeta):
     option_unlocked_from_start = Placement.starting_inventory
     option_early_game = Placement.early
@@ -235,6 +234,11 @@ class EnergyLinkLogic(PlacementLogic):
     display_name = "EnergyLink Placement"
     default = Placement.early
 
+class SplitterLogic(PlacementLogic):
+    """Where to place the Conveyor Splitter and Merger buildings in logic. Earlier means it will be more likely to get access to it early into your game."""
+    display_name = "Splitter and Merger Placement"
+    default = Placement.starting_inventory
+
 _skip_tutorial_starting_items = [
     # https://satisfactory.wiki.gg/wiki/Onboarding
     "Bundle: Portable Miner", "Bundle: Portable Miner", "Bundle: Portable Miner", "Bundle: Portable Miner",
@@ -296,6 +300,7 @@ class SatisfactoryOptions(PerGameCommonOptions):
     mam_logic_placement: MamLogic
     awesome_logic_placement: AwesomeLogic
     energy_link_logic_placement: EnergyLinkLogic
+    splitter_placement: SplitterLogic
     trap_chance: TrapChance
     trap_selection_preset: TrapSelectionPreset
     trap_selection_override: TrapSelectionOverride

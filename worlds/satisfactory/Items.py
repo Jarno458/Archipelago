@@ -491,7 +491,7 @@ class Items:
         "Building: Flood Light Tower": ItemData(frozenset({G.Building, G.Lights}), 1338671, C.filler, 0),
         "Building: Ceiling Light": ItemData(frozenset({G.Building, G.Lights}), 1338672, C.filler, 0),
         "Building: Power Tower": ItemData(frozenset({G.Building}), 1338673, C.useful),
-        "Building: Walls Orange": ItemData(frozenset({G.Building, G.Walls}), 1338674, C.useful),
+        "Building: Walls Orange": ItemData(frozenset({G.Building, G.Walls}), 1338674, C.progression),
         "Building: Radar Tower": ItemData(frozenset({G.Building}), 1338675, C.useful),
         "Building: Smart Splitter": ItemData(frozenset({G.Building}), 1338676, C.useful),
         "Building: Programmable Splitter": ItemData(frozenset({G.Building}), 1338677, C.useful),
@@ -712,12 +712,13 @@ class Items:
             return random.choice(self.filler_items)
 
 
-    def get_excluded_items(self, multiworld: MultiWorld) -> Set[str]:
+    def get_excluded_items(self, multiworld: MultiWorld, options: SatisfactoryOptions) -> Set[str]:
         excluded_items: Set[str] = set()
 
         for item in multiworld.precollected_items[self.player]:
-            if item.name in self.item_data and \
-                                    self.item_data[item.name].category.isdisjoint(self.non_unique_item_categories):
+            if item.name in self.item_data \
+                    and self.item_data[item.name].category.isdisjoint(self.non_unique_item_categories) \
+                    and item.name not in options.start_inventory_from_pool:
 
                 excluded_items.add(item.name)
 
@@ -726,11 +727,14 @@ class Items:
 
     def build_item_pool(self, random: Random, multiworld: MultiWorld, 
                         options: SatisfactoryOptions, number_of_locations: int) -> List[Item]:
-        excluded_from_pool: Set[str] = self.get_excluded_items(multiworld) \
+        excluded_from_pool: Set[str] = self.get_excluded_items(multiworld, options) \
                                            .union(self.logic.implicitly_unlocked_recipes.keys())
         pool: List[Item] = []
 
         for name, data in self.item_data.items():
+            if name == "Building: Blueprint Designer":
+                halp = 10
+
             if data.count > 0 \
                 and not data.category.isdisjoint(self.pool_item_categories) \
                 and name not in excluded_from_pool:

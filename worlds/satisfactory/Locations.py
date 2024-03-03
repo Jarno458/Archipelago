@@ -78,7 +78,7 @@ class PowerInfrastructure(LocationData):
             ) -> Callable[[CollectionState], bool]:
 
         def can_power(state: CollectionState) -> bool:
-            return any(state_logic.can_power(state, level) for level in PowerInfrastructureLevel if level > powerLevel) \
+            return any(state_logic.can_power(state, level) for level in PowerInfrastructureLevel if level > powerLevel)\
                 or any(state_logic.can_build(state, recipe.building) and 
                        state_logic.can_produce_all_allowing_handcrafting(state, game_logic, recipe.inputs) 
                         for recipe in recipes)
@@ -89,7 +89,8 @@ class PowerInfrastructure(LocationData):
 class ElevatorTier(LocationData):
     def __init__(self, tier: int, state_logic: StateLogic, game_logic: GameLogic):
         super().__init__("Overworld", f"Elevator Tier {tier + 1}", EventId,
-            rule = lambda state: state_logic.can_produce_all(state, game_logic.space_elevator_tiers[tier].keys()))
+            rule = lambda state: state_logic.can_build(state, "Space Elevator") and \
+                                 state_logic.can_produce_all(state, game_logic.space_elevator_tiers[tier].keys()))
 
 
 class HubSlot(LocationData):

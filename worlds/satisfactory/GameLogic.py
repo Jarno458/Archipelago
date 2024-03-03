@@ -406,8 +406,8 @@ class GameLogic:
             Recipe("Spitter Protein", "Constructor", ("Plasma Spitter Remains", ), handcraftable=True),
             Recipe("Stinger Protein", "Constructor", ("Stinger Remains", ), handcraftable=True)),
         "Biomass": (
-            Recipe("Biomass (Leaves)", "Constructor", ("Leaves", ), minimal_belt_speed=2, handcraftable=True),
-            Recipe("Biomass (Wood)", "Constructor", ("Wood", ), minimal_belt_speed=4, handcraftable=True),
+            Recipe("Biomass (Leaves)", "Constructor", ("Leaves", ), minimal_belt_speed=2, handcraftable=True, implicitly_unlocked=True),
+            Recipe("Biomass (Wood)", "Constructor", ("Wood", ), minimal_belt_speed=4, handcraftable=True, implicitly_unlocked=True),
             Recipe("Biomass (Mycelia)", "Constructor", ("Mycelia", ), minimal_belt_speed=3, handcraftable=True),
             Recipe("Biomass (Alien Protein)", "Constructor", ("Alien Protein", ), minimal_belt_speed=5, handcraftable=True)),
         "Fabric": (
@@ -473,7 +473,6 @@ class GameLogic:
             Recipe("Xeno-Zapper", "Equipment Workshop", ("Iron Rod", "Reinforced Iron Plate", "Cable", "Wire"), handcraftable=True, implicitly_unlocked=True), ),
 
         # TODO transport types aren't currently in logic
-        # TODO fix multiple handcraftable recipes per part
     }
 
     buildings: Dict[str, Building] = {
@@ -516,13 +515,17 @@ class GameLogic:
         # higher level power poles arent in logic
         #"Power Pole Mk.2": Building("Power Pole Mk.2", ("Quickwire", "Iron Rod", "Concrete"), False),
         #"Power Pole Mk.3": Building("Power Pole Mk.3", ("High-Speed Connector", "Steel Pipe", "Rubber"), False),
+        "Power Storage": Building("Power Storage", ("Wire", "Modular Frame", "Stator"), can_produce=False),
         "Foundation": Building("Foundation", ("Iron Plate", "Concrete"), can_produce=False),
+        "Walls Orange": Building("Walls Orange", ("Iron Plate", "Concrete"), can_produce=False),
+        "Space Elevator": Building("Space Elevator", ("Concrete", "Iron Plate", "Iron Rod", "Wire"), can_produce=False, implicitly_unlocked=True),
     }
 
-    handcraftable_recipes: Dict[str, Recipe] = { part: recipe 
-        for part, recipes_per_part in recipes.items()
-        for recipe in recipes_per_part if recipe.handcraftable 
-    }
+    handcraftable_recipes: Dict[str, List[Recipe]] = {}
+    for part, recipes_per_part in recipes.items():
+        for recipe in recipes_per_part:
+            if recipe.handcraftable:
+                handcraftable_recipes.setdefault(part, list()).append(recipe)
 
     implicitly_unlocked_recipes: Dict[str, Recipe] = { 
         recipe.name: recipe 
