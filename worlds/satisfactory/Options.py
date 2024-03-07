@@ -288,7 +288,7 @@ class StartingInventoryPreset(ChoiceMap):
 
 @dataclass
 class SatisfactoryOptions(PerGameCommonOptions):
-    final_elevator_tier: ElevatorTier
+    final_elevator_tier: ElevatorTier # TODO rename to "final_elevator_package" to avoid confusion over what the value means (the range 0-4 is not the same as the range of tiers 0-8)
     final_resource_sink_points: ResourceSinkPoints
     # tech_tree_information: TechTreeInformation # TODO: NYI
     # allow_droppod_progression: AllowDroppodProgression #TODO: NYI
