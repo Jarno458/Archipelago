@@ -88,7 +88,7 @@ class Items:
         "Bundle: Plastic": ItemData(frozenset({G.Parts}), 1338077),
         "Bundle: Plutonium Fuel Rod": ItemData(frozenset({G.Trap}), 1338078, C.trap),
         "Bundle: Plutonium Pellet": ItemData(frozenset({G.Trap}), 1338079, C.trap),
-        "Bundle: Plutonium Waste (item)": ItemData(frozenset({G.Trap}), 1338080, C.trap),
+        "Bundle: Plutonium Waste": ItemData(frozenset({G.Trap}), 1338080, C.trap),
         "Bundle: Polymer Resin": ItemData(frozenset({G.Parts}), 1338081),
         "Bundle: Power Shard": ItemData(frozenset({G.Parts}), 1338082),
         "Bundle: Confusing Creature Statue": ItemData(frozenset({G.Parts}), 1338083),
