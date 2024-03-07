@@ -64,8 +64,7 @@ def create_regions_and_return_locations(world: MultiWorld, options: Satisfactory
     ]
 
     early_game_buildings: List[str] = [
-        str(PowerInfrastructureLevel.Automated),
-        "Power Storage"
+        str(PowerInfrastructureLevel.Automated)
     ]
 
     if options.mam_logic_placement.value == Placement.early:

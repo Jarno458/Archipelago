@@ -448,7 +448,7 @@ class Items:
         "Building: Ladder": ItemData(frozenset({G.Building}), 1338628, C.filler),
         "Building: MAM": ItemData(frozenset({G.Building}), 1338629, C.progression),
         "Building: Personal Storage Box": ItemData(frozenset({G.Building}), 1338630, C.filler),
-        "Building: Power Storage": ItemData(frozenset({G.Building}), 1338631, C.useful),
+        "Building: Power Storage": ItemData(frozenset({G.Building}), 1338631, C.progression),
         "Building: U-Jelly Landing Pad": ItemData(frozenset({G.Building}), 1338632, C.useful),
         "Building: Power Switch": ItemData(frozenset({G.Building}), 1338633, C.useful),
         "Building: Priority Power Switch": ItemData(frozenset({G.Building}), 1338634, C.useful),
