@@ -75,8 +75,8 @@ def create_regions_and_return_locations(world: MultiWorld, options: Satisfactory
     if options.energy_link_logic_placement.value == Placement.early:
         early_game_buildings.append("Power Storage")
     if options.splitter_placement == Placement.early:
-        super_early_game_buildings.append("Building: Conveyor Splitter")
-        super_early_game_buildings.append("Building: Conveyor Merger")
+        super_early_game_buildings.append("Conveyor Splitter")
+        super_early_game_buildings.append("Conveyor Merger")
 
     connect(regions, "Menu", "Overworld")
     connect(regions, "Overworld", "Hub Tier 1")
