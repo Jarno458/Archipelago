@@ -168,4 +168,4 @@ TODO what is the scope of this section? How much do we help with vs. sending peo
 
 - Satisfactory Wiki: [Satisfactory Official Wiki](https://satisfactory.wiki.gg/wiki/)
 - Satisfactory Modding FAQ page: [Satisfactory Modding Documentation FAQ](https://docs.ficsit.app/satisfactory-modding/latest/faq.html)
-- Satisfactory Item names can be found [on github](https://github.com/Jarno458/Archipelago/blob/Satisfactory/worlds/satisfactory/Items.py): 
+- Satisfactory Item names can be found [on github](https://github.com/Jarno458/Archipelago/blob/Satisfactory/worlds/satisfactory/Items.py)
