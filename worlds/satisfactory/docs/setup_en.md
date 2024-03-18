@@ -6,7 +6,8 @@
 
 - [Satisfactory (Steam)](https://store.steampowered.com/app/526870/Satisfactory/)
   or [Satisfactory (Epic)](https://www.epicgames.com/store/en-US/product/satisfactory/home)
-- Latest version of **Satisfactory Mod Manager**: [Satisfactory Mod Manager GitHub Releases](https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/)
+- [Satisfactory Mod Manager (ficsit)](https://smm.ficsit.app/) 
+  or [Satisfactory Mod Manager (github)](https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/)
 
 ## Overview
 
@@ -84,7 +85,7 @@ The Mod Manager is used to install and manage mods for Satisfactory.
 It automatically detects your game install location and automatically handles mod dependencies for you.
 
 Download the Mod Manager here:
-[Satisfactory Mod Manager GitHub Releases](https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/)
+[Satisfactory Mod Manager GitHub Releases](https://smm.ficsit.app/)
 
 Directions for setting up the Mod Manager can be found here:
 [Satisfactory Modding Documentation FAQ: Installing the Mod Manager](https://docs.ficsit.app/satisfactory-modding/latest/ForUsers/SatisfactoryModManager.html)
@@ -93,15 +94,13 @@ Directions for setting up the Mod Manager can be found here:
 
 Once the Mod Manager is installed you can install mods directly in the manager or via the Satisfactory Mod Repository website.
 
-Inside the Mod Manager, search for and install the "Archipelago Multi-World Randomizer".
+Inside the Mod Manager, search for and install the "Archipelago Randomizer".
 Alternatively, visit the mod page: [Archipelago Multi-World Randomizer on Ficsit.app](https://ficsit.app/mod/Archipelago).
 Once on the mod page, click the "Install" link in the Latest Versions card.
 
 The Mod Manager will install all required dependency mods for you with no additional action required.
 
 As soon as you have the relevant mods installed, you do not need to launch the game through the Mod Manager - desktop shortcuts, Steam, Epic. etc. will all launch the game with mods still loaded.
-
-TODO for development time only: Here is a link to the manual install directions in case the Archipelago mod developers send you a custom version for testing: <https://docs.ficsit.app/satisfactory-modding/latest/ManualInstallDirections.html>
 
 ### Installing Additional Mods
 
@@ -156,10 +155,8 @@ TODO what is the scope of this section? How much do we help with vs. sending peo
   The server port may have changed if the room went to sleep.
   If you need to enter a new port,
   use the "Force override settings in save" option on the mod options menu before loading into a save.
-- If you are having trouble using the Satisfactory Mod Manager, join the Satisfactory Modding Discord for support.
-  [Discord: Satisfactory Modding Discord](https://discord.gg/xkVJ73E)
-- If you encounter a game crash, please report it to us via the Satisfactory Modding Discord.
-  [Discord: Satisfactory Modding Discord](https://discord.gg/xkVJ73E)
+- If you are having trouble using the Satisfactory Mod Manager, join the [Satisfactory Modding Discord](https://discord.gg/xkVJ73E) for support.
+- If you encounter a game crash, please report it to us via the [Satisfactory Modding Discord](https://discord.gg/xkVJ73E).
   Please include the following information:
   - What you were doing when the crash occurred.
   <!-- - If you were a Satisfactory multiplayer host or client, and if you were playing on a dedicated server. -->
@@ -171,4 +168,4 @@ TODO what is the scope of this section? How much do we help with vs. sending peo
 
 - Satisfactory Wiki: [Satisfactory Official Wiki](https://satisfactory.wiki.gg/wiki/)
 - Satisfactory Modding FAQ page: [Satisfactory Modding Documentation FAQ](https://docs.ficsit.app/satisfactory-modding/latest/faq.html)
-- TODO list to file that contains all AP item/location names for usage in starting inventory and hinting
+- Satisfactory Item names can be found [on github](https://github.com/Jarno458/Archipelago/blob/Satisfactory/worlds/satisfactory/Items.py): 
