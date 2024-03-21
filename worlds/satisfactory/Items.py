@@ -452,7 +452,7 @@ class Items:
         "Building: U-Jelly Landing Pad": ItemData(frozenset({G.Building}), 1338632, C.useful),
         "Building: Power Switch": ItemData(frozenset({G.Building}), 1338633, C.useful),
         "Building: Priority Power Switch": ItemData(frozenset({G.Building}), 1338634, C.useful),
-        "Building: Storage Container": ItemData(frozenset({G.Building}), 1338635, C.useful),
+        "Building: Storage Container": ItemData(frozenset({G.Building}), 1338635, C.useful, 0),
         "Building: Lookout Tower": ItemData(frozenset({G.Building}), 1338636, C.filler),
         #"Building: Power Pole Mk.1": ItemData(frozenset({G.Building}), 1338637, C.progression),
         "Building: Power Pole Mk.2": ItemData(frozenset({G.Building}), 1338638, C.useful),
