@@ -6,8 +6,9 @@
 
 - [Satisfactory (Steam)](https://store.steampowered.com/app/526870/Satisfactory/)
   or [Satisfactory (Epic)](https://www.epicgames.com/store/en-US/product/satisfactory/home)
-- [Satisfactory Mod Manager (ficsit)](https://smm.ficsit.app/) 
-  or [Satisfactory Mod Manager (github)](https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/)
+- Satisfactory Mod Manager, either
+  - Automatically via [smm.ficsit.app](https://smm.ficsit.app/) or
+  - Manually via [latest stable release on GitHub](https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/)
 
 ## Overview
 
@@ -85,9 +86,9 @@ The Mod Manager is used to install and manage mods for Satisfactory.
 It automatically detects your game install location and automatically handles mod dependencies for you.
 
 Download the Mod Manager here:
-[Satisfactory Mod Manager GitHub Releases](https://smm.ficsit.app/)
+[Satisfactory Mod Manager automatic download via ficsit.app](https://smm.ficsit.app/)
 
-Directions for setting up the Mod Manager can be found here:
+Directions for setting and using up the Mod Manager can be found here:
 [Satisfactory Modding Documentation FAQ: Installing the Mod Manager](https://docs.ficsit.app/satisfactory-modding/latest/ForUsers/SatisfactoryModManager.html)
 
 ### Installing the Archipelago Mod
@@ -95,7 +96,7 @@ Directions for setting up the Mod Manager can be found here:
 Once the Mod Manager is installed you can install mods directly in the manager or via the Satisfactory Mod Repository website.
 
 Inside the Mod Manager, search for and install the "Archipelago Randomizer".
-Alternatively, visit the mod page: [Archipelago Multi-World Randomizer on Ficsit.app](https://ficsit.app/mod/Archipelago).
+Alternatively, visit the mod page: [Archipelago Randomizer mod on ficsit.app](https://ficsit.app/mod/Archipelago).
 Once on the mod page, click the "Install" link in the Latest Versions card.
 
 The Mod Manager will install all required dependency mods for you with no additional action required.
@@ -120,7 +121,7 @@ You can hover over the fields in the menu for more information and example value
 - **Password**: The password for your slot, blank if you did not assign one.
 - **Archipelago Enabled**: Make sure this is checked, otherwise no server connection will be attempted.
 - **Debug Mode**: Don't enable it unless the developers ask you to when reporting problems.
-- **Force override settings in save**: When loading a save, will use the `URI`, `Username` and `Password` provided here rather than the values stored in the save (usefull when the server changed ports)
+- **Force override settings in save**: Leave false for now. It is useful when the server changed ports. Read its tooltip for more info.
 
 Note that the Satisfactory Client does _not_ need a copy of your Archipelago config file.
 The mod communicates with the Archipelago Server, which already has your config file,
@@ -131,13 +132,14 @@ to generate the required content at runtime.
 Once you have entered connection details, create a new world using the game's New Game menu.
 Make sure to check 'Skip Intro' if you don't want to deal with the game's tutorial sequence.
 Consider enabling Advanced Game Settings to allow dealing with bugs that may arise.
-You may also wish to switch the "Keep Inventory" setting to "Keep Everything" to avoid dropping items when you die,
+Within the Advanced Game Settings menus,
+you may wish to switch the "Keep Inventory" setting to "Keep Everything" to avoid dropping items on death,
 although this will never lock you out of progression.
 
 ### Verifying Connection Success
 
 Once connected to the AP server,
-you can issue the `/help` command in the game's chat to list available commands like `/hint`.
+you can issue the `/help` command in the game's chat to list available commands, such as `/hint`.
 For more information about the commands you can use, see the [Commands Guide](/tutorial/Archipelago/commands/en).
 Note that Archipelago commands are not prefixed with `!` inside of Satisfactory.
 You may wish to use the Text Client to run commands since Satisfactory's in game chat is not very user friendly.
@@ -155,8 +157,8 @@ TODO what is the scope of this section? How much do we help with vs. sending peo
   The server port may have changed if the room went to sleep.
   If you need to enter a new port,
   use the "Force override settings in save" option on the mod options menu before loading into a save.
-- If you are having trouble using the Satisfactory Mod Manager, join the [Satisfactory Modding Discord](https://discord.gg/xkVJ73E) for support.
-- If you encounter a game crash, please report it to us via the [Satisfactory Modding Discord](https://discord.gg/xkVJ73E).
+- If you are having trouble using the Satisfactory Mod Manager, join the [Satisfactory Modding Discord](https://discord.ficsit.app) for support.
+- If you encounter a game crash, please report it to us via the [Satisfactory Modding Discord](https://discord.ficsit.app).
   Please include the following information:
   - What you were doing when the crash occurred.
   <!-- - If you were a Satisfactory multiplayer host or client, and if you were playing on a dedicated server. -->
@@ -168,4 +170,4 @@ TODO what is the scope of this section? How much do we help with vs. sending peo
 
 - Satisfactory Wiki: [Satisfactory Official Wiki](https://satisfactory.wiki.gg/wiki/)
 - Satisfactory Modding FAQ page: [Satisfactory Modding Documentation FAQ](https://docs.ficsit.app/satisfactory-modding/latest/faq.html)
-- Satisfactory Item names can be found [on github](https://github.com/Jarno458/Archipelago/blob/Satisfactory/worlds/satisfactory/Items.py)
+- Satisfactory Archipelago Item names (for hints/starting inventory/etc.) can be found [on the mod's github](https://github.com/Jarno458/Archipelago/blob/Satisfactory/worlds/satisfactory/Items.py)
