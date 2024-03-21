@@ -69,7 +69,7 @@ and are color coded to indicate what Archipelago progression type they are.
 
 Hover over them to read a description, since many Satisfactory UIs (such as the MAM) cut this information off.
 
-![TODO screenshot of HUB with some remote and some local items](/static/generated/docs/Satisfactory/HUB-screenshot.png)
+![screenshot of HUB with some remote and some local items](https://raw.githubusercontent.com/Jarno458/SatisfactoryArchipelagoMod/main/Docs/localAndRemoteItems.JPG)
 
 Upon successful unlock of the technology, the item will be sent to its home world.
 
