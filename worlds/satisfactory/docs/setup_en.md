@@ -4,8 +4,9 @@
 
 ## Required Software
 
-- [Satisfactory (Steam)](https://store.steampowered.com/app/526870/Satisfactory/)
-  or [Satisfactory (Epic)](https://www.epicgames.com/store/en-US/product/satisfactory/home)
+- Satisfactory, either
+  - Steam [Satisfactory (Steam)](https://store.steampowered.com/app/526870/Satisfactory/)
+  - Epic [Satisfactory (Epic)](https://www.epicgames.com/store/en-US/product/satisfactory/home)
 - Satisfactory Mod Manager, either
   - Automatically via [smm.ficsit.app](https://smm.ficsit.app/) or
   - Manually via [latest stable release on GitHub](https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/)
