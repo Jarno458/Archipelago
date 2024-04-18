@@ -136,7 +136,8 @@ class Droppod(LocationData):
                 return "Overworld"
 
         def get_rule(unlocked_by: str, needs_power: bool) -> Callable[[CollectionState], bool]:
-            #TODO handle power
+            # Power is kept out of logic. with energy link its simple, 
+            # without you just going to have to figure it your yourself
 
             def logic_rule(state: CollectionState):
                 return state_logic and state_logic.can_produce(state, unlocked_by)
