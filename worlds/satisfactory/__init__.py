@@ -80,13 +80,26 @@ class SatisfactoryWorld(World):
 
 
     def set_rules(self) -> None:
+        resource_sink_goal: bool = \
+            self.options.goal_selection.value == self.options.goal_selection.option_resource_sink_points \
+            or self.options.goal_selection.value == self.options.goal_selection.option_both_goals \
+            or self.options.goal_selection.value == self.options.goal_selection.option_either_goal
+        elevator_goal: bool = \
+            self.options.goal_selection.value == self.options.goal_selection.option_space_elevator_packages \
+            or self.options.goal_selection.value == self.options.goal_selection.option_both_goals \
+            or self.options.goal_selection.value == self.options.goal_selection.option_either_goal
+
         last_elevator_tier: int = \
-            len(self.game_logic.space_elevator_tiers) if self.options.final_resource_sink_points.value > 0 \
-                else self.options.final_elevator_tier.value
+            len(self.game_logic.space_elevator_tiers) if resource_sink_goal else self.options.final_elevator_tier.value
+        
+        if resource_sink_goal or not elevator_goal:
+            last_elevator_tier = len(self.game_logic.space_elevator_tiers)
+        else:
+            self.options.final_elevator_tier.value
 
         required_parts: Set[str] = set(self.game_logic.space_elevator_tiers[last_elevator_tier - 1].keys())
 
-        if self.options.final_resource_sink_points > 0:
+        if resource_sink_goal:
             required_parts.union(self.game_logic.buildings["AWESOME Sink"].inputs)
 
         required_parts_tuple: Tuple[str, ...] = tuple(required_parts)
@@ -112,9 +125,10 @@ class SatisfactoryWorld(World):
                 "HubLayout": slot_hub_layout,
                 "SlotsPerMilestone": self.game_logic.slots_per_milestone,
                 "Options": {
+                    "GoalSelection": self.options.goal_selection.value,
                     "FinalElevatorTier": self.options.final_elevator_tier.value,
                     "FinalResourceSinkPoints": self.options.final_resource_sink_points.value,
-                    #"AllowDroppodProgression": bool(self.options.allow_droppod_progression),
+                    "EnableHardDriveGacha": True if self.options.hard_drive_progression_limit else False,
                     "FreeSampleEquipment": self.options.free_sample_equipment.value,
                     "FreeSampleBuildings": self.options.free_sample_buildings.value,
                     "FreeSampleParts": self.options.free_sample_parts.value,

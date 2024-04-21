@@ -45,10 +45,9 @@ class ElevatorTier(NamedRange):
     """Ship these Space Elevator packages to finish"""
     display_name = "Goal: Space Elevator shipment"
     default = 2
-    range_start = 0
+    range_start = 1
     range_end = 4
     special_range_names = {
-        "disabled": 0,
         "one package (tiers 1-2)": 1,
         "two packages (tiers 1-4)": 2,
         "three packages (tiers 1-6)": 3,
@@ -64,11 +63,10 @@ class ResourceSinkPoints(NamedRange):
 
     If you have Free Samples enabled, consider setting this higher so that you can't reach the goal just by sinking your Free Samples."""
     display_name = "Goal: AWESOME Sink points"
-    default = 0
-    range_start = 0
+    default = 2166000
+    range_start = 2166000
     range_end = 18436379500
     special_range_names = {
-        "disabled": 0,
         "50 coupons (~2m points)": 2166000,
         "100 coupons (~18m points)": 17804500,
         "150 coupons (~61m points)": 60787500,
@@ -91,8 +89,8 @@ class ResourceSinkPoints(NamedRange):
         "1000 coupons (~18b points)": 18436379500
     }
 
-class DroppodProgressionLimit(Range):
-    """How many drop-pods can contain progression items.
+class HardDriveProgressionLimit(Range):
+    """How many Hard-drive locations can contain progression items.
     Hard-drive locations above this threshold cannot contain progression but can still be useful"""
     display_name = "Max Hard-drive Progression"
     default = 0
@@ -100,7 +98,7 @@ class DroppodProgressionLimit(Range):
     range_end = 100
 
 # class TechTreeInformation(Choice):
-#     """TODO Implement me
+#     """TODO Implement me or not, i dont think we need this
 #     How much information should be displayed in the tech tree.
 
 #     None: No indication what a technology unlocks or who it is for
@@ -290,12 +288,24 @@ class StartingInventoryPreset(ChoiceMap):
     }
     default = "Archipelago"
 
+# options.py
+class GoalSelection(Choice):
+    """What will be your goal(s)? """
+
+    display_name = "Selected Goals"
+    option_space_elevator_packages = 1
+    option_resource_sink_points = 2
+    option_both_goals = 3
+    option_either_goal = 4
+    default = option_space_elevator_packages
+
 @dataclass
 class SatisfactoryOptions(PerGameCommonOptions):
+    goal_selection: GoalSelection
     final_elevator_tier: ElevatorTier # TODO rename to "final_elevator_package" to avoid confusion over what the value means (the range 0-4 is not the same as the range of tiers 0-8)
     final_resource_sink_points: ResourceSinkPoints
     # tech_tree_information: TechTreeInformation # TODO: NYI
-    droppod_progression_limit: DroppodProgressionLimit
+    hard_drive_progression_limit: HardDriveProgressionLimit
     free_sample_equipment: FreeSampleEquipment
     free_sample_buildings: FreeSampleBuildings
     free_sample_parts: FreeSampleParts
