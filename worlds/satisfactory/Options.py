@@ -91,9 +91,13 @@ class ResourceSinkPoints(NamedRange):
         "1000 coupons (~18b points)": 18436379500
     }
 
-class AllowDroppodProgression(Toggle):
-    """TODO. Allow the hard drive Gacha to contain progression items."""
-    display_name = "Allow Hard-drive Progression"
+class DroppodProgressionLimit(Range):
+    """How many drop-pods can contain progression items.
+    Hard-drive locations above this threshold cannot contain progression but can still be useful"""
+    display_name = "Max Hard-drive Progression"
+    default = 0
+    range_start = 0
+    range_end = 100
 
 # class TechTreeInformation(Choice):
 #     """TODO Implement me
@@ -291,7 +295,7 @@ class SatisfactoryOptions(PerGameCommonOptions):
     final_elevator_tier: ElevatorTier # TODO rename to "final_elevator_package" to avoid confusion over what the value means (the range 0-4 is not the same as the range of tiers 0-8)
     final_resource_sink_points: ResourceSinkPoints
     # tech_tree_information: TechTreeInformation # TODO: NYI
-    # allow_droppod_progression: AllowDroppodProgression #TODO: NYI
+    droppod_progression_limit: DroppodProgressionLimit
     free_sample_equipment: FreeSampleEquipment
     free_sample_buildings: FreeSampleBuildings
     free_sample_parts: FreeSampleParts

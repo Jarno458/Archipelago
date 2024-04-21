@@ -24,7 +24,7 @@ class SatisfactoryWorld(World):
     web = SatisfactoryWebWorld()
 
     item_name_to_id = Items.item_names_and_ids
-    location_name_to_id = Locations().get_all_location_ids_by_name()
+    location_name_to_id = Locations().get_locations_for_data_package()
     item_name_groups = Items.get_item_names_per_category()
 
     game_logic: ClassVar[GameLogic] = GameLogic()
@@ -65,7 +65,8 @@ class SatisfactoryWorld(World):
 
 
     def create_regions(self) -> None:
-        locations: List[LocationData] = Locations(self.game_logic, self.state_logic, self.items).get_locations()
+        locations: List[LocationData] = \
+            Locations(self.game_logic, self.options, self.state_logic, self.items).get_locations()
         create_regions_and_return_locations(
             self.multiworld, self.options, self.player, self.game_logic, self.state_logic, locations)
 
