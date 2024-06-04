@@ -1,9 +1,11 @@
+import copy
 from random import Random
 from typing import ClassVar, Dict, Set, List, TextIO, Tuple, Optional
 from BaseClasses import Item, ItemClassification as C, MultiWorld
 from .GameLogic import GameLogic, Recipe
 from .Options import SatisfactoryOptions
 from .ItemData import ItemData, ItemGroups as G
+
 
 class Items:
     item_data: ClassVar[Dict[str, ItemData]] = {
@@ -639,7 +641,7 @@ class Items:
         self.logic = logic
         self.random = random
 
-        if False: # TODO major performance boost if we can get it stable
+        if True: # TODO major performance boost if we can get it stable
             self.precalculated_progression_recipes = self.select_progression_recipes()
         else:
             self.precalculated_progression_recipes = None
@@ -649,6 +651,10 @@ class Items:
             part: str, parts_to_avoid: Dict[str, str]) -> Recipe:
         
         recipes: List[Recipe] = list(self.logic.recipes[part])
+
+        implicit_recipe = next(filter(lambda r: r.implicitly_unlocked, recipes), None)
+        if implicit_recipe:
+            return implicit_recipe
 
         while (len(recipes) > 0):
             recipe: Recipe = recipes.pop(self.random.randrange(len(recipes)))
@@ -682,11 +688,56 @@ class Items:
                     self.build_progression_recipe_tree(child_recipe.inputs, selected_recipes)
 
 
-    def select_progression_recipes(self) -> Dict[str, str]:
+    def select_progression_recipes(self) -> Dict[str, Recipe]:
         required_top_level_parts: Tuple[str, ...] = ("Versatile Framework", "Modular Engine", "Adaptive Control Unit")
         selected_recipes: Dict[str, str] = {}
 
-        self.build_progression_recipe_tree(required_top_level_parts, selected_recipes)
+        #self.build_progression_recipe_tree(required_top_level_parts, selected_recipes)
+
+        while not self.is_beatable(selected_recipes):
+            selected_recipes = self.select_random_progression_recipes()
+
+
+    def is_beatable(self, recipes: Dict[str, Recipe]) -> bool:
+        if not recipes:
+            return False
+
+        craftable_parts: Set[str] = set()
+        pending_recipes_by_part: Dict[str, Recipe] = copy.deepcopy(recipes)
+
+        for part, recipe_tuples in self.logic.recipes.items():
+            for recipe in recipe_tuples:
+                if recipe.implicitly_unlocked:
+                    craftable_parts.add(part)
+
+        while pending_recipes_by_part:
+            new_collected_parts: Set[str] = set()
+
+            for part, recipe in pending_recipes_by_part.items():
+                if all(input in craftable_parts for input in recipe.inputs):
+                    new_collected_parts.add(part)
+
+            if not new_collected_parts:
+                return False
+
+            craftable_parts = craftable_parts.union(new_collected_parts)
+
+            for part in new_collected_parts:
+                del pending_recipes_by_part[part]
+
+        return True
+
+
+    def select_random_progression_recipes(self) -> Dict[str, Recipe]:
+        selected_recipes: Dict[str, str] = {}
+
+        for part, recipes in self.logic.recipes.items():
+
+            implicit_recipe: Recipe = next(filter(lambda r: r.implicitly_unlocked, recipes), None)
+            if implicit_recipe:
+                continue
+
+            selected_recipes[part] = self.random.choice(recipes)
 
         return selected_recipes
 
