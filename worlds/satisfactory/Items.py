@@ -146,16 +146,16 @@ class Items:
         "Bundle: Explosive Rebar": ItemData(frozenset({G.Ammo}), 1338159),
         "Bundle: Factory Cart": ItemData(frozenset({G.Equipment}), 1338160),
         "Bundle: Factory Cart (golden)": ItemData(frozenset({G.Equipment}), 1338161, count=0),
-        "Bundle: Gas Mask": ItemData(frozenset({G.Equipment}), 1338162, C.progression),
+        "Bundle: Gas Mask": ItemData(frozenset({G.Equipment}), 1338162),
         "Bundle: Gas Nobelisk": ItemData(frozenset({G.Ammo}), 1338163),
-        "Bundle: Hazmat Suit": ItemData(frozenset({G.Equipment}), 1338164, C.progression),
+        "Bundle: Hazmat Suit": ItemData(frozenset({G.Equipment}), 1338164),
         "Bundle: Homing Rifle Ammo": ItemData(frozenset({G.Ammo}), 1338165),
-        "Bundle: Hover Pack": ItemData(frozenset({G.Equipment}), 1338166, C.progression),
+        "Bundle: Hover Pack": ItemData(frozenset({G.Equipment}), 1338166),
         "Bundle: Iron Rebar": ItemData(frozenset({G.Ammo}), 1338167),
-        "Bundle: Jetpack": ItemData(frozenset({G.Equipment}), 1338168, C.progression),
+        "Bundle: Jetpack": ItemData(frozenset({G.Equipment}), 1338168),
         "Bundle: Medicinal Inhaler": ItemData(frozenset({G.Ammo}), 1338169),
         "Bundle: Nobelisk": ItemData(frozenset({G.Ammo}), 1338170),
-        "Bundle: Nobelisk Detonator": ItemData(frozenset({G.Equipment}), 1338171, C.progression),
+        "Bundle: Nobelisk Detonator": ItemData(frozenset({G.Equipment}), 1338171),
         "Bundle: Nuke Nobelisk": ItemData(frozenset({G.Ammo}), 1338172),
         "Bundle: Object Scanner": ItemData(frozenset({G.Equipment}), 1338173),
         "Bundle: Paleberry": ItemData(frozenset({G.Ammo}), 1338174),
@@ -171,7 +171,7 @@ class Items:
         "Bundle: Xeno-Zapper": ItemData(frozenset({G.Equipment}), 1338184),
         "Bundle: Zipline": ItemData(frozenset({G.Equipment}), 1338185),
         "Bundle: Portable Miner": ItemData(frozenset({G.Equipment}), 1338186),
-        "Bundle: Gas Filter": ItemData(frozenset({G.Ammo}), 1338187, C.progression),
+        "Bundle: Gas Filter": ItemData(frozenset({G.Ammo}), 1338187),
 
         "Small Inflated Pocket Dimension": ItemData(frozenset({G.Upgrades}), 1338188, C.useful, 11),
         "Inflated Pocket Dimension": ItemData(frozenset({G.Upgrades}), 1338189, C.useful, 5),
@@ -633,7 +633,7 @@ class Items:
     player: int
     logic: GameLogic
     random: Random
-    precalculated_progression_recipes: Optional[Dict[str, Recipe]]
+    precalculated_progression_recipes: Optional[Set[str]]
 
 
     def __init__(self, player: Optional[int], logic: GameLogic, random: Random):
@@ -645,6 +645,8 @@ class Items:
             self.precalculated_progression_recipes = self.select_progression_recipes()
         else:
             self.precalculated_progression_recipes = None
+
+        x = 20
 
 
     def select_recipe_for_part_that_does_not_depend_on_parent_recipes(self,
@@ -688,14 +690,13 @@ class Items:
                     self.build_progression_recipe_tree(child_recipe.inputs, selected_recipes)
 
 
-    def select_progression_recipes(self) -> Dict[str, Recipe]:
-        required_top_level_parts: Tuple[str, ...] = ("Versatile Framework", "Modular Engine", "Adaptive Control Unit")
-        selected_recipes: Dict[str, str] = {}
-
-        #self.build_progression_recipe_tree(required_top_level_parts, selected_recipes)
+    def select_progression_recipes(self) -> Set[str]:
+        selected_recipes: Dict[str, Recipe] = {}
 
         while not self.is_beatable(selected_recipes):
             selected_recipes = self.select_random_progression_recipes()
+
+        return set(recipe.name for recipe in selected_recipes.values())
 
 
     def is_beatable(self, recipes: Dict[str, Recipe]) -> bool:
@@ -745,12 +746,14 @@ class Items:
     @classmethod
     def create_item(cls, instance: Optional["Items"], name: str, player: int) -> Item:
         data: ItemData = cls.item_data[name]
+        type = data.type
 
-        if instance and instance.precalculated_progression_recipes and \
+        if type == C.progression and not name.startswith("Building: ") and \
+                instance and instance.precalculated_progression_recipes and \
                 name not in instance.precalculated_progression_recipes:
-            return Item(name, C.useful, data.code, instance.player)
+            type = C.useful
 
-        return Item(name, data.type, data.code, player)
+        return Item(name, type, data.code, player)
 
 
     def get_filler_item_name(self, random: Random, options: SatisfactoryOptions) -> str:
