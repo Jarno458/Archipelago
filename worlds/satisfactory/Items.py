@@ -5,6 +5,7 @@ from BaseClasses import Item, ItemClassification as C, MultiWorld
 from .GameLogic import GameLogic, Recipe
 from .Options import SatisfactoryOptions
 from .ItemData import ItemData, ItemGroups as G
+import logging
 
 
 class Items:
@@ -633,7 +634,8 @@ class Items:
     player: int
     logic: GameLogic
     random: Random
-    precalculated_progression_recipes: Optional[Set[str]]
+    precalculated_progression_recipes: Optional[Dict[str, Recipe]]
+    precalculated_progression_recipes_names: Optional[Set[str]]
 
 
     def __init__(self, player: Optional[int], logic: GameLogic, random: Random):
@@ -643,10 +645,14 @@ class Items:
 
         if True: # TODO major performance boost if we can get it stable
             self.precalculated_progression_recipes = self.select_progression_recipes()
+            self.precalculated_progression_recipes_names = set(
+                recipe.name for recipe in self.precalculated_progression_recipes.values()
+            )
         else:
             self.precalculated_progression_recipes = None
+            self.precalculated_progression_recipes_names = None
 
-        x = 20
+        
 
 
     def select_recipe_for_part_that_does_not_depend_on_parent_recipes(self,
@@ -690,13 +696,13 @@ class Items:
                     self.build_progression_recipe_tree(child_recipe.inputs, selected_recipes)
 
 
-    def select_progression_recipes(self) -> Set[str]:
+    def select_progression_recipes(self) -> Dict[str, Recipe]:
         selected_recipes: Dict[str, Recipe] = {}
 
         while not self.is_beatable(selected_recipes):
             selected_recipes = self.select_random_progression_recipes()
 
-        return set(recipe.name for recipe in selected_recipes.values())
+        return selected_recipes
 
 
     def is_beatable(self, recipes: Dict[str, Recipe]) -> bool:
@@ -749,9 +755,12 @@ class Items:
         type = data.type
 
         if type == C.progression and not name.startswith("Building: ") and \
-                instance and instance.precalculated_progression_recipes and \
-                name not in instance.precalculated_progression_recipes:
-            type = C.useful
+                instance and instance.precalculated_progression_recipes_names:
+            if name not in instance.precalculated_progression_recipes_names:
+                type = C.useful
+                logging.info(f"Downscaling .. {name}")
+            else:
+                logging.warn(f"Preserving .. {name}")
 
         return Item(name, type, data.code, player)
 
@@ -812,5 +821,5 @@ class Items:
                 f"{player_name}{part} -> {recipe.name}" 
                 for part, recipes_per_part in self.logic.recipes.items()
                 for recipe in recipes_per_part 
-                if recipe.name in self.precalculated_progression_recipes
+                if recipe.name in self.precalculated_progression_recipes_names
             ))

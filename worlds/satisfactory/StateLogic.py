@@ -68,12 +68,9 @@ class StateLogic:
         if recipe.is_radio_active and not self.can_produce_all(state, ("Hazmat Suit", "Iodine Infused Filter")): 
             return False
         
-        if recipe.minimal_belt_speed and \
-                not self.can_build_any(state, map(self.to_belt_name, range(recipe.minimal_belt_speed, 6))):
-            return False
-        
-        if recipe.minimal_belt_speed > 1 and not self.can_build_all(state, ("Conveyor Merger", "Conveyor Splitter")):
-            return False
+        #if recipe.minimal_belt_speed and \
+        #        not self.can_build_any(state, map(self.to_belt_name, range(recipe.minimal_belt_speed, 6))):
+        #    return False
 
         return self.has_recipe(state, recipe) \
             and self.can_build(state, recipe.building) \

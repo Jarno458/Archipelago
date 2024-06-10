@@ -38,21 +38,33 @@ class Part(LocationData):
 
     def __init__(self, state_logic: StateLogic, region: str, recipes: Iterable[Recipe], name: str, items: Items):
         super().__init__(region, part_event_prefix + name + region, EventId, part_event_prefix + name,
-            self.can_produce_any_recipe_for_part(state_logic, recipes, name, items))
+            rule = self.can_produce_any_recipe_for_part(state_logic, recipes, name, items))
 
     def can_produce_any_recipe_for_part(self, state_logic: StateLogic, recipes: Iterable[Recipe], 
                                         name: str, items: Items) -> Callable[[CollectionState], bool]:
         def can_build_by_any_recipe(state: CollectionState) -> bool:
-            return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) for recipe in recipes)
+            if name == "Steel Ingot":
+                debug = True
 
-        def can_build_by_precalculated_recipe(state: CollectionState) -> bool:
-            return state_logic.can_produce_specific_recipe_for_part( 
-                state, items.precalculated_progression_recipes[name])
+            if items.precalculated_progression_recipes and name in items.precalculated_progression_recipes:
+                can_produce: bool = state_logic.can_produce_specific_recipe_for_part(
+                    state, items.precalculated_progression_recipes[name])
+                
+                can_produce_anyway: bool
+                if can_produce:
+                    return can_produce
+                else:
+                    can_produce_anyway = \
+                        any(state_logic.can_produce_specific_recipe_for_part(state, recipe) for recipe in recipes)
 
-        if items.precalculated_progression_recipes:
-            return can_build_by_precalculated_recipe
-        else:
-            return can_build_by_any_recipe
+                    if can_produce_anyway:
+                        debug = True
+
+                    return False # can_produce_anyway
+            else:
+                return any(state_logic.can_produce_specific_recipe_for_part(state, recipe) for recipe in recipes)
+
+        return can_build_by_any_recipe
 
 
 class EventBuilding(LocationData):
@@ -64,6 +76,9 @@ class EventBuilding(LocationData):
             ) -> Callable[[CollectionState], bool]:
 
         def can_build(state: CollectionState) -> bool:
+            if building.name == "Building: Foundry":
+                debug = True
+
             return state_logic.has_recipe(state, building) \
                 and state_logic.can_power(state, building.power_requirement) \
                 and state_logic.can_produce_all_allowing_handcrafting(state, game_logic, building.inputs)
