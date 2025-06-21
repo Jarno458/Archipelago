@@ -87,8 +87,14 @@ class CriticalPathCalculator:
         }
         self.required_item_names.update({"Building: "+ building for building in self.required_buildings})
 
+        self.select_recipes_for_required_parts()
+
         self.calculate_excluded_things()
         self.select_starter_recipes()
+
+    def select_recipes_for_required_parts() -> None:
+
+        a = 10
 
 
     def select_minimal_required_parts_for_building(self, building: str) -> None:
