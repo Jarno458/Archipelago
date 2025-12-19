@@ -468,7 +468,8 @@ def flag_excludes_by_faction_presence(world: SC2World, item_list: List[FilterIte
 
     for item in item_list:
         # Catch-all for all of a faction's items
-        if not terran_missions and item.data.race == SC2Race.TERRAN:
+        # Unit upgrades required for no-builds will get the FilterExcluded lifted when flagging AllowedOrphan
+        if not terran_build_missions and item.data.race == SC2Race.TERRAN:
             if item.name not in item_groups.nova_equipment:
                 item.flags |= ItemFilterFlags.FilterExcluded
                 continue
@@ -483,10 +484,6 @@ def flag_excludes_by_faction_presence(world: SC2World, item_list: List[FilterIte
             continue
 
         # Faction units
-        if (not terran_build_missions
-            and item.data.type in (item_tables.TerranItemType.Unit, item_tables.TerranItemType.Building, item_tables.TerranItemType.Mercenary)
-        ):
-            item.flags |= ItemFilterFlags.FilterExcluded
         if (not zerg_build_missions
             and item.data.type in (item_tables.ZergItemType.Unit, item_tables.ZergItemType.Mercenary, item_tables.ZergItemType.Evolution_Pit)
         ):
@@ -654,19 +651,24 @@ def flag_mission_based_item_excludes(world: SC2World, item_list: List[FilterItem
 def flag_allowed_orphan_items(world: SC2World, item_list: List[FilterItem]) -> None:
     """Adds the `Allowed_Orphan` flag to items that shouldn't be filtered with their parents, like combat shield"""
     missions = get_all_missions(world.custom_mission_order)
-    terran_nobuild_missions = any((MissionFlag.Terran|MissionFlag.NoBuild) in mission.flags and mission.campaign != SC2Campaign.NCO for mission in missions)
-    if terran_nobuild_missions:
+    if SC2Mission.PIERCING_OF_THE_SHROUD in missions:
         for item in item_list:
             if item.name in (
                     item_names.MARINE_COMBAT_SHIELD, item_names.MARINE_PROGRESSIVE_STIMPACK, item_names.MARINE_MAGRAIL_MUNITIONS,
-                    item_names.MEDIC_STABILIZER_MEDPACKS, item_names.MEDIC_NANO_PROJECTOR, item_names.MARINE_LASER_TARGETING_SYSTEM,
+                    item_names.MEDIC_STABILIZER_MEDPACKS, item_names.MARINE_LASER_TARGETING_SYSTEM,
             ):
                 item.flags |= ItemFilterFlags.AllowedOrphan
+                item.flags &= ~ItemFilterFlags.FilterExcluded
     # These rules only trigger on Standard tactics
     if SC2Mission.BELLY_OF_THE_BEAST in missions and world.options.required_tactics == RequiredTactics.option_standard:
         for item in item_list:
-            if item.name in (item_names.FIREBAT_NANO_PROJECTORS, item_names.FIREBAT_NANO_PROJECTORS, item_names.FIREBAT_PROGRESSIVE_STIMPACK):
+            if item.name in (
+                    item_names.MARINE_COMBAT_SHIELD, item_names.MARINE_PROGRESSIVE_STIMPACK, item_names.MARINE_MAGRAIL_MUNITIONS,
+                    item_names.MEDIC_STABILIZER_MEDPACKS, item_names.MARINE_LASER_TARGETING_SYSTEM,
+                    item_names.FIREBAT_NANO_PROJECTORS, item_names.FIREBAT_JUGGERNAUT_PLATING, item_names.FIREBAT_PROGRESSIVE_STIMPACK
+            ):
                 item.flags |= ItemFilterFlags.AllowedOrphan
+                item.flags &= ~ItemFilterFlags.FilterExcluded
     if SC2Mission.EVIL_AWOKEN in missions and world.options.required_tactics == RequiredTactics.option_standard:
         for item in item_list:
             if item.name in (item_names.STALKER_PHASE_REACTOR, item_names.STALKER_INSTIGATOR_SLAYER_DISINTEGRATING_PARTICLES, item_names.STALKER_INSTIGATOR_SLAYER_PARTICLE_REFLECTION):
