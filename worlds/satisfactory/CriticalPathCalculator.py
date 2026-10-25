@@ -1,8 +1,10 @@
 from random import Random
 from typing import Optional
 from collections.abc import Iterable
+from venv import logger
 from .GameLogic import GameLogic, Recipe
 from .Options import SatisfactoryOptions
+import logging
 
 
 class CriticalPathCalculator:
@@ -27,6 +29,9 @@ class CriticalPathCalculator:
     handcraftable_parts: dict[str, list[Recipe]]
     tier_0_recipes: set[str]
 
+    progression_calculation_passes: int
+    progression_recipe_per_part: dict[str, Recipe]
+
     def __init__(self, logic: GameLogic, seed: float, options: SatisfactoryOptions):
         self.logic = logic
         self.random = Random(seed)
@@ -42,57 +47,62 @@ class CriticalPathCalculator:
 
         self.__potential_required_belt_speed = 1
 
+        self.progression_recipe_per_part = {}
+
         self.configure_implicitly_unlocked_and_handcraftable_parts()
 
+        self.select_starter_recipes()
+
         self.select_minimal_required_parts_for(
-            self.logic.space_elevator_phases[self.final_elevator_phase-1].keys())
+            self.logic.space_elevator_phases[self.final_elevator_phase-1].keys(), context=f"Initial selection: Space Elevator Parts phase {self.final_elevator_phase}")
 
         for tree_name, tree in self.logic.man_trees.items():
             if tree_name == "Ficsmas" and not self.ficsmas:
                 continue
 
-            self.select_minimal_required_parts_for(tree.access_items)
+            self.select_minimal_required_parts_for(tree.access_items, context=f"Initial selection: {tree_name} Access Items")
 
             for node in tree.nodes:
                 if node.minimal_phase > self.final_elevator_phase:
                     continue
 
-                self.select_minimal_required_parts_for(node.unlock_cost)
+                self.select_minimal_required_parts_for(node.unlock_cost, context=f"Initial selection: {node.name} Unlock Cost")
 
                 if node.requires_items:
                     self.required_item_names.update(node.requires_items)
 
-        self.select_minimal_required_parts_for_building("MAM")
-        self.select_minimal_required_parts_for_building("AWESOME Sink")
-        self.select_minimal_required_parts_for_building("AWESOME Shop")
-        self.select_minimal_required_parts_for_building("Space Elevator")
-        self.select_minimal_required_parts_for_building("Conveyor Splitter")
-        self.select_minimal_required_parts_for_building("Conveyor Merger")
-        self.select_minimal_required_parts_for_building("Equipment Workshop")
-        self.select_minimal_required_parts_for_building("Foundation")
-        self.select_minimal_required_parts_for_building("Walls Orange")
-        self.select_minimal_required_parts_for_building("Power Storage")
-        self.select_minimal_required_parts_for_building("Miner Mk.2")
-        self.select_minimal_required_parts_for_building("Pipes Mk.1")
-        self.select_minimal_required_parts_for_building("Pipes Mk.2")
-        self.select_minimal_required_parts_for_building("Pipeline Pump Mk.1")
-        self.select_minimal_required_parts_for_building("Pipeline Pump Mk.2")
+        self.select_minimal_required_parts_for_building("MAM", context="Initial selection: MAM")
+        self.select_minimal_required_parts_for_building("AWESOME Sink", context="Initial selection: AWESOME Sink")
+        self.select_minimal_required_parts_for_building("AWESOME Shop", context="Initial selection: AWESOME Shop")
+        self.select_minimal_required_parts_for_building("Space Elevator", context="Initial selection: Space Elevator")
+        self.select_minimal_required_parts_for_building("Conveyor Splitter", context="Initial selection: Conveyor Splitter")
+        self.select_minimal_required_parts_for_building("Conveyor Merger", context="Initial selection: Conveyor Merger")
+        self.select_minimal_required_parts_for_building("Equipment Workshop", context="Initial selection: Equipment Workshop")
+        self.select_minimal_required_parts_for_building("Foundation", context="Initial selection: Foundation")
+        self.select_minimal_required_parts_for_building("Walls Orange", context="Initial selection: Walls Orange")
+        self.select_minimal_required_parts_for_building("Power Storage", context="Initial selection: Power Storage")
+        self.select_minimal_required_parts_for_building("Miner Mk.2", context="Initial selection: Miner Mk.2")
+        self.select_minimal_required_parts_for_building("Pipes Mk.1", context="Initial selection: Pipes Mk.1")
+        self.select_minimal_required_parts_for_building("Pipes Mk.2", context="Initial selection: Pipes Mk.2")
+        self.select_minimal_required_parts_for_building("Pipeline Pump Mk.1", context="Initial selection: Pipeline Pump Mk.1")
+        self.select_minimal_required_parts_for_building("Pipeline Pump Mk.2", context="Initial selection: Pipeline Pump Mk.2")
 
         if self.ficsmas:
-            self.select_minimal_required_parts_for(("FICSMAS Wonder Star", ))
+            self.select_minimal_required_parts_for(("FICSMAS Wonder Star", ), context="Initial selection: FICSMAS Wonder Star")
 
         if self.logic.recipes["Uranium"][0].minimal_phase <= self.final_elevator_phase:
-            self.select_minimal_required_parts_for(("Hazmat Suit", "Iodine-Infused Filter"))
+            self.select_minimal_required_parts_for(("Hazmat Suit", "Iodine-Infused Filter"), context="Initial selection: Hazmat Suit & Iodine-Infused Filter")
 
         for i in range(1, self.__potential_required_belt_speed + 1):
-            self.select_minimal_required_parts_for_building(f"Conveyor Mk.{i}")
+            self.select_minimal_required_parts_for_building(f"Conveyor Mk.{i}", context=f"Initial selection: Conveyor Mk.{i}")
 
         for i in range(1, self.required_power_level + 1):
             power_recipe = self.random.choice(self.logic.requirement_per_powerlevel[i])
-            self.select_minimal_required_parts_for(power_recipe.inputs)
-            self.select_minimal_required_parts_for_building(power_recipe.building)
+            self.select_minimal_required_parts_for(power_recipe.inputs, context=f"Power Recipe for {power_recipe.name}")
+            self.select_minimal_required_parts_for_building(power_recipe.building, context=f"Power Recipe for {power_recipe.name}")
 
-        self.select_starter_recipes()
+        self.progression_calculation_passes = 0
+        self.select_progression_recipes()
 
         self.required_item_names.update({
             recipe.name
@@ -100,21 +110,131 @@ class CriticalPathCalculator:
             for recipe in self.logic.recipes[part]
             if recipe.minimal_phase <= self.final_elevator_phase
         })
+
         self.required_item_names.update({"Building: " + building for building in self.required_buildings})
 
         self.calculate_excluded_things()
 
-    def select_minimal_required_parts_for_building(self, building: str) -> None:
-        self.select_minimal_required_parts_for(self.logic.buildings[building].inputs)
+    def select_minimal_required_parts_for_building(self, building: str, context: Optional[str] = None) -> None:
+        self.select_minimal_required_parts_for(self.logic.buildings[building].inputs, context)
         self.required_buildings.add(building)
 
-    def select_minimal_required_parts_for(self, parts: Optional[Iterable[str]]) -> None:
+
+    ######################
+    ### NEW CODE START    
+    ######################
+
+
+    # so lets think this through
+    # we select 1 recipe for each space elevator part we need
+    # for those recipes we need to make sure we have all the required parts to build thier buildings and the parts to produce them
+    def select_minimal_required_parts_for(self, parts: Optional[Iterable[str]], context: Optional[str] = None) -> None:
         if parts is None:
             return
 
         for part in parts:
             if part in self.required_parts:
                 continue
+
+            recipes_per_part = self.logic.recipes[part]
+            if any(recipe.name in self.implicitly_unlocked or recipe.name in self.tier_0_recipes for recipe in recipes_per_part):
+                continue
+
+            self.required_parts.add(part)
+
+            selected_recipe = self.random.choice(recipes_per_part)
+            self.progression_recipe_per_part[part] = selected_recipe
+
+            logging.info(f"Selected progression recipe for {part}: {selected_recipe.name}, context: {context}")
+
+            if not context:
+                context = f"Selected recipe for {part}: {selected_recipe.name}"
+
+            self.select_minimal_required_parts_for(selected_recipe.inputs, context)
+            self.select_minimal_required_parts_for_building(selected_recipe.building, context)
+
+
+    def select_progression_recipes(self) -> None:
+        self.progression_calculation_passes += 1
+
+        if (self.progression_calculation_passes > 10):
+            raise RuntimeError("Exceeded maximum number of progression calculation passes.")
+
+        # select progression recipes for each required part
+        #for part in self.required_parts:
+        #    if part in self.progression_recipe_per_part:
+        #        continue
+
+        #    recipes_per_part = self.logic.recipes[part]
+        #    if any(recipe.name in self.implicitly_unlocked or recipe.name in self.tier_0_recipes for recipe in recipes_per_part):
+        #        continue
+
+        #    self.progression_recipe_per_part[part] = self.random.choice(recipes_per_part)
+
+        ### todo remove
+        #for part, recipe in self.progression_recipe_per_part.items():
+        #    logging.info(f"Selected progression recipe for {part}: {recipe.name} (building: {recipe.building})")
+
+        logging.warning("Beatable check")
+        ###
+
+        # beatability check
+        available_parts = {
+            part
+            for part, recipes_per_part in self.logic.recipes.items()
+            if any(recipe.name in self.implicitly_unlocked or recipe.name in self.tier_0_recipes for recipe in recipes_per_part)
+        }
+
+        # todo fixme, available_parts likely contains a few raw resources at this point that arent in required parts
+
+        previous_count = len(available_parts)
+        while len(available_parts) < len(self.required_parts):
+            for part, recipe_per_part in self.progression_recipe_per_part.items():
+                if part in available_parts:
+                    continue
+
+                if part == "Steel Ingot":
+                    Debug = True
+
+                if part == "Steel Beam":
+                    Debug = True 
+
+                if not recipe_per_part.inputs or all(
+                    input in available_parts and all(
+                        building_input in available_parts for building_input in self.logic.buildings[recipe_per_part.building].inputs
+                    ) for input in recipe_per_part.inputs):
+
+                    available_parts.add(part)
+
+            if len(available_parts) == previous_count:
+                # Try again
+                missing = self.required_parts - available_parts
+                logging.warning(f"Missing parts: {missing}, Trying again")    
+
+                self.select_progression_recipes()
+            
+            previous_count = len(available_parts)
+
+        logging.warning("Beatable check complete")
+
+
+    ######################
+    ### NEW CODE END     
+    ######################
+
+
+
+    def select_minimal_required_parts_for_oldge(self, parts: Optional[Iterable[str]], context: Optional[str] = None) -> None:
+        if parts is None:
+            return
+
+        for part in parts:
+            if part in self.required_parts:
+                continue
+
+            if context is None:
+                context = f"Selecting minimal required parts for {part}"
+            logger.info(f"Adding required part '{part}' for context: '{context}'")
 
             self.required_parts.add(part)
 
@@ -125,10 +245,10 @@ class CriticalPathCalculator:
                 self.__potential_required_belt_speed = \
                     max(self.__potential_required_belt_speed, recipe.minimal_belt_speed)
 
-                self.select_minimal_required_parts_for(recipe.inputs)
+                self.select_minimal_required_parts_for(recipe.inputs, context=f"Recipe for {part}")
 
                 if recipe.building:
-                    self.select_minimal_required_parts_for(self.logic.buildings[recipe.building].inputs)
+                    self.select_minimal_required_parts_for(self.logic.buildings[recipe.building].inputs, context=f"Building {recipe.building} for {part}")
                     self.required_buildings.add(recipe.building)
 
                     if self.logic.buildings[recipe.building].power_requirement:
